@@ -9,9 +9,19 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:7002",
+        changeOrigin: true,
+      },
     },
   },
 });

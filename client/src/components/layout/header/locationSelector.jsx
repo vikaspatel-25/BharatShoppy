@@ -4,28 +4,18 @@ import {
   MapPin,
   Search,
 } from "lucide-react";
+import { useLocation } from "@/context/locationContext";
+import { searchLocations } from "@/services/locationService";
 
 function LocationSelector() {
   const [locationOpen, setLocationOpen] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
   const [locationResults, setLocationResults] = useState([]);
   const [locationLoading, setLocationLoading] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const { selectedLocation, setSelectedLocation } = useLocation();
 
   const locationRef = useRef(null);
-
-  const recentLocations = [
-    {
-      id: 1,
-      city: "Indore",
-      state: "Madhya Pradesh",
-    },
-    {
-      id: 2,
-      city: "Bhopal",
-      state: "Madhya Pradesh",
-    },
-  ];
 
   useEffect(() => {
     function handleOutsideClick(event) {
@@ -53,7 +43,7 @@ function LocationSelector() {
   }, []);
 
   useEffect(() => {
-    async function searchLocations() {
+    async function loadLocations() {
       const query = locationQuery.trim();
 
       if (!query) {
@@ -64,17 +54,7 @@ function LocationSelector() {
       try {
         setLocationLoading(true);
 
-        const response = await fetch(
-          `http://localhost:7002/searchLocations?q=${encodeURIComponent(
-            query
-          )}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to search locations");
-        }
-
-        const data = await response.json();
+        const data = await searchLocations(query);
 
         setLocationResults(data);
       } catch (error) {
@@ -85,7 +65,7 @@ function LocationSelector() {
       }
     }
 
-    searchLocations();
+    loadLocations();
   }, [locationQuery]);
 
   function toggleLocation() {
@@ -93,18 +73,26 @@ function LocationSelector() {
   }
 
   function handleCurrentLocation() {
-    console.log("Request current location");
-
     // Browser Geolocation API will be connected later.
   }
 
   function selectLocation(location) {
-    console.log("Selected location:", location);
+    const newLocation =
+      location.id === "all" ? null : location;
 
-    setSelectedLocation(location);
+    setSelectedLocation(newLocation);
+
     setLocationQuery("");
     setLocationResults([]);
     setLocationOpen(false);
+  }
+
+  function selectAllLocations() {
+    selectLocation({
+      id: "all",
+      city: "All locations",
+      state: null,
+    });
   }
 
   return (
@@ -122,12 +110,12 @@ function LocationSelector() {
 
         <div className="max-w-32 text-left leading-tight">
           <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-            Shopping near
+            Shopping Across
           </p>
 
           <div className="mt-0.5 flex items-center gap-1">
             <span className="truncate text-sm font-semibold text-slate-800">
-              {selectedLocation?.city || "Select location"}
+              {selectedLocation?.city || "All locations"}
             </span>
 
             <ChevronDown className="h-3.5 w-3.5 shrink-0 text-slate-400" />
@@ -142,7 +130,7 @@ function LocationSelector() {
         aria-label={
           selectedLocation
             ? `Selected location: ${selectedLocation.city}`
-            : "Select location"
+            : "All locations"
         }
         className="flex h-10 w-9 items-center justify-center rounded-xl text-slate-600 transition-colors hover:bg-slate-100 md:hidden"
       >
@@ -200,27 +188,14 @@ function LocationSelector() {
             </div>
           </button>
 
-          {/* Recent Locations */}
-          {!locationQuery && (
-            <>
-              <div className="my-4 h-px bg-slate-100" />
-
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                Recent locations
-              </p>
-
-              {recentLocations.map((location) => (
-                <button
-                  key={location.id}
-                  type="button"
-                  onClick={() => selectLocation(location)}
-                  className="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 transition-colors hover:bg-slate-50"
-                >
-                  {location.city}
-                </button>
-              ))}
-            </>
-          )}
+          {/* All Locations */}
+          <button
+            type="button"
+            onClick={selectAllLocations}
+            className="mt-2 w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+          >
+            All locations
+          </button>
 
           {/* Search Results */}
           {locationQuery && (

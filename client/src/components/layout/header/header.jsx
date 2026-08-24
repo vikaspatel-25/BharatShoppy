@@ -1,12 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  ChevronDown,
-  ShoppingCart,
-  UserRound,
-} from "lucide-react";
+import { ChevronDown, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import LocationSelector from "./LocationSelector";
-import GlobalSearch from "./GlobalSearch";
+import LocationSelector from "./locationSelector";
+import GlobalSearch from "./globalSearch";
 
 function Header() {
   const [accountOpen, setAccountOpen] = useState(false);
@@ -15,10 +11,7 @@ function Header() {
 
   useEffect(() => {
     function handleOutsideClick(event) {
-      if (
-        accountRef.current &&
-        !accountRef.current.contains(event.target)
-      ) {
+      if (accountRef.current && !accountRef.current.contains(event.target)) {
         setAccountOpen(false);
       }
     }
@@ -44,16 +37,19 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/95 shadow-sm backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-1.5 px-2 sm:gap-3 sm:px-6 lg:px-8">
-
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
         {/* Logo */}
-        <div className="flex h-full w-9 shrink-0 items-center sm:w-40">
-          <span className="text-lg font-bold tracking-tight text-slate-900 sm:hidden">
-            BS
+        <div className="flex h-full shrink-0 items-center sm:w-44">
+          {/* Mobile Logo */}
+          <span className="text-2xl font-bold tracking-tight sm:hidden">
+            <span className="text-orange-500">B</span>
+            <span className="text-blue-900">S</span>
           </span>
 
-          <span className="hidden text-xl font-bold tracking-tight text-slate-900 sm:inline">
-            BharatShoppy
+          {/* Desktop Logo */}
+          <span className="hidden text-2xl font-bold tracking-tight sm:inline">
+            <span className="text-orange-500">Bharat</span>
+            <span className="text-blue-900">Shoppy</span>
           </span>
         </div>
 
@@ -63,28 +59,8 @@ function Header() {
         {/* Global Search */}
         <GlobalSearch />
 
-        {/* Cart */}
-        {/* <Button
-          variant="ghost"
-          className="h-10 shrink-0 gap-1.5 rounded-xl px-2 text-slate-600 transition-all duration-200 hover:bg-slate-100 hover:text-slate-900 sm:h-11 sm:gap-2 sm:px-3"
-          aria-label="Cart"
-        >
-          <ShoppingCart className="h-[18px] w-[18px] sm:h-[19px] sm:w-[19px]" />
-
-          <span className="hidden text-sm font-medium sm:inline">
-            Cart
-          </span>
-
-          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-slate-900 px-1 text-[10px] font-semibold leading-none text-white">
-            0
-          </span>
-        </Button> */}
-
         {/* Account */}
-        <div
-          ref={accountRef}
-          className="relative shrink-0"
-        >
+        <div ref={accountRef} className="relative shrink-0">
           <Button
             variant="outline"
             className="h-10 shrink-0 gap-1.5 rounded-xl border-slate-200 bg-white px-2 text-slate-700 transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 sm:h-11 sm:gap-2 sm:px-4"
