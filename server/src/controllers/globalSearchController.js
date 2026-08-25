@@ -4,6 +4,8 @@ import stores from "../data/mockData/stores.js";
 async function globalSearch(req, res) {
   const query = req.query.q?.trim().toLowerCase() || "";
   const city = req.query.city?.trim().toLowerCase() || null;
+  const category =
+    req.query.category?.trim().toLowerCase() || null;
 
   const productPage = Math.max(
     Number(req.query.productPage) || 1,
@@ -101,6 +103,24 @@ async function globalSearch(req, res) {
 
     filteredStores = filteredStores.filter(
       (store) => store.city.toLowerCase() === city
+    );
+  }
+
+  /*
+   * -------------------------
+   * Category filter
+   * -------------------------
+   */
+
+  if (category) {
+    filteredProducts = filteredProducts.filter(
+      (product) =>
+        product.category?.toLowerCase() === category
+    );
+
+    filteredStores = filteredStores.filter(
+      (store) =>
+        store.storeCategory?.toLowerCase() === category
     );
   }
 

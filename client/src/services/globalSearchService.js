@@ -1,6 +1,7 @@
 async function searchGlobal(
   query,
   city = null,
+  category = null,
   productPage = 1,
   storePage = 1
 ) {
@@ -12,6 +13,10 @@ async function searchGlobal(
 
   if (city) {
     params.set("city", city);
+  }
+
+  if (category) {
+    params.set("category", category);
   }
 
   const response = await fetch(

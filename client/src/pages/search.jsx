@@ -15,6 +15,16 @@ import StoreCard from "@/components/storeCard";
 import { searchGlobal } from "@/services/globalSearchService";
 import { useLocation } from "@/context/locationContext";
 
+const categories = [
+  "Electronics",
+  "Gaming",
+  "Gadgets",
+  "Computers",
+  "Mobiles",
+  "Audio",
+  "Furniture",
+];
+
 function SearchPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -23,6 +33,7 @@ function SearchPage() {
   const { selectedLocation } = useLocation();
 
   const [activeTab, setActiveTab] = useState("products");
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   // Products
   const [products, setProducts] = useState([]);
@@ -59,6 +70,7 @@ function SearchPage() {
     setStoresLoaded(false);
 
     setActiveTab("products");
+    setSelectedCategory(null);
   }, [query, selectedLocation]);
 
   // Load first page of active tab
@@ -73,11 +85,13 @@ function SearchPage() {
         setLoading(true);
 
         const city = selectedLocation?.city || null;
+        const category = selectedCategory || null;
 
         if (activeTab === "products" && !productsLoaded) {
           const data = await searchGlobal(
             query,
             city,
+            category,
             1,
             1
           );
@@ -99,6 +113,7 @@ function SearchPage() {
           const data = await searchGlobal(
             query,
             city,
+            category,
             1,
             1
           );
@@ -129,10 +144,30 @@ function SearchPage() {
   }, [
     query,
     selectedLocation,
+    selectedCategory,
     activeTab,
     productsLoaded,
     storesLoaded,
   ]);
+
+  // Change category
+  function handleCategoryChange(category) {
+    setSelectedCategory(
+      selectedCategory === category ? null : category
+    );
+
+    setProducts([]);
+    setStores([]);
+
+    setProductPage(1);
+    setStorePage(1);
+
+    setProductHasMore(false);
+    setStoreHasMore(false);
+
+    setProductsLoaded(false);
+    setStoresLoaded(false);
+  }
 
   // Load next page
   async function loadMore() {
@@ -141,6 +176,7 @@ function SearchPage() {
     }
 
     const city = selectedLocation?.city || null;
+    const category = selectedCategory || null;
 
     try {
       setLoadingMore(true);
@@ -155,6 +191,7 @@ function SearchPage() {
         const data = await searchGlobal(
           query,
           city,
+          category,
           nextPage,
           1
         );
@@ -164,7 +201,9 @@ function SearchPage() {
           ...(data.products || []),
         ]);
 
-        setProductPage(nextPage);
+        setProductPage(
+          data.pagination?.products?.page || nextPage
+        );
 
         setProductHasMore(
           data.pagination?.products?.hasMore || false
@@ -181,6 +220,7 @@ function SearchPage() {
         const data = await searchGlobal(
           query,
           city,
+          category,
           1,
           nextPage
         );
@@ -190,7 +230,9 @@ function SearchPage() {
           ...(data.stores || []),
         ]);
 
-        setStorePage(nextPage);
+        setStorePage(
+          data.pagination?.stores?.page || nextPage
+        );
 
         setStoreHasMore(
           data.pagination?.stores?.hasMore || false
@@ -225,16 +267,17 @@ function SearchPage() {
 
     observerRef.current?.disconnect();
 
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMore();
+    observerRef.current =
+      new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            loadMore();
+          }
+        },
+        {
+          rootMargin: "300px",
         }
-      },
-      {
-        rootMargin: "300px",
-      }
-    );
+      );
 
     observerRef.current.observe(element);
 
@@ -251,6 +294,7 @@ function SearchPage() {
     loadingMore,
     query,
     selectedLocation,
+    selectedCategory,
   ]);
 
   // No query
@@ -372,6 +416,42 @@ function SearchPage() {
                 <span className="absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-slate-900" />
               )}
             </button>
+
+          </div>
+        </div>
+
+        {/* Categories */}
+        <div className="mt-4 overflow-x-auto pb-1 scrollbar-none">
+          <div className="flex min-w-max gap-2">
+
+            <button
+              type="button"
+              onClick={() => handleCategoryChange(null)}
+              className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                selectedCategory === null
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700"
+              }`}
+            >
+              All
+            </button>
+
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() =>
+                  handleCategoryChange(category)
+                }
+                className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                  selectedCategory === category
+                    ? "border-slate-900 bg-slate-900 text-white"
+                    : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
 
           </div>
         </div>
