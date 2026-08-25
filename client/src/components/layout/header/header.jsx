@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import LocationSelector from "./locationSelector";
 import GlobalSearch from "./globalSearch";
 
@@ -8,6 +9,7 @@ function Header() {
   const [accountOpen, setAccountOpen] = useState(false);
 
   const accountRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleOutsideClick(event) {
@@ -35,11 +37,18 @@ function Header() {
     setAccountOpen((current) => !current);
   }
 
+  function goHome() {
+    navigate("/");
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/95 shadow-sm backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
         {/* Logo */}
-        <div className="flex h-full shrink-0 items-center sm:w-44">
+        <div
+          onClick={goHome}
+          className="flex h-full shrink-0 cursor-pointer items-center sm:w-44"
+        >
           {/* Mobile Logo */}
           <span className="text-2xl font-bold tracking-tight sm:hidden">
             <span className="text-orange-500">B</span>

@@ -1,4 +1,4 @@
-async function getProducts(
+export async function getStores(
   page = 1,
   city = null,
   category = null
@@ -16,14 +16,12 @@ async function getProducts(
   }
 
   const response = await fetch(
-    `/api/products?${params.toString()}`
+    `/api/stores?${params.toString()}`
   );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch products");
+    throw new Error("Failed to fetch stores");
   }
 
   return response.json();
 }
-
-export { getProducts };
