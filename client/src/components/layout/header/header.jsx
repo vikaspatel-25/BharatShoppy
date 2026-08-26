@@ -58,7 +58,7 @@ function Header() {
           {/* Desktop Logo */}
           <span className="hidden text-2xl font-bold tracking-tight sm:inline">
             <span className="text-orange-500">Bharat</span>
-            <span className="text-blue-900">Shoppy</span>
+            <span className="text-blue-900">Shopy</span>
           </span>
         </div>
 
