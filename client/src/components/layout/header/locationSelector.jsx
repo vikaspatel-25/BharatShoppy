@@ -169,7 +169,7 @@ function LocationSelector() {
             />
           </div>
 
-          {/* Current Location */}
+          {/* Current Location
           <button
             type="button"
             onClick={handleCurrentLocation}
@@ -186,7 +186,7 @@ function LocationSelector() {
                 Allow location access
               </p>
             </div>
-          </button>
+          </button> */}
 
           {/* All Locations */}
           <button
