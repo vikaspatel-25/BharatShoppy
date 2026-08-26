@@ -16,15 +16,21 @@ import { searchGlobal } from "@/services/globalSearchService";
 import { useLocation } from "@/context/locationContext";
 
 const categories = [
+  "Apparel & Fashion",
+  "Books & Stationery",
+  "Groceries & Organics",
+  "Furniture & Home Decor",
+  "Pet Supplies",
+  "Sports & Outdoors",
+  "Jewelry & Watches",
+  "Home & Garden",
   "Electronics",
   "Gaming",
   "Gadgets",
   "Computers",
   "Mobiles",
-  "Audio",
-  "Furniture",
+  "Audio"
 ];
-
 function SearchPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
