@@ -4,13 +4,10 @@ import cors from "cors";
 
 const app = express();
 
-const PORT = 7002;
-
-// Middleware
 app.use(cors());
+app.use(cors({ origin: 'https://bharatshoppy-client.vercel.app' }));
 app.use(express.json());
 
-//Routes
-app.use('/api',router)
+app.use("/api", router);
 
-app.listen(PORT,()=>{console.log(`server started at ${PORT}`)})
+export default app;
