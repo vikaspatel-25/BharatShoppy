@@ -8,7 +8,7 @@ app.use(cors());
 app.use(cors({ 
   origin: [
     'https://bharat-shoppy-client.vercel.app', 
-    'https://bharatshoppy.com'
+    'https://bharatshopy.com'
   ] 
 }));app.use(express.json());
 
