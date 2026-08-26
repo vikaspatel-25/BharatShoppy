@@ -5,7 +5,7 @@ import cors from "cors";
 const app = express();
 
 app.use(cors());
-app.use(cors({ origin: 'https://bharatshoppy-client.vercel.app' }));
+app.use(cors({ origin: 'https://bharatshoppy-client.vercel.app' ,'https://bharatshoppy.com'}));
 app.use(express.json());
 
 app.use("/api", router);
