@@ -40,11 +40,7 @@ async function globalSearch(req, res) {
     });
   }
 
-  /*
-   * -------------------------
-   * Filter products
-   * -------------------------
-   */
+  
 
   let filteredProducts = products.filter((product) => {
     const searchableText = [
@@ -62,12 +58,7 @@ async function globalSearch(req, res) {
     return searchableText.includes(query);
   });
 
-  /*
-   * -------------------------
-   * Filter stores
-   * -------------------------
-   */
-
+ 
   let filteredStores = stores.filter((store) => {
     const searchableText = [
       store.storeName,
@@ -83,11 +74,6 @@ async function globalSearch(req, res) {
     return searchableText.includes(query);
   });
 
-  /*
-   * -------------------------
-   * Location filter
-   * -------------------------
-   */
 
   if (city) {
     filteredProducts = filteredProducts.filter((product) => {
@@ -106,11 +92,7 @@ async function globalSearch(req, res) {
     );
   }
 
-  /*
-   * -------------------------
-   * Category filter
-   * -------------------------
-   */
+ 
 
   if (category) {
     filteredProducts = filteredProducts.filter(
@@ -124,11 +106,7 @@ async function globalSearch(req, res) {
     );
   }
 
-  /*
-   * -------------------------
-   * Product pagination
-   * -------------------------
-   */
+
 
   const productStart =
     (productPage - 1) * limit;
@@ -142,12 +120,7 @@ async function globalSearch(req, res) {
       productEnd
     );
 
-  /*
-   * -------------------------
-   * Store pagination
-   * -------------------------
-   */
-
+  
   const storeStart =
     (storePage - 1) * limit;
 
