@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Header from "@/components/layout/header/header";
 import ProductCard from "@/components/productCard";
 
 import {
@@ -215,7 +214,7 @@ I would like to know more about your products and availability.`;
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
-        <Header />
+        {/* <Header /> */}
 
         <main className="flex min-h-[70vh] items-center justify-center">
           <LoaderCircle
@@ -230,7 +229,6 @@ I would like to know more about your products and availability.`;
   if (error || !store) {
     return (
       <div className="min-h-screen bg-white">
-        <Header />
 
         <main className="mx-auto flex min-h-[70vh] max-w-7xl items-center justify-center px-4">
           <div className="text-center">
@@ -284,7 +282,6 @@ I would like to know more about your products and availability.`;
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
 

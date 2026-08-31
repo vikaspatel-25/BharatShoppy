@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { LoaderCircle, Store, Package } from "lucide-react";
 
-import Header from "@/components/layout/header/header";
 import ProductCard from "@/components/productCard";
 import StoreCard from "@/components/storeCard";
 
@@ -286,7 +285,7 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      {/* <Header /> */}
 
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 

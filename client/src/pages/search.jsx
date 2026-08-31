@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import Header from "@/components/layout/header/header";
 import ProductCard from "@/components/productCard";
 import StoreCard from "@/components/storeCard";
 
@@ -307,7 +306,7 @@ function SearchPage() {
   if (!query) {
     return (
       <div className="min-h-screen bg-white">
-        <Header />
+        {/* <Header /> */}
 
         <main className="mx-auto flex min-h-[70vh] max-w-7xl items-center justify-center px-4">
           <div className="text-center">
@@ -343,7 +342,7 @@ function SearchPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      
 
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
