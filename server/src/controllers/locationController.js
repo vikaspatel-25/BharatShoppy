@@ -1,18 +1,22 @@
-import locations from "../data/mockData/locations.js";
+import mongoose from "mongoose";
 
-function searchLocations(req, res) {
+async function searchLocations(req, res) {
   const query = req.query.q?.trim().toLowerCase();
 
   if (!query) {
     return res.json([]);
   }
 
-  const results = locations
+  const locations = mongoose.connection.db.collection("locations");
+
+  const locationsData = await locations.find({}).toArray();
+
+  const results = locationsData
     .filter((location) => {
       return (
-        location.city.toLowerCase().includes(query) ||
-        location.state.toLowerCase().includes(query) ||
-        location.displayName.toLowerCase().includes(query)
+        location.city?.toLowerCase().includes(query) ||
+        location.state?.toLowerCase().includes(query) ||
+        location.displayName?.toLowerCase().includes(query)
       );
     })
     .sort((a, b) => {
@@ -24,9 +28,9 @@ function searchLocations(req, res) {
 }
 
 function getRelevanceScore(location, query) {
-  const city = location.city.toLowerCase();
-  const state = location.state.toLowerCase();
-  const displayName = location.displayName.toLowerCase();
+  const city = location.city?.toLowerCase() || "";
+  const state = location.state?.toLowerCase() || "";
+  const displayName = location.displayName?.toLowerCase() || "";
 
   let score = 0;
 

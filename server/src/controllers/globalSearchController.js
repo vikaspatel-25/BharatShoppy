@@ -1,11 +1,16 @@
-import products from "../data/mockData/products.js";
-import stores from "../data/mockData/stores.js";
+import mongoose from "mongoose";
 
 async function globalSearch(req, res) {
+
+const products = mongoose.connection.db.collection("products");
+const stores = mongoose.connection.db.collection("stores");
+
+const productsData = await products.find({}).toArray();
+const storesData = await stores.find({}).toArray();
+
   const query = req.query.q?.trim().toLowerCase() || "";
   const city = req.query.city?.trim().toLowerCase() || null;
-  const category =
-    req.query.category?.trim().toLowerCase() || null;
+  const category = req.query.category?.trim().toLowerCase() || null;
 
   const productPage = Math.max(
     Number(req.query.productPage) || 1,
@@ -40,9 +45,8 @@ async function globalSearch(req, res) {
     });
   }
 
-  
 
-  let filteredProducts = products.filter((product) => {
+  let filteredProducts = productsData.filter((product) => {
     const searchableText = [
       product.productName,
       product.shortDescription,
@@ -59,7 +63,7 @@ async function globalSearch(req, res) {
   });
 
  
-  let filteredStores = stores.filter((store) => {
+  let filteredStores = storesData.filter((store) => {
     const searchableText = [
       store.storeName,
       store.description,
@@ -77,7 +81,7 @@ async function globalSearch(req, res) {
 
   if (city) {
     filteredProducts = filteredProducts.filter((product) => {
-      const store = stores.find(
+      const store = storesData.find(
         (store) => store._id === product.storeId
       );
 

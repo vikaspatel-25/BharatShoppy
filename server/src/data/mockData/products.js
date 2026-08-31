@@ -1,8 +1,4 @@
 const products = [
-  
-   // ==========================================
-  // STORE 0103: Vastra Heritage Boutique (Apparel & Fashion)
-  // ==========================================
   {
     _id: "prod_0103_01",
     storeId: "store_0103",
@@ -184,9 +180,6 @@ const products = [
     updatedAt: "2024-05-14T10:00:00.000Z",
   },
 
-  // ==========================================
-  // STORE 0104: Chapter & Verse Booksellers (Books & Stationery)
-  // ==========================================
   {
     _id: "prod_0104_01",
     storeId: "store_0104",
@@ -368,9 +361,7 @@ const products = [
     updatedAt: "2024-05-14T10:00:00.000Z",
   },
 
-  // ==========================================
-  // STORE 0105: Earthly Harvest Organics (Groceries & Organics)
-  // ==========================================
+ 
   {
     _id: "prod_0105_01",
     storeId: "store_0105",
@@ -552,9 +543,7 @@ const products = [
     updatedAt: "2024-05-14T10:00:00.000Z",
   },
 
-  // ==========================================
-  // STORE 0106: Timber & Twine Interiors (Furniture & Home Decor)
-  // ==========================================
+  
   {
     _id: "prod_0106_01",
     storeId: "store_0106",
@@ -736,9 +725,7 @@ const products = [
     updatedAt: "2024-05-14T10:00:00.000Z",
   },
 
-  // ==========================================
-  // STORE 0107: Paws & Whiskers Emporium (Pet Supplies)
-  // ==========================================
+  
   {
     _id: "prod_0107_01",
     storeId: "store_0107",
@@ -920,9 +907,7 @@ const products = [
     updatedAt: "2024-05-14T10:00:00.000Z",
   },
 
-  // ==========================================
-  // STORE 0108: Apex Sports & Outdoors
-  // ==========================================
+
   {
     _id: "prod_0108_01",
     storeId: "store_0108",
@@ -1104,9 +1089,6 @@ const products = [
     updatedAt: "2024-05-14T10:00:00.000Z",
   },
 
-  // ==========================================
-  // STORE 0109: Aura Fine Jewellery (Jewelry & Watches)
-  // ==========================================
   {
     _id: "prod_0109_01",
     storeId: "store_0109",
@@ -1288,9 +1270,6 @@ const products = [
     updatedAt: "2024-05-14T10:00:00.000Z",
   },
 
-  // ==========================================
-  // STORE 0110: The Urban Botanist (Home & Garden)
-  // ==========================================
   {
     _id: "prod_0110_01",
     storeId: "store_0110",
@@ -1471,7 +1450,6 @@ const products = [
     createdAt: "2024-05-14T10:00:00.000Z",
     updatedAt: "2024-05-14T10:00:00.000Z",
   },
-  // --- STORE_001: TechZone Electronics (15 Products) ---
   {
     _id: "prod_001_01",
     storeId: "store_001",
@@ -1769,7 +1747,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_002: Mumbai Mobile Hub (12 Products) ---
   {
     _id: "prod_002_01",
     storeId: "store_002",
@@ -1980,8 +1957,6 @@ const products = [
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
-
-  // --- STORE_003: Gadget Gallery (10 Products) ---
   {
     _id: "prod_003_01",
     storeId: "store_003",
@@ -2153,7 +2128,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_004: Digital Point (10 Products) ---
   {
     _id: "prod_004_01",
     storeId: "store_004",
@@ -2329,7 +2303,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_005: CromaTech Solutions (20 Products - BROAD CATALOG) ---
   {
     _id: "prod_005_01",
     storeId: "store_005",
@@ -2671,7 +2644,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_006: Audio World (10 Products) ---
   {
     _id: "prod_006_01",
     storeId: "store_006",
@@ -2844,7 +2816,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_007: Laptop House (10 Products) ---
   {
     _id: "prod_007_01",
     storeId: "store_007",
@@ -3016,7 +2987,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_008: Smart Gadgets Mumbai (10 Products) ---
   {
     _id: "prod_008_01",
     storeId: "store_008",
@@ -3188,9 +3158,7 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_009: Gadget Junction (0 Products - Deliberately empty for realism) ---
-
-  // --- STORE_010: Digital World (10 Products) ---
+  
   {
     _id: "prod_010_01",
     storeId: "store_010",
@@ -3361,7 +3329,6 @@ const products = [
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
-  // --- STORE_011: TechPoint Electronics (Hyderabad) [12 Products] ---
   {
     _id: "prod_011_01",
     storeId: "store_011",
@@ -3601,7 +3568,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_012: Digital Hub (Hyderabad) [10 Products] ---
   {
     _id: "prod_012_01",
     storeId: "store_012",
@@ -3778,7 +3744,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_013: Gadget Gallery (Hyderabad) [10 Products] ---
   {
     _id: "prod_013_01",
     storeId: "store_013",
@@ -3951,9 +3916,7 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_014: SmartTech Store (Hyderabad) [0 Products - Deliberate Empty] ---
-
-  // --- STORE_015: ElectroMart (Hyderabad) [20 Products - BROAD CATALOG] ---
+  
   {
     _id: "prod_015_01",
     storeId: "store_015",
@@ -4304,7 +4267,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_016: Mobile Zone (Hyderabad) [12 Products] ---
   {
     _id: "prod_016_01",
     storeId: "store_016",
@@ -4510,7 +4472,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_017: Laptop House (Hyderabad) [10 Products] ---
   {
     _id: "prod_017_01",
     storeId: "store_017",
@@ -4683,7 +4644,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_018: Audio World (Hyderabad) [10 Products] ---
   {
     _id: "prod_018_01",
     storeId: "store_018",
@@ -4864,7 +4824,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_019: Gadget Point (Hyderabad) [8 Products] ---
   {
     _id: "prod_019_01",
     storeId: "store_019",
@@ -5002,7 +4961,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_020: NextGen Electronics (Hyderabad) [12 Products] ---
   {
     _id: "prod_020_01",
     storeId: "store_020",
@@ -5210,7 +5168,7 @@ const products = [
     isActive: true,
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
-  }, // --- STORE_021: Ahmedabad Electronics Hub (Ahmedabad) [12 Products] ---
+  }, 
   {
     _id: "prod_021_01",
     storeId: "store_021",
@@ -5417,7 +5375,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_022: Gadget House (Ahmedabad) [10 Products] ---
   {
     _id: "prod_022_01",
     storeId: "store_022",
@@ -5590,7 +5547,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_023: Mobile Arena (Ahmedabad) [10 Products] ---
   {
     _id: "prod_023_01",
     storeId: "store_023",
@@ -5762,7 +5718,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_024: Laptop World (Ahmedabad) [10 Products] ---
   {
     _id: "prod_024_01",
     storeId: "store_024",
@@ -5937,7 +5892,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_025: Smart Electronics (Ahmedabad) [8 Products] ---
   {
     _id: "prod_025_01",
     storeId: "store_025",
@@ -6075,7 +6029,7 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_026: Audio Point (Ahmedabad) [10 Products] ---
+
   {
     _id: "prod_026_01",
     storeId: "store_026",
@@ -6247,9 +6201,7 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_027: Digital World (Ahmedabad) [0 Products - Deliberate Empty] ---
-
-  // --- STORE_028: Gadget Junction (Ahmedabad) [10 Products] ---
+  
   {
     _id: "prod_028_01",
     storeId: "store_028",
@@ -6422,7 +6374,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_029: Tech Square (Ahmedabad) [12 Products] ---
   {
     _id: "prod_029_01",
     storeId: "store_029",
@@ -6629,7 +6580,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_030: Future Tech Store (Ahmedabad) [10 Products] ---
   {
     _id: "prod_030_01",
     storeId: "store_030",
@@ -6804,7 +6754,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_031: Croma Delhi (Delhi) [20 Products - BROAD RETAILER] ---
   {
     _id: "prod_031_01",
     storeId: "store_031",
@@ -7146,7 +7095,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_032: Reliance Digital Delhi (Delhi) [20 Products - BROAD RETAILER] ---
   {
     _id: "prod_032_01",
     storeId: "store_032",
@@ -7490,7 +7438,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_033: Vijay Sales Delhi (Delhi) [15 Products] ---
   {
     _id: "prod_033_01",
     storeId: "store_033",
@@ -7747,7 +7694,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_034: Apple Studio Delhi (Delhi) [10 Products - BRAND SPECIFIC] ---
   {
     _id: "prod_034_01",
     storeId: "store_034",
@@ -7920,7 +7866,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_035: Samsung Smart Plaza (Delhi) [10 Products - BRAND SPECIFIC] ---
   {
     _id: "prod_035_01",
     storeId: "store_035",
@@ -8095,7 +8040,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_036: Sony Center Delhi (Delhi) [10 Products - BRAND SPECIFIC] ---
   {
     _id: "prod_036_01",
     storeId: "store_036",
@@ -8269,7 +8213,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_037: Laptop Hub Delhi (Delhi) [12 Products] ---
   {
     _id: "prod_037_01",
     storeId: "store_037",
@@ -8480,7 +8423,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_038: Gadget Point Delhi (Delhi) [10 Products] ---
   {
     _id: "prod_038_01",
     storeId: "store_038",
@@ -8652,7 +8594,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_039: Camera House Delhi (Delhi) [12 Products] ---
   {
     _id: "prod_039_01",
     storeId: "store_039",
@@ -8863,7 +8804,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_040: Gaming Arena Delhi (Delhi) [15 Products] ---
   {
     _id: "prod_040_01",
     storeId: "store_040",
@@ -9120,7 +9060,7 @@ const products = [
     isActive: true,
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
-  }, // --- STORE_041: Croma Bengaluru (Bengaluru) [10 Products] ---
+  }, 
   {
     _id: "prod_041_01",
     storeId: "store_041",
@@ -9295,7 +9235,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_044: Apple Studio Bengaluru (Bengaluru) [10 Products] ---
   {
     _id: "prod_044_01",
     storeId: "store_044",
@@ -9481,7 +9420,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_047: Laptop Hub Bengaluru (Bengaluru) [10 Products] ---
   {
     _id: "prod_047_01",
     storeId: "store_047",
@@ -9654,7 +9592,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_053: Laptop House Jaipur (Jaipur) [10 Products] ---
   {
     _id: "prod_053_01",
     storeId: "store_053",
@@ -9827,7 +9764,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_056: Audio World Jaipur (Jaipur) [10 Products] ---
   {
     _id: "prod_056_01",
     storeId: "store_056",
@@ -9999,7 +9935,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_058: Gaming Arena Jaipur (Jaipur) [10 Products] ---
   {
     _id: "prod_058_01",
     storeId: "store_058",
@@ -10178,7 +10113,6 @@ const products = [
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
-  // --- STORE_061: Pune Tech Hub (Pune) [12 Products] ---
   {
     _id: "prod_061_01",
     storeId: "store_061",
@@ -10389,7 +10323,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_062: Gadget World Pune (Pune) [10 Products] ---
   {
     _id: "prod_062_01",
     storeId: "store_062",
@@ -10565,7 +10498,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_063: Laptop Zone Pune (Pune) [12 Products] ---
   {
     _id: "prod_063_01",
     storeId: "store_063",
@@ -10777,7 +10709,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_064: Mobile Planet Pune (Pune) [10 Products] ---
   {
     _id: "prod_064_01",
     storeId: "store_064",
@@ -10955,7 +10886,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_065: Digital Avenue Pune (Pune) [15 Products - HUB] ---
   {
     _id: "prod_065_01",
     storeId: "store_065",
@@ -11213,7 +11143,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_066: Audio Space Pune (Pune) [10 Products] ---
   {
     _id: "prod_066_01",
     storeId: "store_066",
@@ -11390,9 +11319,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_067: Smart Devices Pune (Pune) [0 Products - Deliberate Empty] ---
-
-  // --- STORE_068: Gaming World Pune (Pune) [12 Products] ---
   {
     _id: "prod_068_01",
     storeId: "store_068",
@@ -11602,10 +11528,6 @@ const products = [
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
-
-  // --- STORE_069: Tech Prime Pune (Pune) [0 Products - Deliberate Empty] ---
-
-  // --- STORE_070: Prime Gadgets Pune (Pune) [10 Products] ---
   {
     _id: "prod_070_01",
     storeId: "store_070",
@@ -11776,7 +11698,6 @@ const products = [
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
-  // --- STORE_071: Chennai Electronics Hub (Chennai) [15 Products] ---
   {
     _id: "prod_071_01",
     storeId: "store_071",
@@ -12046,7 +11967,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_072: Tech Gadget Chennai (Chennai) [10 Products] ---
   {
     _id: "prod_072_01",
     storeId: "store_072",
@@ -12218,7 +12138,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_073: Laptop Arena Chennai (Chennai) [12 Products] ---
   {
     _id: "prod_073_01",
     storeId: "store_073",
@@ -12431,7 +12350,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_074: Mobile World Chennai (Chennai) [10 Products] ---
   {
     _id: "prod_074_01",
     storeId: "store_074",
@@ -12604,7 +12522,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_075: Digital Space Chennai (Chennai) [12 Products] ---
   {
     _id: "prod_075_01",
     storeId: "store_075",
@@ -12811,7 +12728,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_076: Audio Hub Chennai (Chennai) [10 Products] ---
   {
     _id: "prod_076_01",
     storeId: "store_076",
@@ -12984,7 +12900,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_077: SmartTech Chennai (Chennai) [10 Products] ---
   {
     _id: "prod_077_01",
     storeId: "store_077",
@@ -13156,7 +13071,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_078: Gaming Point Chennai (Chennai) [15 Products - HUB] ---
   {
     _id: "prod_078_01",
     storeId: "store_078",
@@ -13416,9 +13330,7 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_079: Future Tech Chennai (Chennai) [0 Products - Deliberate Empty] ---
 
-  // --- STORE_080: Prime Electronics Chennai (Chennai) [10 Products] ---
   {
     _id: "prod_080_01",
     storeId: "store_080",
@@ -13591,7 +13503,7 @@ const products = [
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
-  // --- STORE_081: Kolkata Tech Centre (Kolkata) [20 Products - HUB] ---
+  
   {
     _id: "prod_081_01",
     storeId: "store_081",
@@ -13937,8 +13849,6 @@ const products = [
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
-
-  // --- STORE_082: Gadget Galaxy Kolkata (Kolkata) [10 Products] ---
   {
     _id: "prod_082_01",
     storeId: "store_082",
@@ -14111,7 +14021,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_083: Laptop Hub Kolkata (Kolkata) [12 Products] ---
   {
     _id: "prod_083_01",
     storeId: "store_083",
@@ -14317,7 +14226,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_084: Mobile Zone Kolkata (Kolkata) [10 Products] ---
   {
     _id: "prod_084_01",
     storeId: "store_084",
@@ -14489,7 +14397,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_085: Digital Avenue Kolkata (Kolkata) [10 Products] ---
   {
     _id: "prod_085_01",
     storeId: "store_085",
@@ -14661,7 +14568,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_086: Audio Studio Kolkata (Kolkata) [10 Products] ---
   {
     _id: "prod_086_01",
     storeId: "store_086",
@@ -14833,9 +14739,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_087: Smart Home Kolkata (Kolkata) [0 Products - Deliberate Empty] ---
-
-  // --- STORE_088: Gaming Galaxy Kolkata (Kolkata) [12 Products] ---
   {
     _id: "prod_088_01",
     storeId: "store_088",
@@ -15041,7 +14944,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_089: Tech Square Kolkata (Kolkata) [10 Products] ---
   {
     _id: "prod_089_01",
     storeId: "store_089",
@@ -15213,7 +15115,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_090: Prime Gadgets Kolkata (Kolkata) [10 Products] ---
   {
     _id: "prod_090_01",
     storeId: "store_090",
@@ -15386,7 +15287,6 @@ const products = [
     createdAt: "2026-08-24T10:00:00.000Z",
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
-  // --- STORE_091: Indore Tech Hub (Indore) [12 Products] ---
   {
     _id: "prod_091_01",
     storeId: "store_091",
@@ -15604,7 +15504,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_092: Gadget Zone Indore (Indore) [10 Products] ---
   {
     _id: "prod_092_01",
     storeId: "store_092",
@@ -15776,7 +15675,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_093: Laptop World Indore (Indore) [12 Products] ---
   {
     _id: "prod_093_01",
     storeId: "store_093",
@@ -15982,7 +15880,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_094: Mobile Galaxy Indore (Indore) [10 Products] ---
   {
     _id: "prod_094_01",
     storeId: "store_094",
@@ -16154,7 +16051,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_095: Digital Point Indore (Indore) [12 Products] ---
   {
     _id: "prod_095_01",
     storeId: "store_095",
@@ -16361,7 +16257,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_096: Audio Arena Indore (Indore) [10 Products] ---
   {
     _id: "prod_096_01",
     storeId: "store_096",
@@ -16533,9 +16428,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_097: SmartTech Indore (Indore) [0 Products - Deliberate Empty] ---
-
-  // --- STORE_098: Gaming Hub Indore (Indore) [15 Products - HUB] ---
   {
     _id: "prod_098_01",
     storeId: "store_098",
@@ -16792,7 +16684,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_099: Future Electronics Indore (Indore) [12 Products] ---
   {
     _id: "prod_099_01",
     storeId: "store_099",
@@ -16999,7 +16890,6 @@ const products = [
     updatedAt: "2026-08-24T10:00:00.000Z",
   },
 
-  // --- STORE_100: Prime Gadgets Indore (Indore) [10 Products] ---
   {
     _id: "prod_100_01",
     storeId: "store_100",

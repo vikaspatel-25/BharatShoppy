@@ -1,7 +1,14 @@
-  import products from "../data/mockData/products.js";
-  import stores from "../data/mockData/stores.js";
 
-  function getProducts(req, res) {
+import mongoose from "mongoose";
+
+ async function getProducts(req, res) {
+
+    const products = mongoose.connection.db.collection("products")
+    const stores = mongoose.connection.db.collection("stores")
+
+    const productsData = await products.find({}).toArray();
+    const storesData = await stores.find({}).toArray();
+
     const page = Number(req.query.page) || 1;
     const city = req.query.city;
     const category = req.query.category;
@@ -10,10 +17,10 @@
     const startingIndex = (page - 1) * limit;
     const lastIndex = startingIndex + limit;
 
-    let filteredProducts = products;
+    let filteredProducts = productsData;
 
     if (city) {
-      const filteredStores = stores.filter(
+      const filteredStores = storesData.filter(
         (store) => store.city.toLowerCase() === city.toLowerCase()
       );
 
@@ -39,7 +46,7 @@
     );
 
     const productsWithStore = paginatedProducts.map((product) => {
-      const store = stores.find(
+      const store = storesData.find(
         (store) => store._id === product.storeId
       );
 

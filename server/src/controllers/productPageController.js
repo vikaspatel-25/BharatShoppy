@@ -1,10 +1,16 @@
-import products from "../data/mockData/products.js";
-import stores from "../data/mockData/stores.js";
+import mongoose from "mongoose";
 
-function getProductPage(req, res) {
+async function getProductPage(req, res) {
+
+  const products = mongoose.connection.db.collection("products");
+  const stores = mongoose.connection.db.collection("stores");
+
+  const productsData = await products.find({}).toArray();
+  const storesData = await stores.find({}).toArray();
+
   const { productId } = req.params;
 
-  const product = products.find(
+  const product = productsData.find(
     (product) => product._id === productId
   );
 
@@ -14,7 +20,7 @@ function getProductPage(req, res) {
     });
   }
 
-  const store = stores.find(
+  const store = storesData.find(
     (store) => store._id === product.storeId
   );
 

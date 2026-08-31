@@ -1,6 +1,6 @@
-import stores from "../data/mockData/stores.js";
+import mongoose from "mongoose";
 
-function getStores(req, res) {
+async function getStores(req, res) {
   const page = Number(req.query.page) || 1;
   const city = req.query.city;
   const category = req.query.category;
@@ -9,7 +9,9 @@ function getStores(req, res) {
   const startingIndex = (page - 1) * limit;
   const lastIndex = startingIndex + limit;
 
-  let filteredStores = stores;
+  const stores = mongoose.connection.db.collection("stores");
+  const storesData = await stores.find({}).toArray();
+  let filteredStores = storesData;
 
   if (city) {
     filteredStores = filteredStores.filter(
