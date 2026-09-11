@@ -62,13 +62,16 @@ function Header() {
           </span>
         </div>
 
-        {/* Location */}
-        <LocationSelector />
+       
 
         {/* Global Search */}
         <GlobalSearch />
 
-        {/* Account */}
+        {/* Location */}
+        <LocationSelector />
+
+
+        {/* Account
         <div ref={accountRef} className="relative shrink-0">
           <Button
             variant="outline"
@@ -111,7 +114,7 @@ function Header() {
               </button>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </header>
   );
