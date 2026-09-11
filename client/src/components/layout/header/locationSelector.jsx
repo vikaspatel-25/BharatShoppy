@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  ChevronDown,
-  MapPin,
-  Search,
-} from "lucide-react";
+import { ChevronDown, MapPin, Search } from "lucide-react";
 import { useLocation } from "@/context/locationContext";
 import { searchLocations } from "@/services/locationService";
 
@@ -19,10 +15,7 @@ function LocationSelector() {
 
   useEffect(() => {
     function handleOutsideClick(event) {
-      if (
-        locationRef.current &&
-        !locationRef.current.contains(event.target)
-      ) {
+      if (locationRef.current && !locationRef.current.contains(event.target)) {
         setLocationOpen(false);
       }
     }
@@ -77,8 +70,7 @@ function LocationSelector() {
   }
 
   function selectLocation(location) {
-    const newLocation =
-      location.id === "all" ? null : location;
+    const newLocation = location.id === "all" ? null : location;
 
     setSelectedLocation(newLocation);
 
@@ -96,10 +88,7 @@ function LocationSelector() {
   }
 
   return (
-    <div
-      ref={locationRef}
-      className="relative shrink-0"
-    >
+    <div ref={locationRef} className="relative shrink-0">
       {/* Desktop Location Button */}
       <button
         type="button"
@@ -139,15 +128,15 @@ function LocationSelector() {
 
       {/* Location Panel */}
       {locationOpen && (
-        <div
-          className="
-            absolute left-0 top-12 z-50
-            w-[calc(100vw-16px)]
-            max-w-80
-            rounded-xl border border-slate-200
-            bg-white p-4 shadow-xl
-            sm:top-14 sm:w-80
-          "
+            <div
+              className="
+        absolute right-0 top-12 z-50
+        w-[calc(100vw-16px)]
+        max-w-80
+        rounded-xl border border-slate-200
+        bg-white p-4 shadow-xl
+        sm:top-14 sm:w-80
+  "
         >
           <p className="text-sm font-semibold text-slate-900">
             Choose your location
@@ -160,9 +149,7 @@ function LocationSelector() {
             <input
               type="text"
               value={locationQuery}
-              onChange={(event) =>
-                setLocationQuery(event.target.value)
-              }
+              onChange={(event) => setLocationQuery(event.target.value)}
               placeholder="Search city or area..."
               className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-sm outline-none placeholder:text-slate-400"
               autoFocus
@@ -205,17 +192,14 @@ function LocationSelector() {
               </p>
 
               {locationLoading && (
-                <p className="px-2 py-3 text-sm text-slate-400">
-                  Searching...
-                </p>
+                <p className="px-2 py-3 text-sm text-slate-400">Searching...</p>
               )}
 
-              {!locationLoading &&
-                locationResults.length === 0 && (
-                  <p className="px-2 py-3 text-sm text-slate-400">
-                    No locations found.
-                  </p>
-                )}
+              {!locationLoading && locationResults.length === 0 && (
+                <p className="px-2 py-3 text-sm text-slate-400">
+                  No locations found.
+                </p>
+              )}
 
               {!locationLoading &&
                 locationResults.map((location) => (
