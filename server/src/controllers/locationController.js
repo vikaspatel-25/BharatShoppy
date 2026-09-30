@@ -67,4 +67,4 @@ function getRelevanceScore(location, query) {
   return score;
 }
 
-export { searchLocations };
+export { searchLocations, getRelevanceScore };
