@@ -4,17 +4,12 @@ async function searchStoreProducts(req, res) {
   const storeId = req.params.storeId;
   const query = req.query.q?.trim().toLowerCase() || "";
 
-  const products = mongoose.connection.collection("products");
-  const productsData = products.find({}).toArray();
-
   const page = Math.max(
     Number(req.query.page) || 1,
     1
   );
 
   const limit = 10;
-
-  
 
   if (!query) {
     return res.json({
@@ -27,6 +22,9 @@ async function searchStoreProducts(req, res) {
       },
     });
   }
+
+  const products = mongoose.connection.db.collection("products");
+  const productsData = await products.find({}).toArray();
 
  
   const filteredProducts = productsData.filter((product) => {
