@@ -397,53 +397,15 @@ function Store() {
       </div>
 
       <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8 space-y-6">
-        {/* 2. STORE WEBSITE HERO & IDENTITY BANNER */}
+        {/* 2. STORE WEBSITE HERO & IDENTITY */}
         <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 bg-white shadow-sm">
-          {/* Cover Header */}
-          <div className="relative h-44 sm:h-60 w-full overflow-hidden bg-gradient-to-r from-[#0b1f3b] via-[#16365f] to-[#1e4a82]">
-            {store.images?.[0] ? (
-              <img
-                src={store.images[0]}
-                alt={`${store.storeName} storefront cover`}
-                className="h-full w-full object-cover opacity-35 filter blur-[0.5px]"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-              />
-            ) : null}
-
-            {/* Subtle overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
-
-            {/* Floating Top Pills on Cover */}
-            <div className="absolute top-4 right-4 flex items-center gap-2">
-              <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-md border border-white/10">
-                <Sparkles className="h-3 w-3 text-amber-400" />
-                Verified Local Merchant
-              </span>
-
-              <button
-                type="button"
-                onClick={handleShareStore}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md hover:bg-white/30 transition-colors"
-                title="Share Storefront"
-              >
-                {copiedLink ? (
-                  <Check className="h-4 w-4 text-emerald-400" />
-                ) : (
-                  <Share2 className="h-4 w-4" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Store Info & Avatar Strip */}
-          <div className="relative px-5 pb-6 sm:px-8 pt-0 sm:pb-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 -mt-14 sm:-mt-16">
+          {/* Store Info & Actions */}
+          <div className="p-5 sm:p-7 lg:p-8">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
               {/* Brand Avatar + Title */}
-              <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-5 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-5 min-w-0">
                 {/* Logo Badge */}
-                <div className="relative h-24 w-24 sm:h-28 sm:w-28 shrink-0 overflow-hidden rounded-2xl border-4 border-white bg-white shadow-md ring-1 ring-slate-200">
+                <div className="relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-xs">
                   {store.logo ? (
                     <img
                       src={store.logo}
@@ -465,7 +427,7 @@ function Store() {
                 </div>
 
                 {/* Name, Category, Location */}
-                <div className="min-w-0 pt-1">
+                <div className="min-w-0 pt-0.5">
                   <div className="flex flex-wrap items-center gap-2">
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
                       {store.storeName}
@@ -508,11 +470,18 @@ function Store() {
                       </span>
                     )}
                   </div>
+
+                  {/* Description */}
+                  {store.description && (
+                    <p className="mt-3.5 text-xs sm:text-sm leading-relaxed text-slate-600 max-w-2xl">
+                      {store.description}
+                    </p>
+                  )}
                 </div>
               </div>
 
               {/* Action Buttons Ribbon */}
-              <div className="flex flex-wrap items-center gap-2.5 pt-2 md:pt-0">
+              <div className="flex flex-wrap items-center gap-2.5 shrink-0 pt-2 md:pt-0">
                 {store.contact?.whatsapp && (
                   <button
                     type="button"
@@ -548,7 +517,7 @@ function Store() {
                 <button
                   type="button"
                   onClick={handleShareStore}
-                  className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-colors"
+                  className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-colors cursor-pointer"
                   title="Share Store"
                 >
                   {copiedLink ? (
@@ -559,13 +528,6 @@ function Store() {
                 </button>
               </div>
             </div>
-
-            {/* Description */}
-            {store.description && (
-              <p className="mt-4 text-xs sm:text-sm leading-relaxed text-slate-600 max-w-3xl">
-                {store.description}
-              </p>
-            )}
           </div>
 
           {/* 3. STOREFRONT NAVIGATION TABS */}
