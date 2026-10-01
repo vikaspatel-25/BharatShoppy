@@ -287,7 +287,7 @@ function Home() {
     <div className="min-h-screen bg-white">
       {/* <Header /> */}
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-3.5 py-5 sm:px-6 sm:py-6 lg:px-8">
 
         {/* Tabs */}
         <div className="border-b border-slate-200">
@@ -424,7 +424,7 @@ function Home() {
           hasResults && (
             <section className="mt-6">
 
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {products.map((product) => (
                   <ProductCard
                     key={product._id}
@@ -462,7 +462,7 @@ function Home() {
           hasResults && (
             <section className="mt-6">
 
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {stores.map((store) => (
                   <StoreCard
                     key={store._id}

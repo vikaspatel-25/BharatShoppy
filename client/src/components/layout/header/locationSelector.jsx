@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, MapPin, Search } from "lucide-react";
+import { ChevronDown, MapPin, Search, X } from "lucide-react";
 import { useLocation } from "@/context/locationContext";
 import { searchLocations } from "@/services/locationService";
 
@@ -63,10 +63,6 @@ function LocationSelector() {
 
   function toggleLocation() {
     setLocationOpen((current) => !current);
-  }
-
-  function handleCurrentLocation() {
-    // Browser Geolocation API will be connected later.
   }
 
   function selectLocation(location) {
@@ -151,9 +147,23 @@ function LocationSelector() {
               value={locationQuery}
               onChange={(event) => setLocationQuery(event.target.value)}
               placeholder="Search city or area..."
-              className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-sm outline-none placeholder:text-slate-400"
+              className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-base sm:text-sm outline-none placeholder:text-slate-400"
               autoFocus
             />
+
+            {locationQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setLocationQuery("");
+                  setLocationResults([]);
+                }}
+                aria-label="Clear location search"
+                className="mr-2 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-slate-400 hover:bg-slate-200/60 hover:text-slate-600"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
           </div>
 
           {/* Current Location

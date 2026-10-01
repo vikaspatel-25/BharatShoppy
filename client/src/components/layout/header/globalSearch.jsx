@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "@/context/locationContext";
@@ -160,7 +160,7 @@ function GlobalSearch() {
     >
       <form
         onSubmit={handleSearchSubmit}
-        className="group flex h-10 min-w-0 flex-1 items-center rounded-xl border border-slate-400 bg-slate-50 transition-all duration-200 focus-within:border-slate-300 focus-within:bg-white focus-within:shadow-sm sm:h-11"
+        className="group flex h-10 min-w-0 flex-1 items-center rounded-xl border border-slate-200 bg-slate-50/90 transition-all duration-200 focus-within:border-slate-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-slate-100 focus-within:shadow-sm sm:h-11"
       >
         <Search className="ml-2.5 h-[17px] w-[17px] shrink-0 text-slate-400 transition-colors group-focus-within:text-slate-600 sm:ml-3.5 sm:h-[18px] sm:w-[18px]" />
 
@@ -175,8 +175,23 @@ function GlobalSearch() {
           }}
           placeholder="Search products or stores..."
           aria-label="Search products or stores"
-          className="h-full min-w-0 flex-1 bg-transparent px-2 text-sm text-slate-800 outline-none placeholder:text-slate-400 sm:px-3"
+          className="h-full min-w-0 flex-1 bg-transparent px-2 text-base leading-normal text-slate-800 outline-none placeholder:text-slate-400 sm:px-3 sm:text-sm [appearance:textfield] [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
         />
+
+        {query && (
+          <button
+            type="button"
+            onClick={() => {
+              setQuery("");
+              setResults({ products: [], stores: [] });
+              setSearchOpen(false);
+            }}
+            aria-label="Clear search"
+            className="mr-2 flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-200/60 hover:text-slate-600 sm:mr-3"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </form>
 
       {searchOpen && (

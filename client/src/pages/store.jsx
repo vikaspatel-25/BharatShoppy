@@ -326,7 +326,7 @@ function Store() {
   return (
     <div className="min-h-screen bg-slate-50/60 pb-28">
       {/* 1. TOP BREADCRUMB & ENQUIRY BAG BAR */}
-      <div className="sticky top-16 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+      <div className="static sm:sticky sm:top-16 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 min-w-0 text-xs text-slate-500">
@@ -627,7 +627,7 @@ function Store() {
                     value={productSearch}
                     onChange={handleProductSearchChange}
                     placeholder={`Search within ${store.storeName}...`}
-                    className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-xs sm:text-sm text-slate-800 outline-none placeholder:text-slate-400"
+                    className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-base sm:text-sm leading-normal text-slate-800 outline-none placeholder:text-slate-400 [appearance:textfield] [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
                   />
                   {productSearch && (
                     <button
@@ -700,7 +700,7 @@ function Store() {
 
             {/* Product Grid */}
             {displayedProducts.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {displayedProducts.map((product) => (
                   <ProductCard
                     key={product._id}

@@ -4,7 +4,6 @@ import Product from '../pages/product.jsx';
 import Store from '../pages/store.jsx';
 import Search from "../pages/search.jsx";
 import Header from '../components/layout/header/header.jsx';
-import { Navigate } from "react-router-dom";
 function AppRoutes(){
  return(<>
      <Header />

@@ -8,10 +8,14 @@ import {
   Tag,
   Package,
   LoaderCircle,
+  ShoppingBag,
+  Plus,
+  Minus,
 } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
-
+import StoreCartDrawer from "@/components/store/storeCartDrawer";
+import { useStoreCart } from "@/hooks/useStoreCart";
 import { getProductPage } from "@/services/productPageService";
 
 function WhatsAppIcon({ className = "h-5 w-5" }) {
@@ -45,6 +49,22 @@ function Product() {
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [imageErrors, setImageErrors] = useState({});
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+
+  const storeId = product?.store?._id || product?.storeId;
+  const {
+    cart,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    totalCount,
+    totalEstimatedPrice,
+    sendWhatsAppEnquiry,
+  } = useStoreCart(storeId);
+
+  const cartItem = cart.find((item) => item.product._id === product?._id);
+  const cartItemQuantity = cartItem?.quantity || 0;
 
   useEffect(() => {
     async function loadProduct() {
@@ -224,19 +244,45 @@ I am interested in this product. Please share availability and further details.`
 
       <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
 
-        {/* Back */}
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="mb-5 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-[#0f2747]"
-        >
-          <ArrowLeft
-            className="h-4 w-4"
-            strokeWidth={1.8}
-          />
+        {/* Breadcrumb & Enquiry Bag Header */}
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 min-w-0">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="inline-flex cursor-pointer items-center gap-1.5 font-medium text-slate-600 transition-colors hover:text-[#0f2747]"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back</span>
+            </button>
+            {product.store && (
+              <>
+                <span className="text-slate-300">/</span>
+                <Link
+                  to={`/store/${product.store._id}`}
+                  className="hidden truncate hover:text-[#0f2747] transition-colors sm:inline font-medium"
+                >
+                  {product.store.storeName}
+                </Link>
+              </>
+            )}
+            <span className="text-slate-300 hidden sm:inline">/</span>
+            <span className="truncate font-semibold text-slate-900 max-w-[160px] sm:max-w-xs">
+              {product.productName}
+            </span>
+          </div>
 
-          Back
-        </button>
+          {totalCount > 0 && (
+            <button
+              type="button"
+              onClick={() => setCartDrawerOpen(true)}
+              className="flex shrink-0 items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100 transition-colors cursor-pointer"
+            >
+              <ShoppingBag className="h-3.5 w-3.5" />
+              <span>Shop Bag ({totalCount})</span>
+            </button>
+          )}
+        </div>
 
         {/* Main Product */}
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_4px_20px_rgba(15,39,71,0.05)]">
@@ -376,20 +422,64 @@ I am interested in this product. Please share availability and further details.`
 
               </div>
 
-              {/* WhatsApp */}
-              <button
-                type="button"
-                onClick={openWhatsApp}
-                className="mt-5 flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl bg-[#25D366] px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#20bd5a] hover:shadow-md active:scale-[0.99]"
-              >
-                <WhatsAppIcon className="h-5 w-5" />
+              {/* Actions: Direct WhatsApp Enquiry + Shop Bag */}
+              <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={openWhatsApp}
+                  className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-xs transition-all hover:bg-[#20bd5a] hover:shadow-sm active:scale-[0.99]"
+                >
+                  <WhatsAppIcon className="h-4 w-4" />
+                  <span>Enquire on WhatsApp</span>
+                </button>
 
-                Enquire on WhatsApp
-              </button>
+                {cartItemQuantity === 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => addToCart(product, 1)}
+                    className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-xs transition-all hover:border-slate-400 hover:bg-slate-50 active:scale-[0.99]"
+                  >
+                    <ShoppingBag className="h-4 w-4 text-slate-600" />
+                    <span>Add to Shop Bag</span>
+                  </button>
+                ) : (
+                  <div className="flex flex-1 items-center justify-between rounded-xl border border-emerald-300 bg-emerald-50/60 p-1">
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(product._id, cartItemQuantity - 1)}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-700 shadow-xs hover:bg-slate-100 transition-colors"
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="h-3.5 w-3.5" />
+                      </button>
+                      <span className="w-7 text-center text-xs font-bold text-emerald-950">
+                        {cartItemQuantity}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(product._id, cartItemQuantity + 1)}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-700 shadow-xs hover:bg-slate-100 transition-colors"
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setCartDrawerOpen(true)}
+                      className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800 transition-colors cursor-pointer"
+                    >
+                      <ShoppingBag className="h-3 w-3" />
+                      <span>View Bag ({totalCount})</span>
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <p className="mt-2 text-center text-[11px] text-slate-400">
-                Contact the store directly for availability,
-                pricing and other details.
+                Enquire directly on WhatsApp or add multiple items to your shop bag to enquire in a single message.
               </p>
 
               {/* Attributes */}
@@ -637,6 +727,21 @@ I am interested in this product. Please share availability and further details.`
           </section>
         )}
 
+        {/* Store Cart Drawer */}
+        {product?.store && (
+          <StoreCartDrawer
+            isOpen={cartDrawerOpen}
+            onClose={() => setCartDrawerOpen(false)}
+            store={product.store}
+            cart={cart}
+            onUpdateQuantity={updateQuantity}
+            onRemove={removeFromCart}
+            onClearCart={clearCart}
+            totalCount={totalCount}
+            totalEstimatedPrice={totalEstimatedPrice}
+            onSendWhatsApp={sendWhatsAppEnquiry}
+          />
+        )}
       </main>
     </div>
   );
