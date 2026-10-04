@@ -20,7 +20,7 @@ const stores = [
         state: "Rajasthan",
         pincode: "302003",
       },
-      contact: { phone: "+919876543073", whatsapp: "+919876543073" },
+      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
       businessHours: {
         monday: { open: "11:00", close: "21:00" },
         tuesday: { open: "11:00", close: "21:00" },
@@ -54,7 +54,7 @@ const stores = [
         state: "West Bengal",
         pincode: "700073",
       },
-      contact: { phone: "+919876543074", whatsapp: "+919876543074" },
+      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
       businessHours: {
         monday: { open: "09:00", close: "19:00" },
         tuesday: { open: "09:00", close: "19:00" },
@@ -85,7 +85,7 @@ const stores = [
         state: "Karnataka",
         pincode: "560038",
       },
-      contact: { phone: "+919876543075", whatsapp: "+919876543075" },
+      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
       businessHours: {
         monday: { open: "07:00", close: "22:00" },
         tuesday: { open: "07:00", close: "22:00" },
@@ -119,7 +119,7 @@ const stores = [
         state: "Maharashtra",
         pincode: "411001",
       },
-      contact: { phone: "+919876543076", whatsapp: "+919876543076" },
+      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
       businessHours: {
         monday: { open: "closed", close: "closed" },
         tuesday: { open: "10:30", close: "20:30" },
@@ -150,7 +150,7 @@ const stores = [
         state: "Chandigarh",
         pincode: "160017",
       },
-      contact: { phone: "+919876543077", whatsapp: "+919876543077" },
+      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
       businessHours: {
         monday: { open: "09:30", close: "20:00" },
         tuesday: { open: "09:30", close: "20:00" },
@@ -181,7 +181,7 @@ const stores = [
         state: "Delhi",
         pincode: "110016",
       },
-      contact: { phone: "+919876543078", whatsapp: "+919876543078" },
+      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
       businessHours: {
         monday: { open: "10:00", close: "21:30" },
         tuesday: { open: "10:00", close: "21:30" },
@@ -215,7 +215,7 @@ const stores = [
         state: "Gujarat",
         pincode: "395007",
       },
-      contact: { phone: "+919876543079", whatsapp: "+919876543079" },
+      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
       businessHours: {
         monday: { open: "11:00", close: "20:00" },
         tuesday: { open: "11:00", close: "20:00" },
@@ -246,7 +246,7 @@ const stores = [
         state: "Maharashtra",
         pincode: "400050",
       },
-      contact: { phone: "+919876543080", whatsapp: "+919876543080" },
+      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
       businessHours: {
         monday: { open: "10:00", close: "19:00" },
         tuesday: { open: "10:00", close: "19:00" },
@@ -279,7 +279,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400058",
     },
-    contact: { phone: "+919876543001", whatsapp: "+919876543001" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -311,7 +311,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400050",
     },
-    contact: { phone: "+919876543002", whatsapp: "+919876543002" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -343,7 +343,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400092",
     },
-    contact: { phone: "+919876543003", whatsapp: "+919876543003" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -375,7 +375,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400076",
     },
-    contact: { phone: "+919876543004", whatsapp: "+919876543004" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -407,7 +407,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400028",
     },
-    contact: { phone: "+919876543005", whatsapp: "+919876543005" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -439,7 +439,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400064",
     },
-    contact: { phone: "+919876543006", whatsapp: "+919876543006" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -471,7 +471,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400086",
     },
-    contact: { phone: "+919876543007", whatsapp: "+919876543007" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -502,7 +502,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400056",
     },
-    contact: { phone: "+919876543008", whatsapp: "+919876543008" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -534,7 +534,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400067",
     },
-    contact: { phone: "+919876543009", whatsapp: "+919876543009" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -566,7 +566,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "400070",
     },
-    contact: { phone: "+919876543010", whatsapp: "+919876543010" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -600,7 +600,7 @@ const stores = [
       state: "Telangana",
       pincode: "500016",
     },
-    contact: { phone: "+919876543011", whatsapp: "+919876543011" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -632,7 +632,7 @@ const stores = [
       state: "Telangana",
       pincode: "500029",
     },
-    contact: { phone: "+919876543012", whatsapp: "+919876543012" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -663,7 +663,7 @@ const stores = [
       state: "Telangana",
       pincode: "500034",
     },
-    contact: { phone: "+919876543013", whatsapp: "+919876543013" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -694,7 +694,7 @@ const stores = [
       state: "Telangana",
       pincode: "500072",
     },
-    contact: { phone: "+919876543014", whatsapp: "+919876543014" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -726,7 +726,7 @@ const stores = [
       state: "Telangana",
       pincode: "500003",
     },
-    contact: { phone: "+919876543015", whatsapp: "+919876543015" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -757,7 +757,7 @@ const stores = [
       state: "Telangana",
       pincode: "500060",
     },
-    contact: { phone: "+919876543016", whatsapp: "+919876543016" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -788,7 +788,7 @@ const stores = [
       state: "Telangana",
       pincode: "500016",
     },
-    contact: { phone: "+919876543017", whatsapp: "+919876543017" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -820,7 +820,7 @@ const stores = [
       state: "Telangana",
       pincode: "500033",
     },
-    contact: { phone: "+919876543018", whatsapp: "+919876543018" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -852,7 +852,7 @@ const stores = [
       state: "Telangana",
       pincode: "500016",
     },
-    contact: { phone: "+919876543019", whatsapp: "+919876543019" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -884,7 +884,7 @@ const stores = [
       state: "Telangana",
       pincode: "500081",
     },
-    contact: { phone: "+919876543020", whatsapp: "+919876543020" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -917,7 +917,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380009",
     },
-    contact: { phone: "+919876543021", whatsapp: "+919876543021" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -949,7 +949,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380006",
     },
-    contact: { phone: "+919876543022", whatsapp: "+919876543022" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -980,7 +980,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380008",
     },
-    contact: { phone: "+919876543023", whatsapp: "+919876543023" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1012,7 +1012,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380009",
     },
-    contact: { phone: "+919876543024", whatsapp: "+919876543024" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1043,7 +1043,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380015",
     },
-    contact: { phone: "+919876543025", whatsapp: "+919876543025" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1074,7 +1074,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380015",
     },
-    contact: { phone: "+919876543026", whatsapp: "+919876543026" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1106,7 +1106,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380054",
     },
-    contact: { phone: "+919876543027", whatsapp: "+919876543027" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1138,7 +1138,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380015",
     },
-    contact: { phone: "+919876543028", whatsapp: "+919876543028" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1170,7 +1170,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380054",
     },
-    contact: { phone: "+919876543029", whatsapp: "+919876543029" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1202,7 +1202,7 @@ const stores = [
       state: "Gujarat",
       pincode: "380054",
     },
-    contact: { phone: "+919876543030", whatsapp: "+919876543030" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1236,7 +1236,7 @@ const stores = [
       state: "Delhi",
       pincode: "110019",
     },
-    contact: { phone: "+919876543031", whatsapp: "+919876543031" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1268,7 +1268,7 @@ const stores = [
       state: "Delhi",
       pincode: "110085",
     },
-    contact: { phone: "+919876543032", whatsapp: "+919876543032" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1300,7 +1300,7 @@ const stores = [
       state: "Delhi",
       pincode: "110024",
     },
-    contact: { phone: "+919876543033", whatsapp: "+919876543033" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1332,7 +1332,7 @@ const stores = [
       state: "Delhi",
       pincode: "110049",
     },
-    contact: { phone: "+919876543034", whatsapp: "+919876543034" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1364,7 +1364,7 @@ const stores = [
       state: "Delhi",
       pincode: "110005",
     },
-    contact: { phone: "+919876543035", whatsapp: "+919876543035" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1396,7 +1396,7 @@ const stores = [
       state: "Delhi",
       pincode: "110001",
     },
-    contact: { phone: "+919876543036", whatsapp: "+919876543036" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1427,7 +1427,7 @@ const stores = [
       state: "Delhi",
       pincode: "110019",
     },
-    contact: { phone: "+919876543037", whatsapp: "+919876543037" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1459,7 +1459,7 @@ const stores = [
       state: "Delhi",
       pincode: "110027",
     },
-    contact: { phone: "+919876543038", whatsapp: "+919876543038" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1491,7 +1491,7 @@ const stores = [
       state: "Delhi",
       pincode: "110006",
     },
-    contact: { phone: "+919876543039", whatsapp: "+919876543039" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1522,7 +1522,7 @@ const stores = [
       state: "Delhi",
       pincode: "110092",
     },
-    contact: { phone: "+919876543040", whatsapp: "+919876543040" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1556,7 +1556,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560034",
     },
-    contact: { phone: "+919876543041", whatsapp: "+919876543041" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1588,7 +1588,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560066",
     },
-    contact: { phone: "+919876543042", whatsapp: "+919876543042" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1620,7 +1620,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560038",
     },
-    contact: { phone: "+919876543043", whatsapp: "+919876543043" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1652,7 +1652,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560041",
     },
-    contact: { phone: "+919876543044", whatsapp: "+919876543044" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1684,7 +1684,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560003",
     },
-    contact: { phone: "+919876543045", whatsapp: "+919876543045" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1716,7 +1716,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560001",
     },
-    contact: { phone: "+919876543046", whatsapp: "+919876543046" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1747,7 +1747,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560002",
     },
-    contact: { phone: "+919876543047", whatsapp: "+919876543047" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1779,7 +1779,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560102",
     },
-    contact: { phone: "+919876543048", whatsapp: "+919876543048" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1811,7 +1811,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560010",
     },
-    contact: { phone: "+919876543049", whatsapp: "+919876543049" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1842,7 +1842,7 @@ const stores = [
       state: "Karnataka",
       pincode: "560037",
     },
-    contact: { phone: "+919876543050", whatsapp: "+919876543050" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1876,7 +1876,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302001",
     },
-    contact: { phone: "+919876543051", whatsapp: "+919876543051" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1908,7 +1908,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302017",
     },
-    contact: { phone: "+919876543052", whatsapp: "+919876543052" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1940,7 +1940,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302021",
     },
-    contact: { phone: "+919876543053", whatsapp: "+919876543053" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -1972,7 +1972,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302020",
     },
-    contact: { phone: "+919876543054", whatsapp: "+919876543054" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2004,7 +2004,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302004",
     },
-    contact: { phone: "+919876543055", whatsapp: "+919876543055" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2036,7 +2036,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302016",
     },
-    contact: { phone: "+919876543056", whatsapp: "+919876543056" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2068,7 +2068,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302017",
     },
-    contact: { phone: "+919876543057", whatsapp: "+919876543057" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2100,7 +2100,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302018",
     },
-    contact: { phone: "+919876543058", whatsapp: "+919876543058" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2132,7 +2132,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302001",
     },
-    contact: { phone: "+919876543059", whatsapp: "+919876543059" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2164,7 +2164,7 @@ const stores = [
       state: "Rajasthan",
       pincode: "302018",
     },
-    contact: { phone: "+919876543060", whatsapp: "+919876543060" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2198,7 +2198,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411045",
     },
-    contact: { phone: "+919876543061", whatsapp: "+919876543061" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2230,7 +2230,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411001",
     },
-    contact: { phone: "+919876543062", whatsapp: "+919876543062" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2261,7 +2261,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411014",
     },
-    contact: { phone: "+919876543063", whatsapp: "+919876543063" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2293,7 +2293,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411057",
     },
-    contact: { phone: "+919876543064", whatsapp: "+919876543064" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2324,7 +2324,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411005",
     },
-    contact: { phone: "+919876543065", whatsapp: "+919876543065" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2356,7 +2356,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411038",
     },
-    contact: { phone: "+919876543066", whatsapp: "+919876543066" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2388,7 +2388,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411006",
     },
-    contact: { phone: "+919876543067", whatsapp: "+919876543067" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2420,7 +2420,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411028",
     },
-    contact: { phone: "+919876543068", whatsapp: "+919876543068" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2451,7 +2451,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411013",
     },
-    contact: { phone: "+919876543069", whatsapp: "+919876543069" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2482,7 +2482,7 @@ const stores = [
       state: "Maharashtra",
       pincode: "411057",
     },
-    contact: { phone: "+919876543070", whatsapp: "+919876543070" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2516,7 +2516,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600017",
     },
-    contact: { phone: "+919876543071", whatsapp: "+919876543071" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2548,7 +2548,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600042",
     },
-    contact: { phone: "+919876543072", whatsapp: "+919876543072" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2579,7 +2579,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600020",
     },
-    contact: { phone: "+919876543073", whatsapp: "+919876543073" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2611,7 +2611,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600040",
     },
-    contact: { phone: "+919876543074", whatsapp: "+919876543074" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2642,7 +2642,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600096",
     },
-    contact: { phone: "+919876543075", whatsapp: "+919876543075" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2674,7 +2674,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600032",
     },
-    contact: { phone: "+919876543076", whatsapp: "+919876543076" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2706,7 +2706,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600034",
     },
-    contact: { phone: "+919876543077", whatsapp: "+919876543077" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2738,7 +2738,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600004",
     },
-    contact: { phone: "+919876543078", whatsapp: "+919876543078" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2769,7 +2769,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600045",
     },
-    contact: { phone: "+919876543079", whatsapp: "+919876543079" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2800,7 +2800,7 @@ const stores = [
       state: "Tamil Nadu",
       pincode: "600018",
     },
-    contact: { phone: "+919876543080", whatsapp: "+919876543080" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2834,7 +2834,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700016",
     },
-    contact: { phone: "+919876543081", whatsapp: "+919876543081" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2866,7 +2866,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700091",
     },
-    contact: { phone: "+919876543082", whatsapp: "+919876543082" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2897,7 +2897,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700156",
     },
-    contact: { phone: "+919876543083", whatsapp: "+919876543083" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2929,7 +2929,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700019",
     },
-    contact: { phone: "+919876543084", whatsapp: "+919876543084" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2960,7 +2960,7 @@ const stores = [
       state: "West Bengal",
       pincode: "711101",
     },
-    contact: { phone: "+919876543085", whatsapp: "+919876543085" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -2992,7 +2992,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700032",
     },
-    contact: { phone: "+919876543086", whatsapp: "+919876543086" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3024,7 +3024,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700029",
     },
-    contact: { phone: "+919876543087", whatsapp: "+919876543087" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3056,7 +3056,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700135",
     },
-    contact: { phone: "+919876543088", whatsapp: "+919876543088" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3087,7 +3087,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700027",
     },
-    contact: { phone: "+919876543089", whatsapp: "+919876543089" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3118,7 +3118,7 @@ const stores = [
       state: "West Bengal",
       pincode: "700025",
     },
-    contact: { phone: "+919876543090", whatsapp: "+919876543090" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3152,7 +3152,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452001",
     },
-    contact: { phone: "+919876543091", whatsapp: "+919876543091" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3184,7 +3184,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452010",
     },
-    contact: { phone: "+919876543092", whatsapp: "+919876543092" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3215,7 +3215,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452014",
     },
-    contact: { phone: "+919876543093", whatsapp: "+919876543093" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3247,7 +3247,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452002",
     },
-    contact: { phone: "+919876543094", whatsapp: "+919876543094" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3278,7 +3278,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452011",
     },
-    contact: { phone: "+919876543095", whatsapp: "+919876543095" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3310,7 +3310,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452001",
     },
-    contact: { phone: "+919876543096", whatsapp: "+919876543096" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3342,7 +3342,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452001",
     },
-    contact: { phone: "+919876543097", whatsapp: "+919876543097" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3374,7 +3374,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452010",
     },
-    contact: { phone: "+919876543098", whatsapp: "+919876543098" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3405,7 +3405,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452009",
     },
-    contact: { phone: "+919876543099", whatsapp: "+919876543099" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
@@ -3436,7 +3436,7 @@ const stores = [
       state: "Madhya Pradesh",
       pincode: "452009",
     },
-    contact: { phone: "+919876543100", whatsapp: "+919876543100" },
+    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
     businessHours: {
       monday: { open: "10:00", close: "20:00" },
       tuesday: { open: "10:00", close: "20:00" },
