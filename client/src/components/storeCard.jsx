@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getEntityConfig } from "@/lib/entityTypes";
 
 function StoreCard({ store }) {
   const navigate = useNavigate();
@@ -12,8 +13,10 @@ function StoreCard({ store }) {
     storeCategory,
     city,
     address,
+    entityType,
   } = store;
 
+  const entityConfig = getEntityConfig(entityType || storeCategory);
   const [imageError, setImageError] = useState(false);
 
   function handleClick() {
@@ -36,21 +39,28 @@ function StoreCard({ store }) {
           />
         ) : (
           <img
-            src="/assets/images/placeholders/storePlaceholder.jpeg"
+            src="/assets/images/placeholders/storeLogoPlaceholder.svg"
             alt="Store image unavailable"
-            className="h-full w-full object-contain p-2"
+            className="h-full w-full object-contain p-4"
           />
         )}
       </div>
 
       {/* Store Information */}
       <div className="relative flex flex-1 flex-col p-2.5 sm:p-3.5">
-        {/* Category */}
-        {storeCategory && (
-          <span className="w-fit rounded-md bg-blue-50 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.06em] text-blue-600">
-            {storeCategory}
+        {/* Badges Ribbon */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span
+            className={`w-fit rounded-md px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[9px] sm:text-[10px] font-semibold border ${entityConfig.badgeClass}`}
+          >
+            {entityConfig.badgeLabel}
           </span>
-        )}
+          {storeCategory && (
+            <span className="w-fit rounded-md bg-stone-100 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.06em] text-stone-600">
+              {storeCategory}
+            </span>
+          )}
+        </div>
 
         {/* Store Name */}
         <h2 className="mt-1.5 line-clamp-2 min-h-[34px] sm:min-h-[40px] text-xs sm:text-[15px] font-semibold leading-4 sm:leading-5 text-slate-800 transition-colors group-hover:text-blue-700">

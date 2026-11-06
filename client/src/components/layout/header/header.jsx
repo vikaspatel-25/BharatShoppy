@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Store, ShieldCheck } from "lucide-react";
 import LocationSelector from "./locationSelector";
 import GlobalSearch from "./globalSearch";
 
@@ -43,6 +44,26 @@ function Header() {
 
         {/* Location */}
         <LocationSelector />
+
+        {/* Quick Nav: Vendor & Admin Desk */}
+        <div className="hidden lg:flex items-center gap-1.5 shrink-0 pl-1 border-l border-slate-200">
+          <Link
+            to="/vendor"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-stone-200 text-stone-700 hover:text-stone-900 hover:bg-stone-50 text-xs font-semibold transition"
+            title="Upload Products & Vendor Dashboard"
+          >
+            <Store className="w-3.5 h-3.5 text-orange-600" />
+            <span>Vendor Desk</span>
+          </Link>
+          <Link
+            to="/admin"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-stone-200 text-stone-600 hover:text-stone-900 hover:bg-stone-50 text-xs font-medium transition"
+            title="Admin & Subscription Desk"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-stone-500" />
+            <span>Admin</span>
+          </Link>
+        </div>
       </div>
     </header>
   );

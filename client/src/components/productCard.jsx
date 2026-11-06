@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Minus, Check } from "lucide-react";
+import { getProductFallbackImage } from "@/lib/imageFallback";
 
 function ProductCard({
   product,
@@ -53,6 +54,11 @@ function ProductCard({
     }
   }
 
+  const fallbackImage = getProductFallbackImage(
+    product.entityType || store?.entityType,
+    product.category
+  );
+
   return (
     <article
       onClick={handleClick}
@@ -69,7 +75,7 @@ function ProductCard({
           />
         ) : (
           <img
-            src="/assets/images/placeholders/productPlaceholder.jpeg"
+            src={fallbackImage}
             alt="Product image unavailable"
             className="h-full w-full object-contain p-2"
           />

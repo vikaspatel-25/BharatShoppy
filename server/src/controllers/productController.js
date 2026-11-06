@@ -1,5 +1,6 @@
 
 import mongoose from "mongoose";
+import { filterProductsByActiveStores } from "../services/catalogVisibility.js";
 
  async function getProducts(req, res) {
 
@@ -17,7 +18,7 @@ import mongoose from "mongoose";
     const startingIndex = (page - 1) * limit;
     const lastIndex = startingIndex + limit;
 
-    let filteredProducts = productsData;
+    let filteredProducts = filterProductsByActiveStores(productsData, storesData);
 
     if (city) {
       const filteredStores = storesData.filter(

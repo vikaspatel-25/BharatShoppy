@@ -20,8 +20,14 @@ describe("Server Route Stack Tests", () => {
       "/products/:productId",
       "/stores",
       "/store/:storeId",
+      "/shop/:storeId",
       "/stores/:storeId/products/search",
       "/search",
+      "/tenant/resolve",
+      "/vendor/store/:storeId",
+      "/subscription/plans",
+      "/vendor/store/:storeId/subscription",
+      "/admin/subscription-requests",
     ];
 
     expectedPaths.forEach((expectedPath) => {
@@ -29,5 +35,18 @@ describe("Server Route Stack Tests", () => {
       assert.ok(match, `Route ${expectedPath} should be registered on the router`);
       assert.ok(match.methods.includes("get"), `Route ${expectedPath} should handle GET method`);
     });
+
+    // Check mutating routes
+    const vendorProductRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/store/:storeId/products"
+    );
+    assert.ok(vendorProductRoute, "Should register vendor product creation route");
+    assert.ok(vendorProductRoute.methods.includes("post"), "Should handle POST method");
+
+    const subRequestRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/store/:storeId/subscription-request"
+    );
+    assert.ok(subRequestRoute, "Should register subscription request route");
+    assert.ok(subRequestRoute.methods.includes("post"), "Should handle POST method");
   });
 });

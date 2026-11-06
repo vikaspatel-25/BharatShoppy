@@ -8,22 +8,23 @@ import connectDB from "./db/connection.js";
 
 const app = express();
 
-const allowedOrigins = [
-  "https://bharat-shoppy-client.vercel.app",
-  "https://bharatshopy.com",
-  "http://localhost:5173",
-  "http://localhost:3000",
-  process.env.CLIENT_URL,
-].filter(Boolean);
+const isOriginAllowed = (origin) => {
+  if (!origin) return true;
+  // Allow localhost & lvh.me with any subdomain or port
+  if (/^https?:\/\/([a-z0-9-]+\.)*localhost(:\d+)?$/i.test(origin)) return true;
+  if (/^https?:\/\/([a-z0-9-]+\.)*lvh\.me(:\d+)?$/i.test(origin)) return true;
+  // Allow bharatshopee and bharatshoppy with any subdomain
+  if (/^https?:\/\/([a-z0-9-]+\.)*bharatshope?e?y?\.com(:\d+)?$/i.test(origin)) return true;
+  // Allow Vercel preview/production deployments
+  if (/\.vercel\.app$/i.test(origin)) return true;
+
+  return true;
+};
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (
-        !origin ||
-        allowedOrigins.includes(origin) ||
-        /\.vercel\.app$/.test(origin)
-      ) {
+      if (isOriginAllowed(origin)) {
         return callback(null, true);
       }
       return callback(null, true);

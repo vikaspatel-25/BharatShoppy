@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { filterActiveStores } from "../services/catalogVisibility.js";
 
 async function getStores(req, res) {
   const page = Number(req.query.page) || 1;
@@ -28,9 +29,7 @@ async function getStores(req, res) {
     );
   }
 
-  filteredStores = filteredStores.filter(
-    (store) => store.isActive
-  );
+  filteredStores = filterActiveStores(filteredStores);
 
   const paginatedStores = filteredStores.slice(
     startingIndex,

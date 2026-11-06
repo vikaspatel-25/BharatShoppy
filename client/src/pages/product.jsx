@@ -17,6 +17,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import StoreCartDrawer from "@/components/store/storeCartDrawer";
 import { useStoreCart } from "@/hooks/useStoreCart";
 import { getProductPage } from "@/services/productPageService";
+import { getProductFallbackImage } from "@/lib/imageFallback";
 
 function WhatsAppIcon({ className = "h-5 w-5" }) {
   return (
@@ -305,7 +306,10 @@ I am interested in this product. Please share availability and further details.`
                   />
                 ) : (
                   <img
-                    src="/assets/images/placeholders/productPlaceholder.jpeg"
+                    src={getProductFallbackImage(
+                      product.entityType || store?.entityType,
+                      product.category
+                    )}
                     alt="Product image unavailable"
                     className="h-full max-h-[440px] w-full object-contain"
                   />
@@ -341,7 +345,10 @@ I am interested in this product. Please share availability and further details.`
                         />
                       ) : (
                         <img
-                          src="/assets/images/placeholders/productPlaceholder.jpeg"
+                          src={getProductFallbackImage(
+                            product.entityType || store?.entityType,
+                            product.category
+                          )}
                           alt="Product image unavailable"
                           className="h-full w-full object-contain p-1"
                         />

@@ -1,14 +1,11 @@
 import mongoose from "mongoose";
+import { isStoreSubscriptionActive } from "../services/catalogVisibility.js";
 
 async function searchStoreProducts(req, res) {
-  const storeId = req.params.storeId;
+  const storeIdParam = req.params.storeId;
   const query = req.query.q?.trim().toLowerCase() || "";
 
-  const page = Math.max(
-    Number(req.query.page) || 1,
-    1
-  );
-
+  const page = Math.max(Number(req.query.page) || 1, 1);
   const limit = 10;
 
   if (!query) {
@@ -23,13 +20,38 @@ async function searchStoreProducts(req, res) {
     });
   }
 
-  const products = mongoose.connection.db.collection("products");
-  const productsData = await products.find({}).toArray();
+  const storesCollection = mongoose.connection.db.collection("stores");
+  const storesData = await storesCollection.find({}).toArray();
 
- 
+  const normalizedParam = storeIdParam?.trim().toLowerCase();
+  const matchedStore = storesData.find(
+    (s) =>
+      s._id?.toLowerCase() === normalizedParam ||
+      s.slug?.toLowerCase() === normalizedParam ||
+      s.subdomain?.toLowerCase() === normalizedParam
+  );
+
+  // If the store is found and its subscription is expired / inactive, shield items
+  if (matchedStore && !isStoreSubscriptionActive(matchedStore)) {
+    return res.json({
+      products: [],
+      pagination: {
+        page,
+        limit,
+        total: 0,
+        hasMore: false,
+      },
+    });
+  }
+
+  const targetStoreId = matchedStore ? matchedStore._id : storeIdParam;
+
+  const productsCollection = mongoose.connection.db.collection("products");
+  const productsData = await productsCollection.find({}).toArray();
+
   const filteredProducts = productsData.filter((product) => {
     if (
-      product.storeId !== storeId ||
+      product.storeId !== targetStoreId ||
       product.isActive === false
     ) {
       return false;
@@ -50,30 +72,17 @@ async function searchStoreProducts(req, res) {
     return searchableText.includes(query);
   });
 
-
-  const start =
-    (page - 1) * limit;
-
-  const end =
-    start + limit;
-
-  const paginatedProducts =
-    filteredProducts.slice(
-      start,
-      end
-    );
-
- 
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const paginatedProducts = filteredProducts.slice(start, end);
 
   res.json({
     products: paginatedProducts,
-
     pagination: {
       page,
       limit,
       total: filteredProducts.length,
-      hasMore:
-        end < filteredProducts.length,
+      hasMore: end < filteredProducts.length,
     },
   });
 }

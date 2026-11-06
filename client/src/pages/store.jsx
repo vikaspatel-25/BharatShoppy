@@ -16,14 +16,22 @@ import {
   BadgeCheck,
   X,
   ChevronRight,
+  QrCode,
 } from "lucide-react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 
 import ProductCard from "@/components/productCard";
 import StoreCartDrawer from "@/components/store/storeCartDrawer";
+import StoreQrModal from "@/components/store/storeQrModal";
 import { useStoreCart } from "@/hooks/useStoreCart";
 import { getStorePage } from "@/services/storePageService";
 import { searchStoreProducts } from "@/services/storeProductSearchService";
+import { getEntityConfig } from "@/lib/entityTypes";
+import {
+  isIsolatedTenantMode,
+  getTenantSubdomain,
+} from "@/lib/domainUtils";
+import { getStoreFallbackLogo, handleImgError } from "@/lib/imageFallback";
 
 function WhatsAppIcon({ className = "h-5 w-5" }) {
   return (
@@ -98,9 +106,16 @@ function getStoreOpenStatus(businessHours) {
   }
 }
 
-function Store() {
+function Store({ isolated = false, tenantSubdomain = null }) {
   const navigate = useNavigate();
-  const { storeId } = useParams();
+  const { storeId: paramStoreId } = useParams();
+
+  const effectiveIsolated = isolated || isIsolatedTenantMode();
+  const activeStoreIdentifier =
+    tenantSubdomain ||
+    paramStoreId ||
+    getTenantSubdomain() ||
+    "store_0103";
 
   const [store, setStore] = useState(null);
   const [products, setProducts] = useState([]);
@@ -115,6 +130,7 @@ function Store() {
 
   const [activeTab, setActiveTab] = useState("products");
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
   const [selectedGalleryImage, setSelectedGalleryImage] = useState(0);
   const [imageErrors, setImageErrors] = useState({});
   const [copiedLink, setCopiedLink] = useState(false);
@@ -125,7 +141,8 @@ function Store() {
       .toLowerCase();
   }, []);
 
-  // Shop-specific Cart Hook
+  // Shop-specific Cart Hook (keyed to resolved store._id or activeStoreIdentifier)
+  const resolvedStoreId = store?._id || activeStoreIdentifier;
   const {
     cart,
     addToCart,
@@ -136,7 +153,7 @@ function Store() {
     totalCount,
     totalEstimatedPrice,
     sendWhatsAppEnquiry,
-  } = useStoreCart(storeId);
+  } = useStoreCart(resolvedStoreId);
 
   useEffect(() => {
     async function loadStore() {
@@ -144,7 +161,7 @@ function Store() {
         setLoading(true);
         setError(null);
 
-        const data = await getStorePage(storeId);
+        const data = await getStorePage(activeStoreIdentifier);
         const initialProducts = data.products || [];
 
         setStore(data.store || null);
@@ -161,7 +178,7 @@ function Store() {
     }
 
     loadStore();
-  }, [storeId]);
+  }, [activeStoreIdentifier]);
 
   // Extract distinct product categories from store's default products
   const storeCategories = useMemo(() => {
@@ -308,11 +325,17 @@ function Store() {
             </p>
             <button
               type="button"
-              onClick={() => navigate("/")}
+              onClick={() => {
+                if (effectiveIsolated) {
+                  window.location.reload();
+                } else {
+                  navigate("/");
+                }
+              }}
               className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#0f2747] px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-[#16365f] transition-all"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>Back to BharatShoppy</span>
+              <span>{effectiveIsolated ? "Refresh Storefront" : "Back to BharatShoppy"}</span>
             </button>
           </div>
         </main>
@@ -320,6 +343,50 @@ function Store() {
     );
   }
 
+  // Graceful Storefront Gatekeeping (Subscription Lapsed / Under Renewal)
+  if (store.isSubscriptionActive === false) {
+    return (
+      <div className="min-h-screen bg-slate-50/50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200 text-center shadow-lg">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 mb-4">
+            <StoreIcon className="h-8 w-8" strokeWidth={1.8} />
+          </div>
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200 mb-3">
+            Listing Under Renewal
+          </span>
+          <h1 className="text-xl font-black text-slate-900">{store.storeName}</h1>
+          <p className="mt-2 text-xs text-slate-500 leading-relaxed">
+            This storefront is currently undergoing scheduled annual renewal. Existing catalog products and customer inquiries are securely preserved.
+          </p>
+
+          <div className="mt-6 flex flex-col gap-2.5">
+            {store.contact?.whatsapp && (
+              <a
+                href={`https://wa.me/${store.contact.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+                  `Hello ${store.storeName}, I am inquiring directly about your products on BharatShoppy.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 rounded-xl bg-[#25D366] text-white text-xs font-bold hover:bg-[#20bd5a] transition flex items-center justify-center gap-2 shadow-xs"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+                <span>Contact Store via WhatsApp</span>
+              </a>
+            )}
+
+            <Link
+              to={`/vendor/${store._id}`}
+              className="w-full py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition"
+            >
+              Store Owner? Manage & Renew Plan
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const entityConfig = getEntityConfig(store.entityType);
   const galleryImages =
     store.images?.length > 0 ? store.images : [store.logo].filter(Boolean);
 
@@ -328,27 +395,45 @@ function Store() {
       {/* 1. TOP BREADCRUMB & ENQUIRY BAG BAR */}
       <div className="static sm:sticky sm:top-16 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
+          {/* Breadcrumb / Store Identity */}
           <div className="flex items-center gap-2 min-w-0 text-xs text-slate-500">
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-1 font-medium text-slate-600 hover:text-blue-900 transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Back</span>
-            </button>
-            <span className="text-slate-300">/</span>
-            <Link
-              to="/"
-              className="hover:text-slate-800 transition-colors hidden sm:inline"
-            >
-              Stores
-            </Link>
-            <span className="text-slate-300 hidden sm:inline">/</span>
-            <span className="truncate font-semibold text-slate-900 max-w-[140px] sm:max-w-none">
-              {store.storeName}
-            </span>
+            {effectiveIsolated ? (
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="h-7 w-7 rounded-lg bg-orange-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                  {store.storeName?.charAt(0) || "B"}
+                </div>
+                <span className="truncate font-bold text-slate-900 text-sm">
+                  {store.storeName}
+                </span>
+                <span
+                  className={`hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${entityConfig.badgeClass}`}
+                >
+                  {entityConfig.badgeLabel}
+                </span>
+              </div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="flex items-center gap-1 font-medium text-slate-600 hover:text-blue-900 transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                  <span>Back</span>
+                </button>
+                <span className="text-slate-300">/</span>
+                <Link
+                  to="/"
+                  className="hover:text-slate-800 transition-colors hidden sm:inline"
+                >
+                  Stores
+                </Link>
+                <span className="text-slate-300 hidden sm:inline">/</span>
+                <span className="truncate font-semibold text-slate-900 max-w-[140px] sm:max-w-none">
+                  {store.storeName}
+                </span>
+              </>
+            )}
           </div>
 
           {/* Status & Top Bag Trigger */}
@@ -369,6 +454,17 @@ function Store() {
                 {openStatus.text}
               </span>
             )}
+
+            {/* Store QR Standee Trigger */}
+            <button
+              type="button"
+              onClick={() => setQrModalOpen(true)}
+              className="flex items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50/70 px-2.5 py-1.5 text-xs font-semibold text-orange-700 hover:bg-orange-100 transition cursor-pointer"
+              title="Storefront QR Code & Direct Link"
+            >
+              <QrCode className="h-4 w-4 text-orange-600" />
+              <span className="hidden sm:inline">Store QR</span>
+            </button>
 
             {/* Quick Enquiry Bag Button */}
             <button
@@ -411,15 +507,13 @@ function Store() {
                       src={store.logo}
                       alt={store.storeName}
                       onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src =
-                          "/assets/images/placeholders/storeLogoPlaceholder.jpeg";
+                        handleImgError(e, getStoreFallbackLogo(store.entityType));
                       }}
                       className="h-full w-full object-contain p-2"
                     />
                   ) : (
                     <img
-                      src="/assets/images/placeholders/storeLogoPlaceholder.jpeg"
+                      src={getStoreFallbackLogo(store.entityType)}
                       alt="Store logo"
                       className="h-full w-full object-contain p-2"
                     />
@@ -439,6 +533,12 @@ function Store() {
                   </div>
 
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold border ${entityConfig.badgeClass}`}
+                    >
+                      {entityConfig.badgeLabel}
+                    </span>
+
                     {store.storeCategory && (
                       <span className="rounded-md bg-blue-50 px-2.5 py-1 font-semibold text-blue-700 border border-blue-100">
                         {store.storeCategory}
@@ -471,6 +571,32 @@ function Store() {
                     )}
                   </div>
 
+                  {/* Entity-specific Metadata Showcase */}
+                  {store.metadata && (
+                    <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
+                      {store.metadata.farmLocation && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium">
+                          🌾 Farm Origin: {store.metadata.farmLocation}
+                        </span>
+                      )}
+                      {store.metadata.produceSeason && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-stone-100 text-stone-700 font-medium">
+                          📅 Season: {store.metadata.produceSeason}
+                        </span>
+                      )}
+                      {store.metadata.experienceYears && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 font-medium">
+                          🛠️ Experience: {store.metadata.experienceYears}
+                        </span>
+                      )}
+                      {store.metadata.serviceRadius && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-stone-100 text-stone-700 font-medium">
+                          📍 Service Radius: {store.metadata.serviceRadius}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   {/* Description */}
                   {store.description && (
                     <p className="mt-3.5 text-xs sm:text-sm leading-relaxed text-slate-600 max-w-2xl">
@@ -482,6 +608,15 @@ function Store() {
 
               {/* Action Buttons Ribbon */}
               <div className="flex flex-wrap items-center gap-2.5 shrink-0 pt-2 md:pt-0">
+                <button
+                  type="button"
+                  onClick={() => setQrModalOpen(true)}
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50/80 px-3 py-2.5 text-xs font-semibold text-orange-700 hover:bg-orange-100 transition-colors cursor-pointer"
+                  title="Generate QR Code Standee"
+                >
+                  <QrCode className="h-3.5 w-3.5 text-orange-600" />
+                  <span className="hidden sm:inline">Store QR</span>
+                </button>
                 {store.contact?.whatsapp && (
                   <button
                     type="button"
@@ -1051,6 +1186,15 @@ function Store() {
         totalEstimatedPrice={totalEstimatedPrice}
         onSendWhatsApp={sendWhatsAppEnquiry}
       />
+
+      {/* 7. STOREFRONT QR CODE & DIRECT LINK MODAL */}
+      {store && (
+        <StoreQrModal
+          store={store}
+          isOpen={qrModalOpen}
+          onClose={() => setQrModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

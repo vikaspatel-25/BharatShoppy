@@ -1,12 +1,17 @@
 import mongoose from "mongoose";
+import { filterActiveStores, filterProductsByActiveStores } from "../services/catalogVisibility.js";
 
 async function globalSearch(req, res) {
 
 const products = mongoose.connection.db.collection("products");
 const stores = mongoose.connection.db.collection("stores");
 
-const productsData = await products.find({}).toArray();
-const storesData = await stores.find({}).toArray();
+const rawProductsData = await products.find({}).toArray();
+const rawStoresData = await stores.find({}).toArray();
+
+// Subscription Gatekeeping: Shield expired vendor products and stores from public discovery
+const storesData = filterActiveStores(rawStoresData);
+const productsData = filterProductsByActiveStores(rawProductsData, rawStoresData);
 
   const query = req.query.q?.trim().toLowerCase() || "";
   const city = req.query.city?.trim().toLowerCase() || null;

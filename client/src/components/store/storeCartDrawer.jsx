@@ -13,6 +13,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { buildEnquiryMessage } from "@/hooks/useStoreCart";
+import { getProductFallbackImage } from "@/lib/imageFallback";
 
 function WhatsAppIcon({ className = "h-5 w-5" }) {
   return (
@@ -202,13 +203,18 @@ function StoreCartDrawer({
                               className="h-full w-full object-contain p-1"
                               onError={(e) => {
                                 e.currentTarget.onerror = null;
-                                e.currentTarget.src =
-                                  "/assets/images/placeholders/productPlaceholder.jpeg";
+                                e.currentTarget.src = getProductFallbackImage(
+                                  product.entityType || store?.entityType,
+                                  product.category
+                                );
                               }}
                             />
                           ) : (
                             <img
-                              src="/assets/images/placeholders/productPlaceholder.jpeg"
+                              src={getProductFallbackImage(
+                                product.entityType || store?.entityType,
+                                product.category
+                              )}
                               alt="Placeholder"
                               className="h-full w-full object-contain p-1"
                             />
