@@ -134,7 +134,7 @@ function Product() {
         ""
       );
 
-    const message = `Hello, I found this product on BharatShoppy.
+    const message = `Hello, I found this product on BharatShopy.
 
 Product: ${product.productName}
 Price: ${getPriceText()}

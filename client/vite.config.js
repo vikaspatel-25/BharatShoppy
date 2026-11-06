@@ -18,7 +18,7 @@ export default defineConfig({
 
   server: {
     host: true, // Listen on all network addresses (0.0.0.0)
-    allowedHosts: true, // Allow wildcard subdomains such as *.localhost, *.lvh.me, *.bharatshopee.com
+    allowedHosts: true, // Allow wildcard subdomains such as *.localhost, *.lvh.me, *.bharatshopy.com
     proxy: {
       "/api": {
         target: "http://localhost:7002",

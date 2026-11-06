@@ -248,7 +248,7 @@ function Store({ isolated = false, tenantSubdomain = null }) {
     if (!store?.contact?.whatsapp) return;
     const rawNumber = store.contact.whatsapp.replace(/\D/g, "");
     const num = rawNumber.length === 10 ? `91${rawNumber}` : rawNumber;
-    const msg = `Hello ${store.storeName}, I found your shop on BharatShoppy and would like to enquire about your products.`;
+    const msg = `Hello ${store.storeName}, I found your shop on BharatShopy and would like to enquire about your products.`;
     window.open(
       `https://wa.me/${num}?text=${encodeURIComponent(msg)}`,
       "_blank",
@@ -265,8 +265,8 @@ function Store({ isolated = false, tenantSubdomain = null }) {
     if (navigator.share) {
       navigator
         .share({
-          title: store?.storeName || "BharatShoppy Store",
-          text: `Check out ${store?.storeName} on BharatShoppy!`,
+          title: store?.storeName || "BharatShopy Store",
+          text: `Check out ${store?.storeName} on BharatShopy!`,
           url: window.location.href,
         })
         .catch(() => {});
@@ -335,7 +335,7 @@ function Store({ isolated = false, tenantSubdomain = null }) {
               className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#0f2747] px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-[#16365f] transition-all"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>{effectiveIsolated ? "Refresh Storefront" : "Back to BharatShoppy"}</span>
+              <span>{effectiveIsolated ? "Refresh Storefront" : "Back to BharatShopy"}</span>
             </button>
           </div>
         </main>
@@ -363,7 +363,7 @@ function Store({ isolated = false, tenantSubdomain = null }) {
             {store.contact?.whatsapp && (
               <a
                 href={`https://wa.me/${store.contact.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-                  `Hello ${store.storeName}, I am inquiring directly about your products on BharatShoppy.`
+                  `Hello ${store.storeName}, I am inquiring directly about your products on BharatShopy.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -528,7 +528,7 @@ function Store({ isolated = false, tenantSubdomain = null }) {
                     </h1>
                     <BadgeCheck
                       className="h-5 w-5 text-blue-600 shrink-0"
-                      title="Verified Store on BharatShoppy"
+                      title="Verified Store on BharatShopy"
                     />
                   </div>
 
@@ -950,7 +950,7 @@ function Store({ isolated = false, tenantSubdomain = null }) {
 
               <p className="text-xs sm:text-sm leading-relaxed text-slate-600">
                 {store.description ||
-                  `${store.storeName} is a verified merchant on BharatShoppy, serving shoppers in ${store.city}.`}
+                  `${store.storeName} is a verified merchant on BharatShopy, serving shoppers in ${store.city}.`}
               </p>
 
               <div className="space-y-3 pt-2">
@@ -961,7 +961,7 @@ function Store({ isolated = false, tenantSubdomain = null }) {
                       Direct Merchant Enquiries
                     </strong>
                     <p className="text-slate-500 mt-0.5">
-                      BharatShoppy connects you directly with the shop owners. No third-party markups — get real-time stock and local pricing.
+                      BharatShopy connects you directly with the shop owners. No third-party markups — get real-time stock and local pricing.
                     </p>
                   </div>
                 </div>

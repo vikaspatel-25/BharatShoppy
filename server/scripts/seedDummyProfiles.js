@@ -670,7 +670,7 @@ export async function runSeed(options = {}) {
   assertSeedAllowed(env);
 
   console.log("\n==========================================================");
-  console.log("   BharatShoppy: Dynamic Profile & Catalog Seeder Script   ");
+  console.log("   BharatShopy: Dynamic Profile & Catalog Seeder Script   ");
   console.log("==========================================================\n");
 
   // 1. Sync Mock Data Files on Disk (Guarantees local & SSR availability)

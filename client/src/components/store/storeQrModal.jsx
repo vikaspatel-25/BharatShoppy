@@ -67,7 +67,7 @@ export default function StoreQrModal({ store, isOpen, onClose }) {
 
   const handleWhatsAppShare = () => {
     if (!storeUrl) return;
-    const text = `Visit *${store.storeName}* on BharatShoppy: ${storeUrl}`;
+    const text = `Visit *${store.storeName}* on BharatShopy: ${storeUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 

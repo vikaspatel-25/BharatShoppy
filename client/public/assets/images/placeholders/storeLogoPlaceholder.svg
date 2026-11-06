@@ -14,6 +14,6 @@
     <path d="M30 75 L30 115 L110 115 L110 75" fill="#f8fafc" stroke="#94a3b8" stroke-width="4"/>
     <rect x="55" y="88" width="30" height="27" fill="#ea580c" opacity="0.8"/>
   </g>
-  <text x="200" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#1e293b" text-anchor="middle">BharatShoppy</text>
+  <text x="200" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#1e293b" text-anchor="middle">BharatShopy</text>
   <text x="200" y="295" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#ea580c" text-anchor="middle">Verified Partner</text>
 </svg>

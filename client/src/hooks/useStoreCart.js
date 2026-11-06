@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 
 function getStorageKey(storeId) {
-  return `bharatshoppy_cart_${storeId}`;
+  return `bharatshopy_cart_${storeId}`;
 }
 
 import { buildEnquiryMessage } from "../lib/enquiryMessage.js";

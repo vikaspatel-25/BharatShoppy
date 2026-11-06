@@ -18,8 +18,8 @@ const isOriginAllowed = (origin) => {
   // Allow localhost & lvh.me with any subdomain or port
   if (/^https?:\/\/([a-z0-9-]+\.)*localhost(:\d+)?$/i.test(origin)) return true;
   if (/^https?:\/\/([a-z0-9-]+\.)*lvh\.me(:\d+)?$/i.test(origin)) return true;
-  // Allow bharatshopee and bharatshoppy with any subdomain
-  if (/^https?:\/\/([a-z0-9-]+\.)*bharatshope?e?y?\.com(:\d+)?$/i.test(origin)) return true;
+  // Allow bharatshopy with any subdomain
+  if (/^https?:\/\/([a-z0-9-]+\.)*bharatshopy\.com(:\d+)?$/i.test(origin)) return true;
   // Allow Vercel preview/production deployments
   if (/\.vercel\.app$/i.test(origin)) return true;
 

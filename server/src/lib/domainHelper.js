@@ -1,7 +1,7 @@
 /**
  * Extracts a tenant subdomain from a host/domain string.
  * Supports:
- * - Production: tenant.bharatshopee.com -> "tenant"
+ * - Production: tenant.bharatshopy.com -> "tenant"
  * - Staging/Vercel: tenant.bharat-shoppy-client.vercel.app -> "tenant"
  * - Local dev: tenant.localhost -> "tenant"
  * - Local dev wildcard: tenant.lvh.me -> "tenant"
@@ -32,8 +32,7 @@ export function extractSubdomain(host) {
     "cdn",
     "staging",
     "preview",
-    "bharatshoppy",
-    "bharatshopee",
+    "bharatshopy",
   ]);
 
   // Handle localhost subdomains: e.g. "tenant.localhost"

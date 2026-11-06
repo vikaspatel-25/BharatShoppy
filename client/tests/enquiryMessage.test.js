@@ -41,7 +41,7 @@ describe("WhatsApp Enquiry Message Generator Tests", () => {
     const msg = buildEnquiryMessage(mockStore, mockCart);
     assert.ok(msg.includes("Vastra Heritage Boutique"), "Should contain store name");
     assert.ok(msg.includes("Johari Bazaar, Jaipur"), "Should contain location");
-    assert.ok(msg.includes("BHARATSHOPPY"), "Should reference BharatShoppy");
+    assert.ok(msg.includes("BHARATSHOPY"), "Should reference BharatShopy");
   });
 
   it("lists all items with quantities and prices accurately", () => {

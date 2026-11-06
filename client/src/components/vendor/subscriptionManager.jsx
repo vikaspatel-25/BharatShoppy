@@ -232,7 +232,7 @@ export default function SubscriptionManager({
       <div>
         <div className="mb-4">
           <h3 className="text-base font-bold text-stone-900">
-            Available BharatShoppy Growth Plans
+            Available BharatShopy Growth Plans
           </h3>
           <p className="text-xs text-stone-500">
             Select a plan to request immediate renewal, unlock higher catalog limits, and verified store badges.

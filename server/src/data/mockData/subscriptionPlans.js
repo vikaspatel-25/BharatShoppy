@@ -1,5 +1,5 @@
 /**
- * Default Subscription Plans for BharatShoppy
+ * Default Subscription Plans for BharatShopy
  * Configurable pricing, discount percentages, and product upload quotas.
  */
 
@@ -59,7 +59,7 @@ export const defaultPlans = [
     features: [
       "200 catalog products / services",
       "Top-tier marketplace search placement",
-      "Custom Subdomain Branding (*.bharatshopee.com)",
+      "Custom Subdomain Branding (*.bharatshopy.com)",
       "Unlimited WhatsApp Enquiry Cart",
       "Bulk produce / B2B order enquiry mode",
       "Comprehensive storefront analytics",

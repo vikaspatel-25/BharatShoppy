@@ -1,6 +1,6 @@
 /**
- * Multi-Tenant Domain & Subdomain Utilities for BharatShoppy
- * Handles wildcard subdomains (*.bharatshopee.com, *.localhost, *.lvh.me)
+ * Multi-Tenant Domain & Subdomain Utilities for BharatShopy
+ * Handles wildcard subdomains (*.bharatshopy.com, *.localhost, *.lvh.me)
  * and path-based routing (/shop/:id) with strict context isolation.
  */
 
@@ -13,14 +13,13 @@ const RESERVED_SUBDOMAINS = new Set([
   "cdn",
   "staging",
   "preview",
-  "bharatshoppy",
-  "bharatshopee",
+  "bharatshopy",
 ]);
 
 /**
  * Extracts tenant subdomain from a given hostname or window.location.hostname
  * Supports:
- * - Production: "vastra-heritage.bharatshopee.com" -> "vastra-heritage"
+ * - Production: "vastra-heritage.bharatshopy.com" -> "vastra-heritage"
  * - Localhost dev: "vastra-heritage.localhost" -> "vastra-heritage"
  * - lvh.me dev: "vastra-heritage.lvh.me" -> "vastra-heritage"
  * - Query parameter fallback for easy testing on standard localhost:5173:
@@ -115,7 +114,7 @@ export function getTenantStoreUrl(store, isLocalMode = false) {
   if (!identifier) return "";
 
   if (typeof window === "undefined") {
-    return `https://${identifier}.bharatshopee.com`;
+    return `https://${identifier}.bharatshopy.com`;
   }
 
   const host = window.location.hostname;
@@ -132,7 +131,7 @@ export function getTenantStoreUrl(store, isLocalMode = false) {
   }
 
   // If in production or custom domain:
-  if (host.includes("bharatshopee.com") || host.includes("bharatshopy.com")) {
+  if (host.includes("bharatshopy.com")) {
     const baseDomain = host.split(".").slice(-2).join(".");
     return `https://${identifier}.${baseDomain}`;
   }

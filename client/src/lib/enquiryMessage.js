@@ -9,15 +9,15 @@ export function buildEnquiryMessage(store, cart, userNote = "") {
     .filter(Boolean)
     .join(", ");
 
-  let headerBanner = "🛍️ *NEW INQUIRY VIA BHARATSHOPPY*";
-  let greetingIntro = `Hello ${store.storeName}, I would like to inquire about the following ${cart.length} item(s) from your shop on BharatShoppy:`;
+  let headerBanner = "🛍️ *NEW INQUIRY VIA BHARATSHOPY*";
+  let greetingIntro = `Hello ${store.storeName}, I would like to inquire about the following ${cart.length} item(s) from your shop on BharatShopy:`;
 
   if (store.entityType === "farmer") {
-    headerBanner = "🌾 *NEW FARM PRODUCE INQUIRY VIA BHARATSHOPPY*";
-    greetingIntro = `Hello ${store.storeName}, I would like to inquire about purchasing fresh harvest/produce from your farm via BharatShoppy:`;
+    headerBanner = "🌾 *NEW FARM PRODUCE INQUIRY VIA BHARATSHOPY*";
+    greetingIntro = `Hello ${store.storeName}, I would like to inquire about purchasing fresh harvest/produce from your farm via BharatShopy:`;
   } else if (store.entityType === "service_provider") {
-    headerBanner = "🛠️ *NEW SERVICE INQUIRY VIA BHARATSHOPPY*";
-    greetingIntro = `Hello ${store.storeName}, I would like to inquire about booking/consultation for the following service(s) on BharatShoppy:`;
+    headerBanner = "🛠️ *NEW SERVICE INQUIRY VIA BHARATSHOPY*";
+    greetingIntro = `Hello ${store.storeName}, I would like to inquire about booking/consultation for the following service(s) on BharatShopy:`;
   }
 
   const lines = [
@@ -72,7 +72,7 @@ export function buildEnquiryMessage(store, cart, userNote = "") {
   }
 
   lines.push("");
-  lines.push("⚡ Sent directly via BharatShoppy Storefront");
+  lines.push("⚡ Sent directly via BharatShopy Storefront");
 
   return lines.filter((line) => line !== null && line !== undefined).join("\n");
 }

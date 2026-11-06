@@ -5,11 +5,11 @@ import { extractSubdomain } from "../src/lib/domainHelper.js";
 describe("Subdomain Extraction & Domain Helper Tests", () => {
   it("extracts clean tenant subdomain from production wildcard domain", () => {
     assert.equal(
-      extractSubdomain("vastra-heritage.bharatshopee.com"),
+      extractSubdomain("vastra-heritage.bharatshopy.com"),
       "vastra-heritage"
     );
     assert.equal(
-      extractSubdomain("earthly-harvest.bharatshopee.com:443"),
+      extractSubdomain("earthly-harvest.bharatshopy.com:443"),
       "earthly-harvest"
     );
   });
@@ -24,13 +24,13 @@ describe("Subdomain Extraction & Domain Helper Tests", () => {
   });
 
   it("returns null for reserved subdomains like www, api, app, admin", () => {
-    assert.equal(extractSubdomain("www.bharatshopee.com"), null);
-    assert.equal(extractSubdomain("api.bharatshopee.com"), null);
-    assert.equal(extractSubdomain("admin.bharatshopee.com"), null);
+    assert.equal(extractSubdomain("www.bharatshopy.com"), null);
+    assert.equal(extractSubdomain("api.bharatshopy.com"), null);
+    assert.equal(extractSubdomain("admin.bharatshopy.com"), null);
   });
 
   it("returns null for bare domains, IP addresses, or localhost without subdomain", () => {
-    assert.equal(extractSubdomain("bharatshopee.com"), null);
+    assert.equal(extractSubdomain("bharatshopy.com"), null);
     assert.equal(extractSubdomain("localhost"), null);
     assert.equal(extractSubdomain("localhost:5173"), null);
     assert.equal(extractSubdomain("127.0.0.1:5173"), null);

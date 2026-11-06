@@ -18,7 +18,7 @@ function Header() {
           type="button"
           onClick={goHome}
           className="flex h-full shrink-0 cursor-pointer items-center transition-opacity hover:opacity-90 sm:w-44"
-          aria-label="BharatShoppy Home"
+          aria-label="BharatShopy Home"
         >
           {/* Mobile Logo: Brand Icon */}
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 text-base font-black text-white shadow-xs sm:hidden">

@@ -9,11 +9,11 @@ import { getEntityConfig } from "../src/lib/entityTypes.js";
 describe("Multi-Tenant Domain & Subdomain Routing Tests", () => {
   it("extracts subdomain from production wildcard hostnames", () => {
     assert.equal(
-      getTenantSubdomain("vastra-heritage.bharatshopee.com"),
+      getTenantSubdomain("vastra-heritage.bharatshopy.com"),
       "vastra-heritage"
     );
     assert.equal(
-      getTenantSubdomain("greenvalley-organics.bharatshoppy.com"),
+      getTenantSubdomain("greenvalley-organics.bharatshopy.com"),
       "greenvalley-organics"
     );
   });
@@ -25,14 +25,14 @@ describe("Multi-Tenant Domain & Subdomain Routing Tests", () => {
   });
 
   it("ignores reserved subdomains like www, app, api, admin", () => {
-    assert.equal(getTenantSubdomain("www.bharatshopee.com"), null);
-    assert.equal(getTenantSubdomain("api.bharatshopee.com"), null);
-    assert.equal(getTenantSubdomain("app.bharatshopee.com"), null);
-    assert.equal(getTenantSubdomain("admin.bharatshopee.com"), null);
+    assert.equal(getTenantSubdomain("www.bharatshopy.com"), null);
+    assert.equal(getTenantSubdomain("api.bharatshopy.com"), null);
+    assert.equal(getTenantSubdomain("app.bharatshopy.com"), null);
+    assert.equal(getTenantSubdomain("admin.bharatshopy.com"), null);
   });
 
   it("returns null for bare domains without subdomains", () => {
-    assert.equal(getTenantSubdomain("bharatshopee.com"), null);
+    assert.equal(getTenantSubdomain("bharatshopy.com"), null);
     assert.equal(getTenantSubdomain("localhost"), null);
     assert.equal(getTenantSubdomain("127.0.0.1"), null);
     assert.equal(getTenantSubdomain(""), null);

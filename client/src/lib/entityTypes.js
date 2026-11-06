@@ -1,5 +1,5 @@
 /**
- * Entity Types & Metadata definitions for Multi-Tenant BharatShoppy profiles:
+ * Entity Types & Metadata definitions for Multi-Tenant BharatShopy profiles:
  * - Shopkeepers (Retail & Boutiques)
  * - Farmers (Organic & Fresh Harvest)
  * - Independent Service Providers (Artisans, Specialists, Technicians)

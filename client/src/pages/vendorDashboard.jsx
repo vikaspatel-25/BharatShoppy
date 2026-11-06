@@ -663,7 +663,7 @@ export default function VendorDashboard({
                     className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-stone-100 text-xs font-mono text-stone-500"
                   />
                   <span className="text-[11px] text-stone-400 mt-0.5 block">
-                    Direct access via {store?.subdomain || store?.slug}.bharatshopee.com
+                    Direct access via {store?.subdomain || store?.slug}.bharatshopy.com
                   </span>
                 </div>
 

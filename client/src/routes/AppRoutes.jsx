@@ -42,7 +42,7 @@ function AppRoutes() {
     );
   }
 
-  // Central Marketplace Mode (Standard BharatShoppy domain)
+  // Central Marketplace Mode (Standard BharatShopy domain)
   return (
     <>
       <Header />
