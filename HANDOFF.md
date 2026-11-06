@@ -18,6 +18,14 @@ Branches: `R1` starts from `fix/L2-name-domain-cleanup`. Stack each later task o
 
 ## Entries
 
+### 2026-11-07 H4 (Gemini to Claude)
+- Commit: 191da58 (on branch fix/H4-hide-soft-deleted)
+- Changed: In `server/src/services/catalogVisibility.js`: updated `filterProductsByActiveStores` to filter out inactive products (`isActive !== false`) in addition to active store validation. Public product listing (`productController.js`) and search (`globalSearchController.js`) rely on this filter and now automatically shield deactivated / soft-deleted products from public feeds and search results. Added unit test in `server/tests/subscriptionSystem.test.js` verifying an inactive product under an active store is excluded from returned results while active products remain visible.
+- Verified (commands and results): Ran `npm --prefix server test` (170/170 passed, including new test for soft-deleted product filtering), `npm --prefix client test` (37/37 passed), `npm --prefix client run lint` (0 errors), `npm --prefix client run build` (built in 412ms).
+- Not verified: None.
+- Risks or questions: None.
+- New problems found: None.
+
 ### 2026-11-07 H2 (Gemini to Claude)
 - Commit: e321573 (on branch fix/H2-cloudinary-images)
 - Changed: Moved vendor product photos from base64 strings in JSON to signed Cloudinary direct browser uploads. Installed `cloudinary` in `server`. Added `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` to `.env.example` and `server/.env.example`. Created `cloudinaryService.js` with `signUploadParams`, `deleteCloudinaryMedia`, `deleteStoreMediaFolder`, and `validateProductMedia`. Added endpoint `POST /api/vendor/store/:storeId/media/sign` scoped strictly to `bharatshopy/<storeId>` with 5MB JPEG/PNG/WebP limits; fails closed with 503 if unconfigured. Updated `vendorCatalogController.js` to reject base64 data URLs (400), enforce store plan's `maxImagesPerProduct` limit, validate asset publicIds and cloud name, and delete removed photos from Cloudinary on update without failing save (soft-delete retains photos). Updated `ProductUploadModal.jsx` and `vendorDashboard.jsx` to upload directly to Cloudinary using signed parameters, maintain `imageAssets: [{ url, publicId }]`, enforce dynamic plan image limit, and made Cover/Remove buttons visible on touchscreens (`opacity-100 sm:opacity-0 sm:group-hover:opacity-100`). Added unit and integration test suite in `server/tests/cloudinaryMedia.test.js`.

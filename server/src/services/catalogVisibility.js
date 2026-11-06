@@ -48,11 +48,14 @@ export function getActiveStoreIds(stores = []) {
 }
 
 /**
- * Filters an array of products to include only those whose parent store is active.
+ * Filters an array of products to include only those whose parent store is active
+ * and which are not soft-deleted or inactive (isActive !== false).
  */
 export function filterProductsByActiveStores(products = [], stores = []) {
   const activeIds = new Set(getActiveStoreIds(stores));
-  return products.filter((product) => activeIds.has(product.storeId));
+  return products.filter(
+    (product) => activeIds.has(product.storeId) && product.isActive !== false
+  );
 }
 
 /**

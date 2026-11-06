@@ -88,6 +88,25 @@ describe("Catalog Visibility & Subscription Gatekeeper Tests", () => {
     assert.ok(visibleProducts.some((p) => p._id === "p3"));
     assert.ok(!visibleProducts.some((p) => p._id === "p2"));
   });
+
+  it("filters out soft-deleted and inactive products under active stores (H4)", () => {
+    const products = [
+      { _id: "p1", storeId: "s_active", productName: "Active Kurti", isActive: true },
+      { _id: "p2", storeId: "s_active", productName: "Soft-deleted Kurti", isActive: false },
+      { _id: "p3", storeId: "s_active", productName: "Default Active Kurti" }, // undefined isActive defaults to true
+      { _id: "p4", storeId: "s_expired", productName: "Expired Active Kurti", isActive: true },
+      { _id: "p5", storeId: "s_expired", productName: "Expired Inactive Kurti", isActive: false },
+    ];
+    const stores = [activeStore, expiredStore];
+
+    const visibleProducts = filterProductsByActiveStores(products, stores);
+    assert.equal(visibleProducts.length, 2);
+    assert.ok(visibleProducts.some((p) => p._id === "p1"));
+    assert.ok(visibleProducts.some((p) => p._id === "p3"));
+    assert.ok(!visibleProducts.some((p) => p._id === "p2"), "Soft-deleted product (isActive: false) must be hidden");
+    assert.ok(!visibleProducts.some((p) => p._id === "p4"), "Product of expired store must be hidden");
+    assert.ok(!visibleProducts.some((p) => p._id === "p5"), "Inactive product of expired store must be hidden");
+  });
 });
 
 describe("Upload Quota Engine Tests", () => {
