@@ -268,3 +268,85 @@ export async function sendVendorRejectionEmail(to, { storeName, reason }) {
 
   return await sendEmail({ to, subject, text, html });
 }
+
+/**
+ * Notifies vendor that their subscription tier has been activated or renewed.
+ */
+export async function sendSubscriptionActivationEmail(to, { storeName, planName, durationDays, expiresAt }) {
+  const expiryFormatted = expiresAt ? new Date(expiresAt).toLocaleDateString() : "Active";
+  const subject = `BharatShopy Subscription Activated: ${storeName}`;
+  const text = `Congratulations! The subscription for "${storeName}" has been activated under the ${planName} plan for ${durationDays} days.\n\nActive until: ${expiryFormatted}\nYour storefront is active and accessible on BharatShopy.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #059669;">Subscription Activated</h2>
+      <p style="color: #475569;">Your store <strong>${storeName}</strong> subscription has been successfully activated.</p>
+      <div style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="color: #065f46; margin: 0;"><strong>Active Plan:</strong> ${planName}</p>
+        <p style="color: #065f46; margin: 4px 0 0 0;"><strong>Duration:</strong> +${durationDays} days</p>
+        <p style="color: #065f46; margin: 4px 0 0 0;"><strong>Valid Until:</strong> ${expiryFormatted}</p>
+      </div>
+      <p style="color: #475569;">Your products are live and searchable in the marketplace and on your store link.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Subscription activation email sent to ${to} for store: ${storeName}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}
+
+/**
+ * Notifies vendor that their store subscription has been discontinued.
+ */
+export async function sendSubscriptionDiscontinuationEmail(to, { storeName }) {
+  const subject = `BharatShopy Subscription Discontinued: ${storeName}`;
+  const text = `The subscription for "${storeName}" has been discontinued by an administrator.\n\nYour products have been hidden from marketplace searches. Store contact details remain saved. To reactivate your catalog, please request a renewal through your vendor portal.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #b91c1c;">Subscription Discontinued</h2>
+      <p style="color: #475569;">The subscription for your store <strong>${storeName}</strong> has been discontinued by an administrator.</p>
+      <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="color: #991b1b; margin: 0;"><strong>Status:</strong> Discontinued / Inactive</p>
+        <p style="color: #991b1b; margin: 4px 0 0 0;">Your products are hidden from public discovery until renewed.</p>
+      </div>
+      <p style="color: #475569;">Your store data and listing items are preserved. You can submit a renewal request anytime from the vendor dashboard.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Subscription discontinuation email sent to ${to} for store: ${storeName}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}
+
+/**
+ * Sends a manual renewal reminder triggered by an admin.
+ */
+export async function sendRenewalReminderEmail(to, { storeName, planName, daysRemaining, expiresAt }) {
+  const expiryFormatted = expiresAt ? new Date(expiresAt).toLocaleDateString() : "Soon";
+  const subject = `BharatShopy Store Renewal Reminder: ${storeName}`;
+  const text = `Dear Vendor,\n\nThis is a friendly reminder that the subscription for "${storeName}" (${planName || "Standard Plan"}) is expiring or has expired (Date: ${expiryFormatted}).\n\nPlease submit a renewal request in your vendor dashboard or contact BharatShopy administration to maintain uninterrupted visibility for your products.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #ea580c;">Subscription Renewal Reminder</h2>
+      <p style="color: #475569;">This is a reminder regarding the subscription for <strong>${storeName}</strong>.</p>
+      <div style="background: #fff7ed; border: 1px solid #fed7aa; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="color: #9a3412; margin: 0;"><strong>Store:</strong> ${storeName}</p>
+        <p style="color: #9a3412; margin: 4px 0 0 0;"><strong>Expiration:</strong> ${expiryFormatted}</p>
+        ${typeof daysRemaining === "number" ? `<p style="color: #9a3412; margin: 4px 0 0 0;"><strong>Days Remaining:</strong> ${daysRemaining}</p>` : ""}
+      </div>
+      <p style="color: #475569;">To ensure uninterrupted access and visibility for your listings, please submit a renewal request in your vendor dashboard.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Renewal reminder email sent to ${to} for store: ${storeName}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}

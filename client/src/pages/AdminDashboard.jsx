@@ -11,6 +11,7 @@ import {
   Building2,
   Clock,
   UserCheck,
+  Mail,
 } from "lucide-react";
 import { apiFetch } from "../lib/apiClient.js";
 
@@ -220,6 +221,32 @@ export default function AdminDashboard() {
         message: data.message || `Store ${targetStoreId} subscription discontinued.`,
       });
       setTargetStoreId("");
+      setTimeout(() => setFeedback(null), 4000);
+    } catch (err) {
+      setFeedback({ type: "error", message: err.message });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleSendRenewalReminder = async () => {
+    if (!targetStoreId.trim()) {
+      setFeedback({ type: "error", message: "Please specify a Store ID" });
+      return;
+    }
+    try {
+      setActionLoading(true);
+      const res = await apiFetch(`/api/admin/store/${targetStoreId.trim()}/send-renewal-reminder`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to send renewal reminder");
+      }
+      setFeedback({
+        type: "success",
+        message: data.message || "Renewal reminder email sent successfully!",
+      });
       setTimeout(() => setFeedback(null), 4000);
     } catch (err) {
       setFeedback({ type: "error", message: err.message });
@@ -633,6 +660,17 @@ export default function AdminDashboard() {
                 >
                   <Zap className="w-3.5 h-3.5" />
                   <span>Renew</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSendRenewalReminder}
+                  disabled={actionLoading || !targetStoreId}
+                  className="py-2 px-3 rounded-lg text-xs font-bold bg-amber-600/20 text-amber-300 border border-amber-500/30 hover:bg-amber-600/30 disabled:opacity-50 transition flex items-center justify-center gap-1.5"
+                  title="Send renewal reminder email to vendor"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>Send Reminder</span>
                 </button>
 
                 <button

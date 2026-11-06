@@ -66,7 +66,7 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 | C1 | P0 | Protect vendor and admin routes | A1, A2 | CHANGES REQUESTED | See `R1` |
 | C2 | P0 | Remove public admin and demo UI | C1 | CHANGES REQUESTED | See `R1` |
 | R1 | P0 | Batch 1 review fixes and email login | L2 | IN REVIEW | Batch 2 |
-| E1 | P1 | Email notifications and failure handling | R1, A3, H6 | TODO | Batch 2 |
+| E1 | P1 | Email notifications and failure handling | R1, A3, H6 | IN REVIEW | Batch 2 |
 | E2 | P2 | Move email to a transactional provider | E1 | BLOCKED | Needs an owner account, SPF and DKIM. Do before real launch |
 | H1 | P1 | Scope product writes to the store | C1 | CHANGES REQUESTED | See `R1` |
 | H4 | P1 | Hide soft-deleted products in feeds | T0 | TODO | |

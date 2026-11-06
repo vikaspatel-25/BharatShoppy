@@ -23,6 +23,8 @@ import {
   verifyPaymentRequest,
   adminDirectRenew,
   adminDirectDiscontinue,
+  sendAdminRenewalReminder,
+  resendSubscriptionEmail,
 } from "../controllers/subscriptionController.js";
 import {
   adminLogin,
@@ -42,6 +44,7 @@ import {
   listApplications,
   approveApplication,
   rejectApplication,
+  resendApplicationEmail,
 } from "../controllers/vendorApplicationController.js";
 
 import {
@@ -85,11 +88,14 @@ router.get("/admin/subscription-requests", requireAdmin, getAdminPaymentRequests
 router.post("/admin/subscription-requests/:requestId/verify", requireAdmin, verifyPaymentRequest);
 router.post("/admin/store/:storeId/renew", requireAdmin, adminDirectRenew);
 router.post("/admin/store/:storeId/discontinue", requireAdmin, adminDirectDiscontinue);
+router.post("/admin/store/:storeId/send-renewal-reminder", requireAdmin, sendAdminRenewalReminder);
+router.post("/admin/store/:storeId/resend-subscription-email", requireAdmin, resendSubscriptionEmail);
 
 // Admin Vendor Applications Management Desk
 router.get("/admin/vendor-applications", requireAdmin, listApplications);
 router.post("/admin/vendor-applications/:id/approve", requireAdmin, approveApplication);
 router.post("/admin/vendor-applications/:id/reject", requireAdmin, rejectApplication);
+router.post("/admin/vendor-applications/:id/resend-email", requireAdmin, resendApplicationEmail);
 
 // Vendor Authentication Desk
 router.post("/vendor/auth/request-code", requestCode);

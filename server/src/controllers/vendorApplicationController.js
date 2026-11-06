@@ -569,7 +569,8 @@ export async function approveApplication(req, res) {
       if (inMemoryApplications.get(id)?.status !== "pending") {
         return res.status(409).json({ message: "Application is no longer pending." });
       }
-      inMemoryApplications.set(id, { ...app, ...appUpdate });
+      Object.assign(app, appUpdate);
+      inMemoryApplications.set(id, app);
     }
 
     // 3. Update vendor record
@@ -586,17 +587,29 @@ export async function approveApplication(req, res) {
       await updateVendor(app.email, vendorUpdate);
     }
 
-    // 4. Send approval notification
-    await sendVendorApprovalEmail(app.email, {
-      storeName: app.storeName,
-      slug: app.slug,
-      subdomain: app.subdomain,
-    });
+    // 4. Send approval notification with failure handling
+    let emailWarning = null;
+    try {
+      await sendVendorApprovalEmail(app.email, {
+        storeName: app.storeName,
+        slug: app.slug,
+        subdomain: app.subdomain,
+      });
+    } catch (emailErr) {
+      console.error("Failed to send vendor approval email:", emailErr);
+      emailWarning =
+        "Application was approved and store created, but the approval email failed to deliver. You can resend it.";
+    }
 
     return res.status(200).json({
       success: true,
-      message: "Vendor application approved successfully. Store created with starter_free plan.",
+      message: emailWarning
+        ? "Vendor application approved. Store created with starter_free plan (email warning)."
+        : "Vendor application approved successfully. Store created with starter_free plan.",
+      warning: emailWarning,
+      emailFailed: Boolean(emailWarning),
       store: newStore,
+      resendEndpoint: `/api/admin/vendor-applications/${id}/resend-email`,
     });
   } catch (error) {
     console.error("approveApplication error:", error);
@@ -662,7 +675,8 @@ export async function rejectApplication(req, res) {
       if (inMemoryApplications.get(id)?.status !== "pending") {
         return res.status(409).json({ message: "Application is no longer pending." });
       }
-      inMemoryApplications.set(id, { ...app, ...appUpdate });
+      Object.assign(app, appUpdate);
+      inMemoryApplications.set(id, app);
     }
 
     // Update vendor record
@@ -679,18 +693,74 @@ export async function rejectApplication(req, res) {
       await updateVendor(app.email, vendorUpdate);
     }
 
-    // Send rejection notification
-    await sendVendorRejectionEmail(app.email, {
-      storeName: app.storeName,
-      reason,
-    });
+    // Send rejection notification with failure handling
+    let emailWarning = null;
+    try {
+      await sendVendorRejectionEmail(app.email, {
+        storeName: app.storeName,
+        reason,
+      });
+    } catch (emailErr) {
+      console.error("Failed to send vendor rejection email:", emailErr);
+      emailWarning =
+        "Application was rejected, but the notification email failed to deliver. You can resend it.";
+    }
 
     return res.status(200).json({
       success: true,
-      message: "Vendor application rejected.",
+      message: emailWarning
+        ? "Vendor application rejected (email warning)."
+        : "Vendor application rejected.",
+      warning: emailWarning,
+      emailFailed: Boolean(emailWarning),
+      resendEndpoint: `/api/admin/vendor-applications/${id}/resend-email`,
     });
   } catch (error) {
     console.error("rejectApplication error:", error);
     return res.status(500).json({ message: "Failed to reject vendor application." });
+  }
+}
+
+/**
+ * POST /api/admin/vendor-applications/:id/resend-email
+ * Resends approval or rejection email for a decided application.
+ */
+export async function resendApplicationEmail(req, res) {
+  try {
+    const { id } = req.params;
+    const appCol = getApplicationsCollection();
+    let app = appCol ? await appCol.findOne({ _id: id }) : inMemoryApplications.get(id);
+
+    if (!app) {
+      return res.status(404).json({ message: "Vendor application not found." });
+    }
+
+    if (app.status === "pending") {
+      return res.status(400).json({
+        message: "Cannot resend email for a pending application. Please approve or reject first.",
+      });
+    }
+
+    if (app.status === "approved") {
+      await sendVendorApprovalEmail(app.email, {
+        storeName: app.storeName,
+        slug: app.slug,
+        subdomain: app.subdomain,
+      });
+      return res.json({ success: true, message: `Approval email resent to ${app.email}.` });
+    }
+
+    if (app.status === "rejected") {
+      await sendVendorRejectionEmail(app.email, {
+        storeName: app.storeName,
+        reason: app.rejectionReason || "Application requirements not met.",
+      });
+      return res.json({ success: true, message: `Rejection email resent to ${app.email}.` });
+    }
+
+    return res.status(400).json({ message: `Cannot resend email for status '${app.status}'.` });
+  } catch (error) {
+    console.error("resendApplicationEmail error:", error);
+    return res.status(500).json({ message: "Failed to resend application email", error: error.message });
   }
 }

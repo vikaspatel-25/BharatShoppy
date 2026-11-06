@@ -1,6 +1,21 @@
 import mongoose from "mongoose";
 import { defaultPlans, calculateDiscount } from "../data/mockData/subscriptionPlans.js";
 import { resolveStoreByIdentifier } from "../middleware/authMiddleware.js";
+import { findVendorByStoreId } from "./vendorAuthController.js";
+import {
+  sendSubscriptionActivationEmail,
+  sendSubscriptionDiscontinuationEmail,
+  sendRenewalReminderEmail,
+} from "../services/emailService.js";
+
+async function resolveVendorEmailForStore(store) {
+  if (store?.contact?.email) return store.contact.email;
+  if (store?._id) {
+    const vendor = await findVendorByStoreId(store._id);
+    if (vendor?.email) return vendor.email;
+  }
+  return null;
+}
 
 // In-memory fallback stores for subscription requests when DB collection is simulated
 let inMemoryRequests = [];
@@ -394,9 +409,33 @@ export async function verifyPaymentRequest(req, res) {
 
       Object.assign(request, updateData);
 
+      // Send activation notification with failure handling
+      let emailWarning = null;
+      const vendorEmail = await resolveVendorEmailForStore(store);
+      if (vendorEmail) {
+        try {
+          await sendSubscriptionActivationEmail(vendorEmail, {
+            storeName: store?.storeName || request.storeName || "Store",
+            planName: selectedPlan.name,
+            durationDays: days,
+            expiresAt,
+          });
+        } catch (emailErr) {
+          console.error("Failed to send subscription activation email:", emailErr);
+          emailWarning =
+            "Subscription was activated in the database, but the notification email failed to deliver. You can resend it.";
+        }
+      }
+
       return res.json({
-        message: `Subscription approved! Store is now active until ${new Date(expiresAt).toLocaleDateString()}.`,
+        success: true,
+        message: emailWarning
+          ? `Subscription approved (+${days} days), but notification email delivery failed.`
+          : `Subscription approved! Store is now active until ${new Date(expiresAt).toLocaleDateString()}.`,
+        warning: emailWarning,
+        emailFailed: Boolean(emailWarning),
         request,
+        resendEndpoint: `/api/admin/store/${request.storeId}/resend-subscription-email`,
       });
     } else {
       // Rejection
@@ -505,10 +544,34 @@ export async function adminDirectRenew(req, res) {
     store.limits.maxImagesPerProduct = selectedPlan.maxImagesPerProduct || 8;
     store.isActive = true;
 
+    // Send activation notification with failure handling
+    let emailWarning = null;
+    const vendorEmail = await resolveVendorEmailForStore(store);
+    if (vendorEmail) {
+      try {
+        await sendSubscriptionActivationEmail(vendorEmail, {
+          storeName: store.storeName || "Store",
+          planName: selectedPlan.name,
+          durationDays: days,
+          expiresAt,
+        });
+      } catch (emailErr) {
+        console.error("Failed to send subscription renewal email:", emailErr);
+        emailWarning =
+          "Subscription renewed in the database, but notification email delivery failed. You can resend it.";
+      }
+    }
+
     return res.json({
-      message: `Store subscription directly renewed (+${days} days) under ${selectedPlan.name}.`,
+      success: true,
+      message: emailWarning
+        ? `Store subscription directly renewed (+${days} days) under ${selectedPlan.name} (email warning).`
+        : `Store subscription directly renewed (+${days} days) under ${selectedPlan.name}.`,
+      warning: emailWarning,
+      emailFailed: Boolean(emailWarning),
       expiresAt,
       status: "active",
+      resendEndpoint: `/api/admin/store/${store._id}/resend-subscription-email`,
     });
   } catch (error) {
     console.error("adminDirectRenew error:", error);
@@ -548,12 +611,108 @@ export async function adminDirectDiscontinue(req, res) {
     store.subscription.status = "expired";
     store.subscription.expiresAt = now.toISOString();
 
+    // Send discontinuation notification with failure handling
+    let emailWarning = null;
+    const vendorEmail = await resolveVendorEmailForStore(store);
+    if (vendorEmail) {
+      try {
+        await sendSubscriptionDiscontinuationEmail(vendorEmail, {
+          storeName: store.storeName || "Store",
+        });
+      } catch (emailErr) {
+        console.error("Failed to send subscription discontinuation email:", emailErr);
+        emailWarning =
+          "Subscription discontinued, but notification email delivery failed.";
+      }
+    }
+
     return res.json({
+      success: true,
       message: "Subscription discontinued. Products are now shielded from public discovery.",
+      warning: emailWarning,
+      emailFailed: Boolean(emailWarning),
       status: "expired",
     });
   } catch (error) {
     console.error("adminDirectDiscontinue error:", error);
     return res.status(500).json({ message: "Discontinuation failed", error: error.message });
+  }
+}
+
+/**
+ * Admin: Sends manual renewal reminder to the vendor with a button click.
+ */
+export async function sendAdminRenewalReminder(req, res) {
+  try {
+    const { storeId } = req.params;
+    let store = req.store || (await resolveStoreByIdentifier(storeId));
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
+    const vendorEmail = await resolveVendorEmailForStore(store);
+    if (!vendorEmail) {
+      return res.status(400).json({ message: "No registered vendor email found for this store" });
+    }
+
+    const subscription = store.subscription || {};
+    const expiresAt = subscription.expiresAt;
+    const expiresAtDate = expiresAt ? new Date(expiresAt) : null;
+    let daysRemaining = null;
+    if (expiresAtDate) {
+      daysRemaining = Math.ceil((expiresAtDate - Date.now()) / (1000 * 60 * 60 * 24));
+    }
+
+    await sendRenewalReminderEmail(vendorEmail, {
+      storeName: store.storeName,
+      planName: subscription.plan || "Standard Plan",
+      daysRemaining,
+      expiresAt,
+    });
+
+    return res.json({
+      success: true,
+      message: `Renewal reminder email sent successfully to ${vendorEmail}.`,
+    });
+  } catch (error) {
+    console.error("sendAdminRenewalReminder error:", error);
+    return res.status(500).json({ message: "Failed to send renewal reminder", error: error.message });
+  }
+}
+
+/**
+ * Admin: Resends subscription activation email.
+ */
+export async function resendSubscriptionEmail(req, res) {
+  try {
+    const { storeId } = req.params;
+    let store = req.store || (await resolveStoreByIdentifier(storeId));
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
+    const vendorEmail = await resolveVendorEmailForStore(store);
+    if (!vendorEmail) {
+      return res.status(400).json({ message: "No registered vendor email found for this store" });
+    }
+
+    const subscription = store.subscription || {};
+    const selectedPlan =
+      inMemoryPlans.find((p) => p.planId === subscription.plan) || defaultPlans[1];
+
+    await sendSubscriptionActivationEmail(vendorEmail, {
+      storeName: store.storeName,
+      planName: selectedPlan.name,
+      durationDays: 365,
+      expiresAt: subscription.expiresAt,
+    });
+
+    return res.json({
+      success: true,
+      message: `Subscription activation email resent to ${vendorEmail}.`,
+    });
+  } catch (error) {
+    console.error("resendSubscriptionEmail error:", error);
+    return res.status(500).json({ message: "Failed to resend subscription email", error: error.message });
   }
 }

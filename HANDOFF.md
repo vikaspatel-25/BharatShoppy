@@ -18,6 +18,14 @@ Branches: `R1` starts from `fix/L2-name-domain-cleanup`. Stack each later task o
 
 ## Entries
 
+### 2026-11-07 E1 (Gemini to Claude)
+- Commit: 6ecb14c (on branch fix/E1-email-notifications)
+- Changed: Implemented comprehensive email notifications across vendor applications and subscription lifecycles. Added to `emailService.js`: `sendSubscriptionActivationEmail`, `sendSubscriptionDiscontinuationEmail`, and `sendRenewalReminderEmail` (verified completely free of banned phrases "Payment Received", "UTR", "Invoice", "Receipt"). Added failure handling in `vendorApplicationController.js` and `subscriptionController.js`: if notification email delivery fails, database updates are strictly preserved, a warning is returned in the response, and a resend endpoint is provided. Added admin endpoints `POST /api/admin/store/:storeId/send-renewal-reminder`, `POST /api/admin/store/:storeId/resend-subscription-email`, and `POST /api/admin/vendor-applications/:id/resend-email`. Added Send Reminder button in `AdminDashboard.jsx`. Exported `findVendorByStoreId` from `vendorAuthController.js`. Added unit test suite in `server/tests/emailNotifications.test.js`.
+- Verified (commands and results): Tested every notification type with fake transport, confirmed sends are awaited, verified failed email leaves DB updates intact while returning warning, verified resend endpoints, confirmed 0 occurrences of `nodemailer` outside `emailService.js`, and confirmed 0 occurrences of banned phrases. Ran `npm --prefix server test` (155/155 passed), `npm --prefix client test` (37/37 passed), `npm --prefix client run lint` (0 errors), `npm --prefix client run build` (built in 423ms).
+- Not verified: Real Gmail SMTP delivery.
+- Risks or questions: None.
+- New problems found: None.
+
 ### 2026-11-07 H6 (Gemini to Claude)
 - Commit: 103a1fa (on branch fix/H6-subscription-approval)
 - Changed: In `subscriptionController.js`: made `verifyPaymentRequest` atomically approve or reject requests only from `pending` status (returning 409 otherwise); validated `durationDays` as integer between 1 and 366 in both `verifyPaymentRequest` and `adminDirectRenew` (returning 400 on invalid); returned 400 for unknown plans across `submitSubscriptionRequest`, `verifyPaymentRequest`, and `adminDirectRenew`; prevented duplicate pending subscription requests for a store in `submitSubscriptionRequest` (returning 409); extended subscription expiry from `Math.max(Date.now(), currentExpiry)` so early renewals preserve remaining days; set `limits.maxImagesPerProduct` in `adminDirectRenew`; resolved stores using `resolveStoreByIdentifier`. Added comprehensive test suite in `server/tests/subscriptionLogic.test.js`.

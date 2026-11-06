@@ -38,6 +38,18 @@ export async function findVendorByEmail(email) {
   return inMemoryVendors.get(normEmail) || null;
 }
 
+export async function findVendorByStoreId(storeId) {
+  if (!storeId || typeof storeId !== "string") return null;
+  const col = getVendorCollection();
+  if (col) {
+    return await col.findOne({ storeId });
+  }
+  for (const v of inMemoryVendors.values()) {
+    if (v.storeId === storeId) return v;
+  }
+  return null;
+}
+
 export async function updateVendor(email, updateFields) {
   if (!email || typeof email !== "string") return;
   const normEmail = email.toLowerCase().trim();
