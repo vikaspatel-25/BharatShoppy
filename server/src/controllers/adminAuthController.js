@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { signToken, verifyToken, hashString, getAuthSecret } from "../lib/tokenHelper.js";
-import { getEmailProvider } from "../services/emailProvider.js";
+import { sendAdminLoginCode } from "../services/emailService.js";
 
 // In-memory admin store fallback when MongoDB is simulated/offline
 let inMemoryAdmins = new Map();
@@ -34,6 +34,7 @@ function getCollection() {
  * Finds admin by email from DB or in-memory fallback.
  */
 async function findAdminByEmail(email) {
+  if (!email || typeof email !== "string") return null;
   const normEmail = email.toLowerCase().trim();
   const col = getCollection();
   if (col) {
@@ -80,8 +81,12 @@ async function updateAdmin(id, updateFields) {
 export async function adminLogin(req, res) {
   try {
     const { email, password } = req.body || {};
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+    if (typeof email !== "string" || typeof password !== "string") {
+      return res.status(400).json({ message: "Email and password are required and must be strings" });
+    }
+
+    if (!email.trim() || !password) {
+      return res.status(400).json({ message: "Email and password cannot be empty" });
     }
 
     const admin = await findAdminByEmail(email);
@@ -123,16 +128,15 @@ export async function adminLogin(req, res) {
       codeAttempts: 0,
     });
 
-    // Create a short-lived, single-use token from the successful password step
+    // Create a short-lived token bound to the current codeHash to reject superseded tokens
     const tempToken = signToken(
-      { adminId: admin._id, email: admin.email, step: "code_verification" },
+      { adminId: admin._id, email: admin.email, step: "code_verification", codeHash },
       getAuthSecret(),
       600 // 10 minutes
     );
 
-    // Send code through configured email provider
-    const emailProvider = getEmailProvider();
-    await emailProvider.sendAdminVerificationCode(admin.email, rawCode);
+    // Send code through emailService
+    await sendAdminLoginCode(admin.email, rawCode);
 
     return res.status(200).json({
       success: true,
@@ -154,14 +158,14 @@ export async function adminVerify(req, res) {
     const tempToken = req.body?.tempToken || req.headers?.["x-pre-auth-token"];
     const code = req.body?.code;
 
-    if (!tempToken) {
+    if (typeof tempToken !== "string" || typeof code !== "string") {
       return res.status(400).json({
-        message: "Verification requires a valid pre-auth token from a completed password step",
+        message: "Verification requires tempToken and code strings",
       });
     }
 
-    if (!code) {
-      return res.status(400).json({ message: "Verification code is required" });
+    if (!tempToken.trim() || !code.trim()) {
+      return res.status(400).json({ message: "tempToken and code cannot be empty" });
     }
 
     let tokenPayload;
@@ -183,6 +187,13 @@ export async function adminVerify(req, res) {
     if (!admin || !admin.verificationCodeHash) {
       return res.status(400).json({
         message: "No active verification code found or code already used. Please login again.",
+      });
+    }
+
+    // Single-use binding check: reject older or superseded tempTokens
+    if (tokenPayload.codeHash !== admin.verificationCodeHash) {
+      return res.status(400).json({
+        message: "Invalid or superseded pre-auth token. Please login again.",
       });
     }
 
@@ -217,7 +228,7 @@ export async function adminVerify(req, res) {
       return res.status(400).json({ message: "Invalid verification code" });
     }
 
-    // Code verified: Clear code to ensure single-use
+    // Code verified: Clear code immediately to ensure single-use
     await updateAdmin(admin._id, {
       verificationCodeHash: null,
       codeExpiresAt: null,

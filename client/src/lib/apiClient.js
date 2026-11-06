@@ -14,7 +14,8 @@ export async function apiFetch(url, options = {}) {
 
   if (response.status === 401) {
     const isBrowser = typeof window !== "undefined";
-    if (isBrowser) {
+    const isAuthRoute = typeof url === "string" && url.includes("/auth/");
+    if (isBrowser && !isAuthRoute) {
       if (url.includes("/api/admin")) {
         window.location.href = "/admin/login";
       } else if (url.includes("/api/vendor")) {

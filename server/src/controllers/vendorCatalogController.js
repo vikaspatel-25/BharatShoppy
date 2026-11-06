@@ -7,20 +7,11 @@ import { checkProductUploadQuota } from "../services/quotaService.js";
 export async function getVendorDashboardData(req, res) {
   try {
     const { storeId } = req.params;
-    if (!storeId) {
+    if (!storeId && !req.store) {
       return res.status(400).json({ message: "Store ID is required" });
     }
 
-    const storesCollection = mongoose.connection.db.collection("stores");
-    const storesData = await storesCollection.find({}).toArray();
-
-    const normalizedId = storeId.trim().toLowerCase();
-    const store = storesData.find(
-      (s) =>
-        s._id?.toLowerCase() === normalizedId ||
-        s.slug?.toLowerCase() === normalizedId ||
-        s.subdomain?.toLowerCase() === normalizedId
-    );
+    const store = req.store || (await resolveStore(storeId, req));
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
@@ -74,15 +65,7 @@ export async function updateVendorProfile(req, res) {
     } = req.body;
 
     const storesCollection = mongoose.connection.db.collection("stores");
-    const normalizedId = storeId.trim().toLowerCase();
-
-    const store = await storesCollection.findOne({
-      $or: [
-        { _id: storeId },
-        { slug: normalizedId },
-        { subdomain: normalizedId },
-      ],
-    });
+    const store = req.store || (await resolveStore(storeId, req));
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
@@ -143,15 +126,7 @@ export async function addVendorProduct(req, res) {
       return res.status(400).json({ message: "Product name and price are required" });
     }
 
-    const storesCollection = mongoose.connection.db.collection("stores");
-    const normalizedId = storeId.trim().toLowerCase();
-    const store = await storesCollection.findOne({
-      $or: [
-        { _id: storeId },
-        { slug: normalizedId },
-        { subdomain: normalizedId },
-      ],
-    });
+    const store = req.store || (await resolveStore(storeId, req));
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
@@ -264,7 +239,9 @@ export async function updateVendorProduct(req, res) {
     // Explicit allowlist of editable product fields to prevent tampering
     const ALLOWED_UPDATE_FIELDS = [
       "productName",
+      "brand",
       "category",
+      "subCategory",
       "shortDescription",
       "description",
       "images",

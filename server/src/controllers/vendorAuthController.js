@@ -1,26 +1,24 @@
 import crypto from "node:crypto";
 import mongoose from "mongoose";
 import { signToken, hashString, getAuthSecret } from "../lib/tokenHelper.js";
-import { normalizePhoneNumber } from "../lib/phoneHelper.js";
-import { getSMSProvider } from "../services/smsProvider.js";
+import { sendVendorLoginCode } from "../services/emailService.js";
+import { checkRateLimit, clearRateLimit } from "../lib/rateLimitHelper.js";
 
-// In-memory vendor and OTP storage fallback for tests and offline operation
+// In-memory vendor fallback for unit testing without MongoDB
 let inMemoryVendors = new Map();
-let ipRequestTracker = new Map(); // ip -> [{ timestamp }]
-let phoneRequestTracker = new Map(); // phone -> [{ timestamp }]
 
 export function setInMemoryVendor(vendorData) {
-  inMemoryVendors.set(vendorData.phone, {
+  const normEmail = String(vendorData.email || "").toLowerCase().trim();
+  inMemoryVendors.set(normEmail, {
     ...vendorData,
+    email: normEmail,
     status: vendorData.status || "approved",
-    otpAttempts: vendorData.otpAttempts || 0,
+    codeAttempts: vendorData.codeAttempts || 0,
   });
 }
 
 export function resetInMemoryVendors() {
   inMemoryVendors.clear();
-  ipRequestTracker.clear();
-  phoneRequestTracker.clear();
 }
 
 function getVendorCollection() {
@@ -30,203 +28,197 @@ function getVendorCollection() {
   return null;
 }
 
-export async function findVendorByPhone(phone) {
+export async function findVendorByEmail(email) {
+  if (!email || typeof email !== "string") return null;
+  const normEmail = email.toLowerCase().trim();
   const col = getVendorCollection();
   if (col) {
-    return await col.findOne({ phone });
+    return await col.findOne({ email: normEmail });
   }
-  return inMemoryVendors.get(phone) || null;
+  return inMemoryVendors.get(normEmail) || null;
 }
 
-export async function updateVendor(phone, updateFields) {
+export async function updateVendor(email, updateFields) {
+  if (!email || typeof email !== "string") return;
+  const normEmail = email.toLowerCase().trim();
   const col = getVendorCollection();
   if (col) {
-    await col.updateOne({ phone }, { $set: updateFields });
+    await col.updateOne({ email: normEmail }, { $set: updateFields });
     return;
   }
-  const existing = inMemoryVendors.get(phone);
+  const existing = inMemoryVendors.get(normEmail);
   if (existing) {
-    inMemoryVendors.set(phone, { ...existing, ...updateFields });
+    inMemoryVendors.set(normEmail, { ...existing, ...updateFields });
   }
 }
 
 /**
- * Checks rate limits per IP and per phone number.
+ * POST /api/vendor/auth/request-code
+ * Normalizes email, checks rate limits via MongoDB, and sends a 6-digit verification code.
+ * Always returns the exact same response for known and unknown emails.
  */
-function checkRateLimits(ip, phone) {
-  const now = Date.now();
-  const windowMs = 15 * 60 * 1000; // 15 minutes
-
-  // IP limit: max 10 requests per 15 minutes
-  if (ip) {
-    const ipHistory = (ipRequestTracker.get(ip) || []).filter(
-      (t) => now - t < windowMs
-    );
-    if (ipHistory.length >= 10) {
-      throw new Error(
-        "Too many OTP requests from this IP address. Please wait a few minutes."
-      );
-    }
-    ipHistory.push(now);
-    ipRequestTracker.set(ip, ipHistory);
-  }
-
-  // Phone limit: max 5 requests per 15 minutes and 30-second cooldown
-  if (phone) {
-    const phoneHistory = (phoneRequestTracker.get(phone) || []).filter(
-      (t) => now - t < windowMs
-    );
-    if (phoneHistory.length > 0) {
-      const lastRequest = phoneHistory[phoneHistory.length - 1];
-      if (now - lastRequest < 30 * 1000) {
-        throw new Error(
-          "Please wait 30 seconds before requesting another verification code."
-        );
-      }
-    }
-    if (phoneHistory.length >= 5) {
-      throw new Error(
-        "Too many OTP requests for this phone number. Please try again later."
-      );
-    }
-    phoneHistory.push(now);
-    phoneRequestTracker.set(phone, phoneHistory);
-  }
-}
-
-/**
- * POST /api/vendor/auth/request-otp
- * Normalizes phone number, checks limits, sends 6-digit OTP via SMS provider.
- */
-export async function requestOtp(req, res) {
+export async function requestCode(req, res) {
   try {
-    const rawPhone = req.body?.phone;
-    if (!rawPhone) {
-      return res.status(400).json({ message: "Phone number is required" });
+    const rawEmail = req.body?.email;
+    if (!rawEmail || typeof rawEmail !== "string") {
+      return res.status(400).json({ message: "Email is required and must be a string" });
     }
 
-    let phone;
-    try {
-      phone = normalizePhoneNumber(rawPhone);
-    } catch (normErr) {
-      return res.status(400).json({ message: normErr.message });
+    const email = rawEmail.toLowerCase().trim();
+    if (!email) {
+      return res.status(400).json({ message: "Email cannot be empty" });
     }
 
     const clientIp = req.ip || req.headers["x-forwarded-for"] || "127.0.0.1";
 
-    try {
-      checkRateLimits(clientIp, phone);
-    } catch (rateErr) {
-      return res.status(429).json({ message: rateErr.message });
-    }
-
-    const vendor = await findVendorByPhone(phone);
-    if (!vendor) {
-      return res.status(404).json({
-        message: "No registered vendor account found for this phone number.",
-      });
-    }
-
-    if (vendor.status === "removed") {
-      return res.status(403).json({
-        message: "Vendor account has been removed. Access denied.",
-      });
-    }
-
-    // Generate 6-digit random code
-    const rawOtp = String(crypto.randomInt(100000, 1000000));
-    const otpHash = hashString(rawOtp);
-    const otpExpiresAt = Date.now() + 5 * 60 * 1000; // 5-minute expiry
-
-    await updateVendor(phone, {
-      otpHash,
-      otpExpiresAt,
-      otpAttempts: 0,
+    // 1. IP rate limit: max 10 requests per 15 minutes
+    const ipCheck = await checkRateLimit(`ip:${clientIp}`, {
+      maxAttempts: 10,
+      windowMs: 15 * 60 * 1000,
+      cooldownMs: 15 * 60 * 1000,
     });
+    if (!ipCheck.allowed) {
+      return res.status(429).json({
+        message: "Too many code requests from this IP address. Please wait before retrying.",
+      });
+    }
 
-    const smsProvider = getSMSProvider();
-    await smsProvider.sendOTP(phone, rawOtp);
+    // 2. Email rate limit & cooldown: 60s cooldown, max 5 requests per 15 minutes
+    const emailCheck = await checkRateLimit(`vendor_req:${email}`, {
+      maxAttempts: 5,
+      windowMs: 15 * 60 * 1000,
+      cooldownMs: 60 * 1000,
+      minIntervalMs: 60 * 1000,
+    });
+    if (!emailCheck.allowed) {
+      return res.status(429).json({
+        message: "Please wait before requesting another verification code.",
+      });
+    }
+
+    const vendor = await findVendorByEmail(email);
+
+    // Only generate and send code if vendor exists and is approved.
+    // However, return the EXACT same response to callers regardless (prevent email enumeration).
+    if (vendor && vendor.status === "approved") {
+      const rawCode = String(crypto.randomInt(100000, 1000000));
+      const codeHash = hashString(rawCode);
+      const codeExpiresAt = Date.now() + 5 * 60 * 1000; // 5-minute expiry
+
+      await updateVendor(email, {
+        codeHash,
+        codeExpiresAt,
+        codeAttempts: 0,
+      });
+
+      await sendVendorLoginCode(email, rawCode);
+    }
 
     return res.status(200).json({
       success: true,
-      message: "One-time verification code sent via SMS",
+      message: "If your email is registered as an approved vendor, a 6-digit verification code has been sent.",
     });
   } catch (error) {
-    console.error("requestOtp error:", error);
-    return res.status(500).json({ message: "Failed to process OTP request" });
+    console.error("requestCode error:", error);
+    return res.status(500).json({ message: "Failed to process login code request" });
   }
 }
 
 /**
- * POST /api/vendor/auth/verify-otp
- * Verifies code, clears OTP (one use), sets separate vendor_session httpOnly cookie.
+ * POST /api/vendor/auth/verify-code
+ * Verifies code, clears code (single use), sets separate vendor_session httpOnly cookie.
  */
-export async function verifyOtp(req, res) {
+export async function verifyCode(req, res) {
   try {
-    const rawPhone = req.body?.phone;
-    const rawCode = req.body?.otp;
+    const rawEmail = req.body?.email;
+    const rawCode = req.body?.code;
 
-    if (!rawPhone || !rawCode) {
-      return res.status(400).json({ message: "Phone number and OTP code are required" });
+    if (typeof rawEmail !== "string" || typeof rawCode !== "string") {
+      return res.status(400).json({ message: "Email and code are required and must be strings" });
     }
 
-    let phone;
-    try {
-      phone = normalizePhoneNumber(rawPhone);
-    } catch (normErr) {
-      return res.status(400).json({ message: normErr.message });
+    const email = rawEmail.toLowerCase().trim();
+    const code = rawCode.trim();
+
+    if (!email || !code) {
+      return res.status(400).json({ message: "Email and code cannot be empty" });
     }
 
-    const vendor = await findVendorByPhone(phone);
-    if (!vendor || !vendor.otpHash) {
+    // Global attempt rate limiting stored in collection per email
+    const attemptCheck = await checkRateLimit(`vendor_verify:${email}`, {
+      maxAttempts: 5,
+      windowMs: 15 * 60 * 1000,
+      cooldownMs: 15 * 60 * 1000,
+    });
+    if (!attemptCheck.allowed) {
+      return res.status(429).json({
+        message: "Too many failed attempts. Verification locked for 15 minutes.",
+      });
+    }
+
+    const vendor = await findVendorByEmail(email);
+    if (!vendor || !vendor.codeHash) {
       return res.status(400).json({
-        message: "No active verification code found or code already used. Request a new OTP.",
+        message: "No active verification code found or code already used. Request a new code.",
       });
     }
 
     // Expiry check (5 minutes)
-    if (!vendor.otpExpiresAt || Date.now() > vendor.otpExpiresAt) {
-      await updateVendor(phone, {
-        otpHash: null,
-        otpExpiresAt: null,
-        otpAttempts: 0,
+    if (!vendor.codeExpiresAt || Date.now() > vendor.codeExpiresAt) {
+      await updateVendor(email, {
+        codeHash: null,
+        codeExpiresAt: null,
+        codeAttempts: 0,
       });
-      return res.status(400).json({ message: "Verification code has expired. Request a new OTP." });
+      return res.status(400).json({ message: "Verification code has expired. Request a new code." });
     }
 
-    // Limit verification attempts (max 5)
-    const attempts = (vendor.otpAttempts || 0) + 1;
+    // Limit verification attempts per code
+    const attempts = (vendor.codeAttempts || 0) + 1;
     if (attempts > 5) {
-      await updateVendor(phone, {
-        otpHash: null,
-        otpExpiresAt: null,
-        otpAttempts: 0,
+      await updateVendor(email, {
+        codeHash: null,
+        codeExpiresAt: null,
+        codeAttempts: 0,
       });
       return res.status(429).json({
-        message: "Too many failed attempts. Verification code invalidated. Request a new OTP.",
+        message: "Too many failed attempts. Verification code invalidated. Request a new code.",
       });
     }
 
-    await updateVendor(phone, { otpAttempts: attempts });
+    await updateVendor(email, { codeAttempts: attempts });
 
     // Compare hash
-    const inputHash = hashString(rawCode.trim());
-    if (inputHash !== vendor.otpHash) {
+    const inputHash = hashString(code);
+    if (inputHash !== vendor.codeHash) {
       return res.status(400).json({ message: "Invalid verification code" });
     }
 
-    // Single use: Clear OTP immediately upon verification
-    await updateVendor(phone, {
-      otpHash: null,
-      otpExpiresAt: null,
-      otpAttempts: 0,
+    // Check vendor status
+    if (vendor.status !== "approved") {
+      await updateVendor(email, {
+        codeHash: null,
+        codeExpiresAt: null,
+        codeAttempts: 0,
+      });
+      return res.status(403).json({
+        message: `Forbidden: Vendor account is not approved (status: '${vendor.status}').`,
+      });
+    }
+
+    // Single use: Clear code immediately upon verification
+    await updateVendor(email, {
+      codeHash: null,
+      codeExpiresAt: null,
+      codeAttempts: 0,
     });
+    await clearRateLimit(`vendor_verify:${email}`);
 
     // Create 24-hour vendor session token
     const sessionToken = signToken(
       {
         vendorId: vendor._id,
-        phone: vendor.phone,
+        email: vendor.email,
         storeId: vendor.storeId,
         status: vendor.status,
         role: "vendor",
@@ -249,14 +241,14 @@ export async function verifyOtp(req, res) {
       message: "Vendor authenticated successfully",
       vendor: {
         _id: vendor._id,
-        phone: vendor.phone,
+        email: vendor.email,
         storeId: vendor.storeId,
         status: vendor.status,
       },
     });
   } catch (error) {
-    console.error("verifyOtp error:", error);
-    return res.status(500).json({ message: "OTP verification failed" });
+    console.error("verifyCode error:", error);
+    return res.status(500).json({ message: "Code verification failed" });
   }
 }
 

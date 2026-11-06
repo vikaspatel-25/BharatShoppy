@@ -9,6 +9,7 @@
     "dev": "nodemon src/dev.index.js",
     "seed": "node scripts/seedDummyProfiles.js",
     "create-admin": "node scripts/createAdmin.js",
+    "create-vendor": "node scripts/createTestVendor.js",
     "test": "node --test tests/**/*.test.js"
   },
   "keywords": [],
@@ -21,6 +22,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongoose": "^9.9.4",
+    "nodemailer": "^10.3.1",
     "nodemon": "^3.1.14"
   }
 }

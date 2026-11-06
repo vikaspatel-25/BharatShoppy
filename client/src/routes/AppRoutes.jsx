@@ -58,7 +58,6 @@ function AppRoutes() {
         {/* Vendor Management Dashboard & Product Upload */}
         <Route path="/vendor" element={<VendorDashboard />} />
         <Route path="/vendor/login" element={<VendorLogin />} />
-        <Route path="/vendor/:storeId" element={<VendorDashboard />} />
         {/* Admin Operations & Subscription Desk */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminDashboard />} />

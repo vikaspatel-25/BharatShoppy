@@ -5,6 +5,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import router from "../src/routes/routes.index.js";
 import { signToken } from "../src/lib/tokenHelper.js";
+import { setInMemoryVendor, resetInMemoryVendors } from "../src/controllers/vendorAuthController.js";
 
 describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
   const TEST_SECRET = "test-protected-routes-signing-secret-999";
@@ -15,8 +16,9 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
   let vendorStore0103Cookie;
   let vendorOtherStoreCookie;
 
+  // Comprehensive table of all protected routes defined in routes.index.js
   const protectedRoutes = [
-    // Admin routes
+    // Admin subscription desk
     { method: "GET", path: "/admin/subscription-requests", role: "admin" },
     { method: "POST", path: "/admin/subscription-requests/req_test/verify", role: "admin" },
     { method: "POST", path: "/admin/store/store_0103/renew", role: "admin" },
@@ -35,6 +37,20 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
   before(async () => {
     process.env.AUTH_SECRET = TEST_SECRET;
 
+    setInMemoryVendor({
+      _id: "vendor_1",
+      email: "vendor1@bharatshopy.com",
+      storeId: "store_0103",
+      status: "approved",
+    });
+
+    setInMemoryVendor({
+      _id: "vendor_other",
+      email: "other@bharatshopy.com",
+      storeId: "store_farmer_01",
+      status: "approved",
+    });
+
     const adminToken = signToken(
       { adminId: "admin_1", email: "admin@bharatshopy.com", role: "admin" },
       TEST_SECRET,
@@ -45,7 +61,7 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
     const vendor0103Token = signToken(
       {
         vendorId: "vendor_1",
-        phone: "+919876543210",
+        email: "vendor1@bharatshopy.com",
         storeId: "store_0103",
         status: "approved",
         role: "vendor",
@@ -58,7 +74,7 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
     const vendorOtherToken = signToken(
       {
         vendorId: "vendor_other",
-        phone: "+919876543211",
+        email: "other@bharatshopy.com",
         storeId: "store_farmer_01",
         status: "approved",
         role: "vendor",
@@ -83,6 +99,7 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
   });
 
   after(async () => {
+    resetInMemoryVendors();
     if (server) {
       await new Promise((resolve) => server.close(resolve));
     }
@@ -90,7 +107,7 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
 
   it("keeps /api/subscription/plans publicly accessible without authentication", async () => {
     const res = await fetch(`${baseUrl}/subscription/plans`);
-    assert.equal(res.status, 200);
+    assert.equal(res.status, 200, "Public plans route must remain accessible");
   });
 
   for (const route of protectedRoutes) {
@@ -99,43 +116,50 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
         const res = await fetch(`${baseUrl}${route.path}`, {
           method: route.method,
           headers: { "Content-Type": "application/json" },
+          body: ["POST", "PUT"].includes(route.method) ? JSON.stringify({}) : undefined,
         });
+
         assert.equal(
           res.status,
           401,
-          `Expected 401 for unauthenticated ${route.method} ${route.path}, got ${res.status}`
+          `Expected 401 for unauthenticated request to ${route.path}`
         );
       });
 
       it("rejects request with wrong role cookie (401 or 403)", async () => {
         const wrongCookie =
           route.role === "admin" ? vendorStore0103Cookie : adminCookie;
+
         const res = await fetch(`${baseUrl}${route.path}`, {
           method: route.method,
           headers: {
             Cookie: wrongCookie,
             "Content-Type": "application/json",
           },
+          body: ["POST", "PUT"].includes(route.method) ? JSON.stringify({}) : undefined,
         });
+
         assert.ok(
-          res.status === 401 || res.status === 403,
-          `Expected 401 or 403 for wrong role on ${route.method} ${route.path}, got ${res.status}`
+          [401, 403].includes(res.status),
+          `Expected 401 or 403 for wrong role on ${route.path}, got ${res.status}`
         );
       });
 
       if (route.role === "vendor") {
-        it("rejects request from another vendor with 403", async () => {
+        it("rejects vendor requesting another vendor's store with 403", async () => {
           const res = await fetch(`${baseUrl}${route.path}`, {
             method: route.method,
             headers: {
               Cookie: vendorOtherStoreCookie,
               "Content-Type": "application/json",
             },
+            body: ["POST", "PUT"].includes(route.method) ? JSON.stringify({}) : undefined,
           });
+
           assert.equal(
             res.status,
             403,
-            `Expected 403 for cross-store vendor access on ${route.method} ${route.path}, got ${res.status}`
+            `Expected 403 when vendor requests another vendor's store on ${route.path}`
           );
         });
       }

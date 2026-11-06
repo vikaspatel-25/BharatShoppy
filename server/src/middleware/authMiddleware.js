@@ -1,34 +1,47 @@
 import mongoose from "mongoose";
 import storesMock from "../data/mockData/stores.js";
 import { verifyToken, signToken, getAuthSecret } from "../lib/tokenHelper.js";
+import { findVendorByEmail } from "../controllers/vendorAuthController.js";
+
+function escapeRegex(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 /**
  * Resolves a store by ID, slug, or subdomain from MongoDB or fallback mock data.
+ * Safely escapes regex and refuses fallback to mock stores in production.
  */
 export async function resolveStoreByIdentifier(identifier) {
-  if (!identifier) return null;
-  const target = String(identifier).trim().toLowerCase();
+  if (!identifier || typeof identifier !== "string") return null;
+  const target = identifier.trim().toLowerCase();
+  if (!target) return null;
+  const escapedTarget = escapeRegex(target);
 
   const storesCol = mongoose.connection?.db?.collection("stores");
   if (storesCol) {
     const store = await storesCol.findOne({
       $or: [
         { _id: identifier },
-        { slug: { $regex: new RegExp(`^${target}$`, "i") } },
-        { subdomain: { $regex: new RegExp(`^${target}$`, "i") } },
+        { slug: { $regex: new RegExp(`^${escapedTarget}$`, "i") } },
+        { subdomain: { $regex: new RegExp(`^${escapedTarget}$`, "i") } },
       ],
     });
     if (store) return store;
   }
 
-  return (
-    storesMock.find(
-      (s) =>
-        s._id === identifier ||
-        s.slug?.toLowerCase() === target ||
-        s.subdomain?.toLowerCase() === target
-    ) || null
-  );
+  // Refuse fallback to mock stores in production
+  if (process.env.NODE_ENV !== "production") {
+    return (
+      storesMock.find(
+        (s) =>
+          s._id === identifier ||
+          s.slug?.toLowerCase() === target ||
+          s.subdomain?.toLowerCase() === target
+      ) || null
+    );
+  }
+
+  return null;
 }
 
 /**
@@ -130,8 +143,8 @@ export function requireVendor(req, res, next) {
 /**
  * Middleware: requireStoreOwner
  * Resolves :storeId parameter by ID, slug, or subdomain.
- * Verifies that the vendor's account is 'approved' and that they own the store.
- * Never trusts a store's public contact.phone as proof of ownership.
+ * Loads fresh vendor from DB on every request to verify current status and store ownership.
+ * Sets req.store and req.vendor.
  */
 export async function requireStoreOwner(req, res, next) {
   try {
@@ -155,21 +168,43 @@ async function handleStoreOwnership(req, res, next) {
     return res.status(400).json({ message: "Store identifier parameter (:storeId) is required" });
   }
 
-  // 1. Only approved vendors are permitted to access their store
-  if (req.vendor.status !== "approved") {
+  // 1. Fetch fresh vendor document from database to reflect current status
+  let liveVendor = null;
+  const vendorsCol = mongoose.connection?.db?.collection("vendors");
+  if (vendorsCol) {
+    if (req.vendor?.vendorId) {
+      liveVendor = await vendorsCol.findOne({ _id: req.vendor.vendorId });
+    }
+    if (!liveVendor && req.vendor?.email) {
+      liveVendor = await vendorsCol.findOne({ email: req.vendor.email.toLowerCase().trim() });
+    }
+  } else {
+    liveVendor = await findVendorByEmail(req.vendor?.email);
+  }
+
+  if (!liveVendor || liveVendor.status !== "approved") {
+    const status = liveVendor ? liveVendor.status : (req.vendor?.status || "unknown");
     return res.status(403).json({
-      message: `Forbidden: Vendor account is not approved (status: '${req.vendor.status}'). Only approved vendors have store access.`,
+      message: `Forbidden: Vendor account is not approved (status: '${status}'). Only approved vendors have store access.`,
     });
   }
 
-  // 2. Resolve store by ID, slug, or subdomain
+  req.vendor = {
+    ...req.vendor,
+    ...liveVendor,
+    vendorId: liveVendor._id,
+    storeId: liveVendor.storeId,
+    status: liveVendor.status,
+  };
+
+  // 2. Resolve store by ID, slug, or subdomain safely
   const resolvedStore = await resolveStoreByIdentifier(storeParam);
   if (!resolvedStore) {
     return res.status(404).json({ message: `Store '${storeParam}' not found` });
   }
 
   // 3. Match vendor's storeId to resolved store's _id
-  if (req.vendor.storeId !== resolvedStore._id) {
+  if (String(liveVendor.storeId) !== String(resolvedStore._id)) {
     return res.status(403).json({
       message: "Forbidden: You do not have ownership of this store",
     });

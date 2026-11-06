@@ -63,17 +63,17 @@ describe("Server Route Stack Tests", () => {
     assert.ok(adminLogoutRoute.methods.includes("post"), "Should handle POST method");
 
     // Check vendor authentication routes
-    const vendorRequestOtpRoute = registeredRoutes.find(
-      (r) => r.path === "/vendor/auth/request-otp"
+    const vendorRequestCodeRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/auth/request-code"
     );
-    assert.ok(vendorRequestOtpRoute, "Should register vendor request-otp route");
-    assert.ok(vendorRequestOtpRoute.methods.includes("post"), "Should handle POST method");
+    assert.ok(vendorRequestCodeRoute, "Should register vendor request-code route");
+    assert.ok(vendorRequestCodeRoute.methods.includes("post"), "Should handle POST method");
 
-    const vendorVerifyOtpRoute = registeredRoutes.find(
-      (r) => r.path === "/vendor/auth/verify-otp"
+    const vendorVerifyCodeRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/auth/verify-code"
     );
-    assert.ok(vendorVerifyOtpRoute, "Should register vendor verify-otp route");
-    assert.ok(vendorVerifyOtpRoute.methods.includes("post"), "Should handle POST method");
+    assert.ok(vendorVerifyCodeRoute, "Should register vendor verify-code route");
+    assert.ok(vendorVerifyCodeRoute.methods.includes("post"), "Should handle POST method");
 
     const vendorLogoutRoute = registeredRoutes.find(
       (r) => r.path === "/vendor/auth/logout"

@@ -4,24 +4,24 @@ import { apiFetch } from "../lib/apiClient.js";
 
 export default function VendorLogin() {
   const navigate = useNavigate();
-  const [step, setStep] = useState("phone"); // 'phone' | 'otp'
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
+  const [step, setStep] = useState("email"); // 'email' | 'code'
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleRequestOtp = async (e) => {
+  const handleRequestCode = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
     setLoading(true);
 
     try {
-      const res = await apiFetch("/api/vendor/auth/request-otp", {
+      const res = await apiFetch("/api/vendor/auth/request-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await res.json();
@@ -29,8 +29,8 @@ export default function VendorLogin() {
         throw new Error(data.message || "Failed to request verification code");
       }
 
-      setMessage(data.message || "Verification code sent to your phone via SMS");
-      setStep("otp");
+      setMessage(data.message || "If registered, a verification code was sent to your email.");
+      setStep("code");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -38,17 +38,17 @@ export default function VendorLogin() {
     }
   };
 
-  const handleVerifyOtp = async (e) => {
+  const handleVerifyCode = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
     setLoading(true);
 
     try {
-      const res = await apiFetch("/api/vendor/auth/verify-otp", {
+      const res = await apiFetch("/api/vendor/auth/verify-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, otp }),
+        body: JSON.stringify({ email, code }),
       });
 
       const data = await res.json();
@@ -58,11 +58,7 @@ export default function VendorLogin() {
 
       setMessage("Authentication successful! Redirecting to dashboard...");
       setTimeout(() => {
-        if (data.vendor?.storeId) {
-          navigate(`/vendor/${data.vendor.storeId}`);
-        } else {
-          navigate("/vendor");
-        }
+        navigate("/vendor");
       }, 800);
     } catch (err) {
       setError(err.message);
@@ -96,24 +92,24 @@ export default function VendorLogin() {
             </div>
           )}
 
-          {step === "phone" ? (
-            <form onSubmit={handleRequestOtp} className="space-y-6">
+          {step === "email" ? (
+            <form onSubmit={handleRequestCode} className="space-y-6">
               <div>
                 <label
-                  htmlFor="phone"
+                  htmlFor="email"
                   className="block text-sm font-medium text-slate-700"
                 >
-                  Mobile Phone Number
+                  Vendor Email Address
                 </label>
                 <div className="mt-1">
                   <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
+                    id="email"
+                    name="email"
+                    type="email"
                     required
-                    placeholder="e.g. 9876543210 or +919876543210"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="vendor@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
                   />
                 </div>
@@ -133,41 +129,41 @@ export default function VendorLogin() {
               </div>
             </form>
           ) : (
-            <form onSubmit={handleVerifyOtp} className="space-y-6">
+            <form onSubmit={handleVerifyCode} className="space-y-6">
               <div>
                 <label
-                  htmlFor="otp"
+                  htmlFor="code"
                   className="block text-sm font-medium text-slate-700"
                 >
                   Enter 6-Digit Verification Code
                 </label>
                 <div className="mt-1">
                   <input
-                    id="otp"
-                    name="otp"
+                    id="code"
+                    name="code"
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]{6}"
                     maxLength={6}
                     required
                     placeholder="123456"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
                     className="appearance-none tracking-widest text-center text-xl font-bold block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   />
                 </div>
                 <p className="mt-1 text-xs text-slate-500">
-                  Sent to {phone}. Code expires in 5 minutes.
+                  Sent to {email}. Code expires in 5 minutes.
                 </p>
               </div>
 
               <div className="flex items-center justify-between">
                 <button
                   type="button"
-                  onClick={() => setStep("phone")}
+                  onClick={() => setStep("email")}
                   className="text-xs font-medium text-emerald-600 hover:text-emerald-500"
                 >
-                  Change phone number
+                  Change email address
                 </button>
               </div>
 

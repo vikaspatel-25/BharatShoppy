@@ -40,14 +40,14 @@ export async function getSubscriptionPlans(req, res) {
 export async function getStoreSubscriptionInfo(req, res) {
   try {
     const { storeId } = req.params;
-    if (!storeId) {
+    if (!storeId && !req.store) {
       return res.status(400).json({ message: "Store ID is required" });
     }
 
     const storesCollection = mongoose.connection?.db?.collection("stores");
-    let store = null;
+    let store = req.store;
 
-    if (storesCollection) {
+    if (!store && storesCollection) {
       const normalized = storeId.trim().toLowerCase();
       store = await storesCollection.findOne({
         $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
@@ -143,10 +143,13 @@ export async function submitSubscriptionRequest(req, res) {
     }
 
     const storesCollection = mongoose.connection?.db?.collection("stores");
-    const normalized = storeId.trim().toLowerCase();
-    const store = await storesCollection?.findOne({
-      $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
-    });
+    let store = req.store;
+    if (!store && storesCollection) {
+      const normalized = storeId.trim().toLowerCase();
+      store = await storesCollection.findOne({
+        $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
+      });
+    }
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
@@ -337,10 +340,13 @@ export async function adminDirectRenew(req, res) {
     const { planId = "yearly_standard", durationDays = 365, adminNotes = "" } = req.body;
 
     const storesCollection = mongoose.connection?.db?.collection("stores");
-    const normalized = storeId.trim().toLowerCase();
-    const store = await storesCollection?.findOne({
-      $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
-    });
+    let store = req.store;
+    if (!store && storesCollection) {
+      const normalized = storeId.trim().toLowerCase();
+      store = await storesCollection.findOne({
+        $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
+      });
+    }
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
@@ -386,10 +392,13 @@ export async function adminDirectDiscontinue(req, res) {
   try {
     const { storeId } = req.params;
     const storesCollection = mongoose.connection?.db?.collection("stores");
-    const normalized = storeId.trim().toLowerCase();
-    const store = await storesCollection?.findOne({
-      $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
-    });
+    let store = req.store;
+    if (!store && storesCollection) {
+      const normalized = storeId.trim().toLowerCase();
+      store = await storesCollection.findOne({
+        $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
+      });
+    }
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });

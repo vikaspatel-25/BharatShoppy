@@ -193,6 +193,24 @@ describe("Product Write Scoping & Allowlist Tests (H1)", () => {
       assert.equal(updated.arbitraryField, undefined, "Non-allowlisted fields must not be persisted");
     });
 
+    it("successfully updates brand and subCategory when provided in update body", async () => {
+      const req = {
+        params: { storeId: "store_A", productId: "prod_A1" },
+        body: {
+          brand: "Heritage Handloom",
+          subCategory: "Casual Kurtas",
+        },
+      };
+      const res = createMockRes();
+
+      await updateVendorProduct(req, res);
+
+      assert.equal(res.statusCode, 200);
+      const updated = products.find((p) => p._id === "prod_A1");
+      assert.equal(updated.brand, "Heritage Handloom");
+      assert.equal(updated.subCategory, "Casual Kurtas");
+    });
+
     it("returns 404 if the storeId parameter is invalid or unknown", async () => {
       const req = {
         params: { storeId: "nonexistent_store", productId: "prod_A1" },

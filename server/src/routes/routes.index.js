@@ -31,8 +31,8 @@ import {
 } from "../controllers/adminAuthController.js";
 
 import {
-  requestOtp,
-  verifyOtp,
+  requestCode,
+  verifyCode,
   vendorLogout,
 } from "../controllers/vendorAuthController.js";
 
@@ -74,14 +74,14 @@ router.post("/admin/store/:storeId/renew", requireAdmin, adminDirectRenew);
 router.post("/admin/store/:storeId/discontinue", requireAdmin, adminDirectDiscontinue);
 
 // Vendor Authentication Desk
-router.post("/vendor/auth/request-otp", requestOtp);
-router.post("/vendor/auth/verify-otp", verifyOtp);
+router.post("/vendor/auth/request-code", requestCode);
+router.post("/vendor/auth/verify-code", verifyCode);
 router.post("/vendor/auth/logout", vendorLogout);
 router.get("/vendor/auth/me", requireVendor, (req, res) => {
   return res.json({
     vendor: {
       _id: req.vendor.vendorId,
-      phone: req.vendor.phone,
+      email: req.vendor.email,
       storeId: req.vendor.storeId,
       status: req.vendor.status,
     },

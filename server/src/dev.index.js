@@ -12,6 +12,7 @@ import { assertSigningSecret } from "./lib/tokenHelper.js";
 assertSigningSecret();
 
 const app = express();
+app.set("trust proxy", 1);
 
 const isOriginAllowed = (origin) => {
   if (!origin) return true;

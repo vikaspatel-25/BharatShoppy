@@ -1,8 +1,9 @@
-import test, { describe, it, beforeEach } from "node:test";
+import test, { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
+import mongoose from "mongoose";
 import {
-  requestOtp,
-  verifyOtp,
+  requestCode,
+  verifyCode,
   vendorLogout,
   setInMemoryVendor,
   resetInMemoryVendors,
@@ -12,14 +13,9 @@ import {
   requireStoreOwner,
   resolveStoreByIdentifier,
 } from "../src/middleware/authMiddleware.js";
-import { normalizePhoneNumber } from "../src/lib/phoneHelper.js";
-import {
-  setSMSProvider,
-  resetSMSProvider,
-  ProductionSMSProvider,
-  DevelopmentSMSProvider,
-} from "../src/services/smsProvider.js";
-import { signToken, verifyToken, hashString } from "../src/lib/tokenHelper.js";
+import { signToken, hashString } from "../src/lib/tokenHelper.js";
+import { setTestTransport, resetTestTransport } from "../src/services/emailService.js";
+import { resetMemoryLimits } from "../src/lib/rateLimitHelper.js";
 
 function createMockRes() {
   return {
@@ -47,355 +43,305 @@ function createMockRes() {
   };
 }
 
-describe("Vendor Phone OTP Authentication (A2) Unit Tests", () => {
+describe("Vendor Email Code Authentication (A2 & R1) Unit Tests", () => {
   const TEST_SECRET = "test-vendor-signing-secret-unit-tests-12345";
-  const TEST_PHONE = "+919876543210";
+  const TEST_EMAIL = "vendor@bharatshopy.com";
   const STORE_ID = "store_0103";
-  let sentOtp = null;
+  let sentMails = [];
 
   beforeEach(() => {
     process.env.AUTH_SECRET = TEST_SECRET;
     resetInMemoryVendors();
-    resetSMSProvider();
+    resetMemoryLimits();
+    resetTestTransport();
+    sentMails = [];
 
-    sentOtp = null;
-    setSMSProvider({
-      async sendOTP(phone, otp) {
-        sentOtp = otp;
-        return { success: true };
+    setTestTransport({
+      async sendMail(mailOptions) {
+        sentMails.push(mailOptions);
+        return { messageId: "vendor-fake-msg-123" };
       },
     });
 
     setInMemoryVendor({
       _id: "vendor_1",
-      phone: TEST_PHONE,
+      email: TEST_EMAIL,
       storeId: STORE_ID,
       status: "approved",
     });
   });
 
-  describe("Phone Normalization to E.164", () => {
-    it("normalizes 10-digit Indian numbers to E.164 format with +91", () => {
-      assert.equal(normalizePhoneNumber("9876543210"), "+919876543210");
-      assert.equal(normalizePhoneNumber("09876543210"), "+919876543210");
-      assert.equal(normalizePhoneNumber(" 98765-43210 "), "+919876543210");
-    });
-
-    it("preserves valid international E.164 numbers", () => {
-      assert.equal(normalizePhoneNumber("+919876543210"), "+919876543210");
-      assert.equal(normalizePhoneNumber("+14155552671"), "+14155552671");
-    });
-
-    it("rejects invalid phone formats", () => {
-      assert.throws(() => normalizePhoneNumber("abc"), /Invalid phone/);
-      assert.throws(() => normalizePhoneNumber("12345"), /Invalid phone/);
-    });
+  afterEach(() => {
+    resetTestTransport();
   });
 
-  describe("SMS Provider Fail-Closed Behavior", () => {
-    it("development provider logs and succeeds", async () => {
-      const dev = new DevelopmentSMSProvider();
-      const res = await dev.sendOTP(TEST_PHONE, "123456");
-      assert.equal(res.success, true);
+  describe("POST /api/vendor/auth/request-code", () => {
+    it("rejects non-string email with 400", async () => {
+      const req = { body: { email: 12345 }, ip: "127.0.0.1" };
+      const res = createMockRes();
+      await requestCode(req, res);
+      assert.equal(res.statusCode, 400);
+
+      const req2 = { body: { email: { object: true } }, ip: "127.0.0.1" };
+      const res2 = createMockRes();
+      await requestCode(req2, res2);
+      assert.equal(res2.statusCode, 400);
     });
 
-    it("production provider fails closed when unconfigured", async () => {
-      const prod = new ProductionSMSProvider({});
-      await assert.rejects(
-        async () => prod.sendOTP(TEST_PHONE, "123456"),
-        /Production SMS provider is unconfigured/
-      );
-    });
-  });
-
-  describe("POST /api/vendor/auth/request-otp", () => {
-    it("successfully requests OTP for registered vendor and sends 6-digit code", async () => {
-      const req = { body: { phone: "9876543210" }, ip: "192.168.1.1", headers: {} };
+    it("successfully requests code for approved vendor and sends 6-digit email", async () => {
+      const req = { body: { email: TEST_EMAIL }, ip: "127.0.0.1" };
       const res = createMockRes();
 
-      await requestOtp(req, res);
+      await requestCode(req, res);
 
       assert.equal(res.statusCode, 200);
       assert.equal(res.body.success, true);
-      assert.ok(sentOtp, "Should have sent OTP code");
-      assert.equal(sentOtp.length, 6);
+      assert.equal(sentMails.length, 1);
+      assert.equal(sentMails[0].to, TEST_EMAIL);
+      assert.ok(sentMails[0].text.match(/\b\d{6}\b/));
     });
 
-    it("returns 404 for unknown phone number", async () => {
-      const req = { body: { phone: "9999999999" }, ip: "192.168.1.1", headers: {} };
-      const res = createMockRes();
+    it("returns identical success response for unknown or unapproved email without sending email", async () => {
+      // 1. Unknown email
+      const reqUnknown = { body: { email: "nobody@example.com" }, ip: "127.0.0.1" };
+      const resUnknown = createMockRes();
+      await requestCode(reqUnknown, resUnknown);
 
-      await requestOtp(req, res);
+      assert.equal(resUnknown.statusCode, 200);
+      assert.equal(resUnknown.body.success, true);
+      assert.ok(resUnknown.body.message.includes("If your email is registered"));
+      assert.equal(sentMails.length, 0, "Must not send email for unknown address");
 
-      assert.equal(res.statusCode, 404);
-    });
-
-    it("returns 403 for removed vendor", async () => {
+      // 2. Pending vendor
       setInMemoryVendor({
-        _id: "vendor_removed",
-        phone: "+919111111111",
-        storeId: "store_removed",
-        status: "removed",
+        _id: "vendor_pending",
+        email: "pending@bharatshopy.com",
+        storeId: "store_pending",
+        status: "pending",
       });
+      const reqPending = { body: { email: "pending@bharatshopy.com" }, ip: "127.0.0.1" };
+      const resPending = createMockRes();
+      await requestCode(reqPending, resPending);
 
-      const req = { body: { phone: "+919111111111" }, ip: "192.168.1.1", headers: {} };
-      const res = createMockRes();
-
-      await requestOtp(req, res);
-
-      assert.equal(res.statusCode, 403);
-      assert.match(res.body.message, /removed/i);
+      assert.equal(resPending.statusCode, 200);
+      assert.equal(sentMails.length, 0, "Must not send email for pending vendor");
     });
 
-    it("enforces cooldown rate limiting per phone", async () => {
-      const req = { body: { phone: "9876543210" }, ip: "192.168.1.2", headers: {} };
+    it("enforces cooldown rate limiting per email", async () => {
+      const req = { body: { email: TEST_EMAIL }, ip: "127.0.0.1" };
+
+      // First request succeeds
       const res1 = createMockRes();
-      await requestOtp(req, res1);
+      await requestCode(req, res1);
       assert.equal(res1.statusCode, 200);
 
-      // Immediate second request within 30 seconds
+      // Immediate second request within 60s hits cooldown
       const res2 = createMockRes();
-      await requestOtp(req, res2);
+      await requestCode(req, res2);
       assert.equal(res2.statusCode, 429);
-      assert.match(res2.body.message, /wait 30 seconds/i);
+      assert.ok(res2.body.message.includes("wait before requesting"));
     });
   });
 
-  describe("POST /api/vendor/auth/verify-otp", () => {
-    it("successfully verifies OTP, clears code, and sets vendor_session cookie", async () => {
-      // Step 1: Request OTP
-      const req1 = { body: { phone: TEST_PHONE }, ip: "192.168.1.3", headers: {} };
+  describe("Rate Limits Stored in Collection", () => {
+    it("stores rate limit records in auth_limits collection when MongoDB is present", async () => {
+      const insertedDocs = [];
+      const fakeCollection = {
+        async findOne(query) {
+          return insertedDocs.find((d) => d._id === query._id) || null;
+        },
+        async updateOne(filter, update, options) {
+          let doc = insertedDocs.find((d) => d._id === filter._id);
+          if (!doc && options?.upsert) {
+            doc = { _id: filter._id, ...update.$set };
+            insertedDocs.push(doc);
+          } else if (doc) {
+            Object.assign(doc, update.$set);
+          }
+        },
+        async deleteOne(filter) {
+          const idx = insertedDocs.findIndex((d) => d._id === filter._id);
+          if (idx !== -1) insertedDocs.splice(idx, 1);
+        },
+      };
+
+      const originalDb = mongoose.connection.db;
+      mongoose.connection.db = {
+        collection(name) {
+          if (name === "auth_limits") return fakeCollection;
+          return null;
+        },
+      };
+
+      try {
+        const req = { body: { email: "collection-test@bharatshopy.com" }, ip: "10.0.0.1" };
+        const res = createMockRes();
+        await requestCode(req, res);
+
+        assert.ok(
+          insertedDocs.some((d) => d._id === "ip:10.0.0.1"),
+          "IP limit document must be stored in collection"
+        );
+        assert.ok(
+          insertedDocs.some((d) => d._id === "vendor_req:collection-test@bharatshopy.com"),
+          "Email limit document must be stored in collection"
+        );
+      } finally {
+        mongoose.connection.db = originalDb;
+      }
+    });
+  });
+
+  describe("POST /api/vendor/auth/verify-code", () => {
+    it("rejects non-string email or code with 400", async () => {
+      const req1 = { body: { email: 12345, code: "123456" } };
       const res1 = createMockRes();
-      await requestOtp(req1, res1);
+      await verifyCode(req1, res1);
+      assert.equal(res1.statusCode, 400);
 
-      const code = sentOtp;
-
-      // Step 2: Verify OTP
-      const req2 = { body: { phone: TEST_PHONE, otp: code } };
+      const req2 = { body: { email: TEST_EMAIL, code: ["123456"] } };
       const res2 = createMockRes();
-      await verifyOtp(req2, res2);
+      await verifyCode(req2, res2);
+      assert.equal(res2.statusCode, 400);
+    });
 
-      assert.equal(res2.statusCode, 200);
-      assert.equal(res2.body.success, true);
-      assert.equal(res2.body.vendor.phone, TEST_PHONE);
-      assert.equal(res2.body.vendor.storeId, STORE_ID);
+    it("successfully verifies code, clears code, and sets vendor_session cookie", async () => {
+      const req = { body: { email: TEST_EMAIL }, ip: "127.0.0.1" };
+      await requestCode(req, createMockRes());
 
-      // Verify separate cookie
-      assert.ok(res2.cookies["vendor_session"]);
-      const cookie = res2.cookies["vendor_session"];
-      assert.equal(cookie.opts.httpOnly, true);
-      assert.equal(cookie.opts.sameSite, "lax");
+      const code = sentMails[0].text.match(/\b\d{6}\b/)[0];
+      const verifyReq = { body: { email: TEST_EMAIL, code } };
+      const verifyRes = createMockRes();
 
-      const sessionPayload = verifyToken(cookie.val, TEST_SECRET);
-      assert.equal(sessionPayload.role, "vendor");
-      assert.equal(sessionPayload.phone, TEST_PHONE);
-      assert.equal(sessionPayload.storeId, STORE_ID);
+      await verifyCode(verifyReq, verifyRes);
 
-      // Code must be single-use: Reusing the same code fails
-      const resReuse = createMockRes();
-      await verifyOtp(req2, resReuse);
-      assert.equal(resReuse.statusCode, 400);
-      assert.match(resReuse.body.message, /already used|No active verification code/i);
+      assert.equal(verifyRes.statusCode, 200);
+      assert.equal(verifyRes.body.success, true);
+      assert.ok(verifyRes.cookies.vendor_session, "Must set vendor_session cookie");
+      assert.equal(verifyRes.cookies.vendor_session.opts.httpOnly, true);
+
+      // Re-using the same code must fail (single use)
+      const reuseRes = createMockRes();
+      await verifyCode(verifyReq, reuseRes);
+      assert.equal(reuseRes.statusCode, 400);
     });
 
     it("rejects wrong code with 400", async () => {
-      const req1 = { body: { phone: TEST_PHONE }, ip: "192.168.1.4", headers: {} };
-      const res1 = createMockRes();
-      await requestOtp(req1, res1);
+      const req = { body: { email: TEST_EMAIL }, ip: "127.0.0.1" };
+      await requestCode(req, createMockRes());
 
-      const req2 = { body: { phone: TEST_PHONE, otp: "000000" } };
-      const res2 = createMockRes();
-      await verifyOtp(req2, res2);
+      const verifyRes = createMockRes();
+      await verifyCode({ body: { email: TEST_EMAIL, code: "000000" } }, verifyRes);
 
-      assert.equal(res2.statusCode, 400);
-      assert.match(res2.body.message, /Invalid verification code/i);
+      assert.equal(verifyRes.statusCode, 400);
+      assert.ok(verifyRes.body.message.includes("Invalid verification code"));
     });
 
-    it("rejects expired OTP", async () => {
+    it("rejects expired code", async () => {
       setInMemoryVendor({
         _id: "vendor_1",
-        phone: TEST_PHONE,
+        email: TEST_EMAIL,
         storeId: STORE_ID,
         status: "approved",
-        otpHash: hashString("123456"),
-        otpExpiresAt: Date.now() - 1000, // Expired
-        otpAttempts: 0,
+        codeHash: hashString("123456"),
+        codeExpiresAt: Date.now() - 1000, // Expired
       });
 
-      const req = { body: { phone: TEST_PHONE, otp: "123456" } };
-      const res = createMockRes();
-      await verifyOtp(req, res);
-
-      assert.equal(res.statusCode, 400);
-      assert.match(res.body.message, /expired/i);
-    });
-
-    it("locks out code after too many failed attempts (attempt limits)", async () => {
-      const req1 = { body: { phone: TEST_PHONE }, ip: "192.168.1.5", headers: {} };
-      const res1 = createMockRes();
-      await requestOtp(req1, res1);
-
-      for (let i = 0; i < 5; i++) {
-        const verifyReq = { body: { phone: TEST_PHONE, otp: "000000" } };
-        const verifyRes = createMockRes();
-        await verifyOtp(verifyReq, verifyRes);
-        assert.equal(verifyRes.statusCode, 400);
-      }
-
-      // 6th attempt should be rejected with 429
-      const verifyReq = { body: { phone: TEST_PHONE, otp: sentOtp } };
       const verifyRes = createMockRes();
-      await verifyOtp(verifyReq, verifyRes);
+      await verifyCode({ body: { email: TEST_EMAIL, code: "123456" } }, verifyRes);
 
-      assert.equal(verifyRes.statusCode, 429);
-      assert.match(verifyRes.body.message, /Too many failed attempts/i);
+      assert.equal(verifyRes.statusCode, 400);
+      assert.ok(verifyRes.body.message.includes("expired"));
     });
   });
 
-  describe("Vendor Store Access & Ownership Enforcement", () => {
-    it("allows approved vendor access to their own store (requireStoreOwner)", async () => {
+  describe("Vendor Store Access & Ownership Enforcement (requireStoreOwner)", () => {
+    it("allows approved vendor access to their own store and populates req.store", async () => {
       const token = signToken(
-        {
-          vendorId: "vendor_1",
-          phone: TEST_PHONE,
-          storeId: "store_0103",
-          status: "approved",
-          role: "vendor",
-        },
-        TEST_SECRET
+        { vendorId: "vendor_1", email: TEST_EMAIL, storeId: STORE_ID, status: "approved", role: "vendor" },
+        TEST_SECRET,
+        3600
       );
 
       const req = {
         cookies: { vendor_session: token },
-        params: { storeId: "store_0103" },
-        headers: {},
+        params: { storeId: STORE_ID },
       };
       const res = createMockRes();
-      let nextCalled = false;
 
+      let calledNext = false;
       await requireStoreOwner(req, res, () => {
-        nextCalled = true;
+        calledNext = true;
       });
 
-      assert.equal(nextCalled, true);
-      assert.ok(req.store);
-      assert.equal(req.store._id, "store_0103");
+      assert.equal(calledNext, true);
+      assert.ok(req.store, "Must populate req.store");
+      assert.equal(req.store._id, STORE_ID);
     });
 
-    it("resolves store by slug or subdomain in requireStoreOwner", async () => {
+    it("returns 403 when a vendor was removed in DB after login token was issued", async () => {
+      // Token says approved
       const token = signToken(
-        {
-          vendorId: "vendor_farmer",
-          phone: "+919876543211",
-          storeId: "store_farmer_01",
-          status: "approved",
-          role: "vendor",
-        },
-        TEST_SECRET
+        { vendorId: "vendor_1", email: TEST_EMAIL, storeId: STORE_ID, status: "approved", role: "vendor" },
+        TEST_SECRET,
+        3600
       );
 
-      // Resolving by slug
-      const req = {
-        cookies: { vendor_session: token },
-        params: { storeId: "kisan-organics" },
-        headers: {},
-      };
-      const res = createMockRes();
-      let nextCalled = false;
-
-      await requireStoreOwner(req, res, () => {
-        nextCalled = true;
+      // But vendor status in DB/store is now 'removed'
+      setInMemoryVendor({
+        _id: "vendor_1",
+        email: TEST_EMAIL,
+        storeId: STORE_ID,
+        status: "removed",
       });
-
-      assert.equal(nextCalled, true);
-      assert.equal(req.store._id, "store_farmer_01");
-    });
-
-    it("rejects unapproved vendor with 403", async () => {
-      const token = signToken(
-        {
-          vendorId: "vendor_pending",
-          phone: "+919876543299",
-          storeId: "store_0103",
-          status: "pending", // Unapproved!
-          role: "vendor",
-        },
-        TEST_SECRET
-      );
 
       const req = {
         cookies: { vendor_session: token },
-        params: { storeId: "store_0103" },
-        headers: {},
+        params: { storeId: STORE_ID },
       };
       const res = createMockRes();
-      let nextCalled = false;
 
+      let calledNext = false;
       await requireStoreOwner(req, res, () => {
-        nextCalled = true;
+        calledNext = true;
       });
 
-      assert.equal(nextCalled, false);
+      assert.equal(calledNext, false);
       assert.equal(res.statusCode, 403);
-      assert.match(res.body.message, /not approved/i);
+      assert.ok(res.body.message.includes("not approved"));
     });
 
     it("rejects vendor requesting another vendor's store with 403", async () => {
       const token = signToken(
-        {
-          vendorId: "vendor_1",
-          phone: TEST_PHONE,
-          storeId: "store_0103", // Vendor owns store_0103
-          status: "approved",
-          role: "vendor",
-        },
-        TEST_SECRET
+        { vendorId: "vendor_1", email: TEST_EMAIL, storeId: STORE_ID, status: "approved", role: "vendor" },
+        TEST_SECRET,
+        3600
       );
 
-      // Attempting to access store_farmer_01
       const req = {
         cookies: { vendor_session: token },
-        params: { storeId: "store_farmer_01" },
-        headers: {},
+        params: { storeId: "store_farmer_01" }, // different store
       };
       const res = createMockRes();
-      let nextCalled = false;
 
+      let calledNext = false;
       await requireStoreOwner(req, res, () => {
-        nextCalled = true;
+        calledNext = true;
       });
 
-      assert.equal(nextCalled, false);
+      assert.equal(calledNext, false);
       assert.equal(res.statusCode, 403);
-      assert.match(res.body.message, /Forbidden.*ownership/i);
+      assert.ok(res.body.message.includes("do not have ownership"));
     });
 
-    it("returns 404 for nonexistent store in requireStoreOwner", async () => {
-      const token = signToken(
-        {
-          vendorId: "vendor_1",
-          phone: TEST_PHONE,
-          storeId: "store_nonexistent",
-          status: "approved",
-          role: "vendor",
-        },
-        TEST_SECRET
-      );
+    it("safely handles '(' without throwing SyntaxError and '.*' without matching every store", async () => {
+      // '(' would break unescaped new RegExp
+      const storeWithParen = await resolveStoreByIdentifier("store_(");
+      assert.equal(storeWithParen, null);
 
-      const req = {
-        cookies: { vendor_session: token },
-        params: { storeId: "store_nonexistent" },
-        headers: {},
-      };
-      const res = createMockRes();
-      let nextCalled = false;
-
-      await requireStoreOwner(req, res, () => {
-        nextCalled = true;
-      });
-
-      assert.equal(nextCalled, false);
-      assert.equal(res.statusCode, 404);
+      // '.*' must not match everything
+      const storeWithWildcard = await resolveStoreByIdentifier(".*");
+      assert.equal(storeWithWildcard, null);
     });
   });
 

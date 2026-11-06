@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Store,
   Plus,
@@ -24,8 +24,7 @@ import { apiFetch } from "@/lib/apiClient";
 export default function VendorDashboard({
   defaultTab = "catalog",
 }) {
-  const { storeId: routeStoreId } = useParams();
-  const [storeId, setStoreId] = useState(routeStoreId || null);
+  const [storeId, setStoreId] = useState(null);
   const [store, setStore] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
