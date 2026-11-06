@@ -48,5 +48,18 @@ describe("Server Route Stack Tests", () => {
     );
     assert.ok(subRequestRoute, "Should register subscription request route");
     assert.ok(subRequestRoute.methods.includes("post"), "Should handle POST method");
+
+    // Check admin authentication routes
+    const adminLoginRoute = registeredRoutes.find((r) => r.path === "/admin/auth/login");
+    assert.ok(adminLoginRoute, "Should register admin login route");
+    assert.ok(adminLoginRoute.methods.includes("post"), "Should handle POST method");
+
+    const adminVerifyRoute = registeredRoutes.find((r) => r.path === "/admin/auth/verify");
+    assert.ok(adminVerifyRoute, "Should register admin verify route");
+    assert.ok(adminVerifyRoute.methods.includes("post"), "Should handle POST method");
+
+    const adminLogoutRoute = registeredRoutes.find((r) => r.path === "/admin/auth/logout");
+    assert.ok(adminLogoutRoute, "Should register admin logout route");
+    assert.ok(adminLogoutRoute.methods.includes("post"), "Should handle POST method");
   });
 });

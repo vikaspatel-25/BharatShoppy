@@ -24,6 +24,11 @@ import {
   adminDirectRenew,
   adminDirectDiscontinue,
 } from "../controllers/subscriptionController.js";
+import {
+  adminLogin,
+  adminVerify,
+  adminLogout,
+} from "../controllers/adminAuthController.js";
 
 const router = express.Router();
 
@@ -44,6 +49,11 @@ router.get("/tenant/resolve", resolveTenant);
 router.get("/subscription/plans", getSubscriptionPlans);
 router.get("/vendor/store/:storeId/subscription", getStoreSubscriptionInfo);
 router.post("/vendor/store/:storeId/subscription-request", submitSubscriptionRequest);
+
+// Admin Authentication Desk
+router.post("/admin/auth/login", adminLogin);
+router.post("/admin/auth/verify", adminVerify);
+router.post("/admin/auth/logout", adminLogout);
 
 // Admin Subscription Control & Verification Desk
 router.get("/admin/subscription-requests", getAdminPaymentRequests);
