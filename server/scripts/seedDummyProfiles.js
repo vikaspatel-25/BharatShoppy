@@ -651,9 +651,24 @@ export const dummyProducts = [
 ];
 
 /**
+ * Guard function to prevent accidental seeding in production or without explicit consent.
+ */
+export function assertSeedAllowed(env = process.env) {
+  if (env.NODE_ENV === "production") {
+    throw new Error("Seeding is strictly prohibited in production environment (NODE_ENV=production).");
+  }
+  if (env.ALLOW_SEED !== "true") {
+    throw new Error("Seeding requires ALLOW_SEED=true in environment.");
+  }
+}
+
+/**
  * Main Seeding Routine
  */
-async function runSeed() {
+export async function runSeed(options = {}) {
+  const env = options.env || process.env;
+  assertSeedAllowed(env);
+
   console.log("\n==========================================================");
   console.log("   BharatShoppy: Dynamic Profile & Catalog Seeder Script   ");
   console.log("==========================================================\n");
@@ -752,7 +767,14 @@ async function runSeed() {
   console.log("All dummy profiles and catalog items seeded successfully!\n");
 }
 
-runSeed().catch((err) => {
-  console.error("Fatal seed script error:", err);
-  process.exit(1);
-});
+const isDirectRun =
+  Boolean(process.argv[1]) &&
+  (fileURLToPath(import.meta.url) === path.resolve(process.argv[1]) ||
+    process.argv[1].endsWith("seedDummyProfiles.js"));
+
+if (isDirectRun) {
+  runSeed().catch((err) => {
+    console.error("Fatal seed script error:", err.message);
+    process.exit(1);
+  });
+}
