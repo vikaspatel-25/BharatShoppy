@@ -1,3455 +1,6812 @@
 const stores = [
-
   {
-      _id: "store_0103",
-      storeName: "Vastra Heritage Boutique",
-      slug: "vastra-heritage-boutique",
-      description: "A premium apparel studio blending traditional Rajasthani craftsmanship with modern ethnic fashion. Specializing in hand-block prints, bridal wear, and bespoke tailoring.",
-      logo: "/mock/stores/vastra-heritage-boutique/logo.webp",
-      images: [
-        "/mock/stores/vastra-heritage-boutique/store-front.webp",
-        "/mock/stores/vastra-heritage-boutique/interior-display.webp"
-      ],
-      storeCategory: "Apparel & Fashion",
-      city: "Jaipur",
-      state: "Rajasthan",
-      location: { latitude: 26.9184, longitude: 75.7903 }, // Slightly offset from city center
-      address: {
-        area: "Johari Bazaar",
-        city: "Jaipur",
-        state: "Rajasthan",
-        pincode: "302003",
+    "_id": "store_farmer_01",
+    "storeName": "Kisan Organic Produce & Farms",
+    "slug": "kisan-organics",
+    "subdomain": "kisan-organics",
+    "entityType": "farmer",
+    "storeCategory": "Groceries & Organics",
+    "description": "Direct-from-farm certified organic produce, heirloom grains, and cold-pressed oils harvested in Nashik valley. Zero chemical fertilizers, 100% trace-to-farm purity.",
+    "logo": "/assets/images/placeholders/storeLogoPlaceholder.svg",
+    "images": [
+      "/assets/images/placeholders/storePlaceholder.jpeg"
+    ],
+    "city": "Nashik",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 20.011,
+      "longitude": 73.79
+    },
+    "address": {
+      "area": "Dindori Agro Belt",
+      "city": "Nashik",
+      "state": "Maharashtra",
+      "pincode": "422004"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "06:00",
+        "close": "19:00"
       },
-      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-      businessHours: {
-        monday: { open: "11:00", close: "21:00" },
-        tuesday: { open: "11:00", close: "21:00" },
-        wednesday: { open: "11:00", close: "21:00" },
-        thursday: { open: "11:00", close: "21:00" },
-        friday: { open: "11:00", close: "21:00" },
-        saturday: { open: "11:00", close: "21:00" },
-        sunday: { open: "10:00", close: "16:00" },
+      "tuesday": {
+        "open": "06:00",
+        "close": "19:00"
       },
-      isActive: true,
-      createdAt: "2023-11-15T09:30:00.000Z",
-      updatedAt: "2023-12-01T14:20:00.000Z",
-    },
-    {
-      _id: "store_0104",
-      storeName: "Chapter & Verse Booksellers",
-      slug: "chapter-and-verse-booksellers",
-      description: "An independent bookstore and cozy reading cafe offering curated selections of fiction, rare antiquarian books, and artisanal coffees.",
-      logo: "/mock/stores/chapter-and-verse/logo.webp",
-      images: [
-        "/mock/stores/chapter-and-verse/store-front.webp",
-        "/mock/stores/chapter-and-verse/reading-nook.webp"
-      ],
-      storeCategory: "Books & Stationery",
-      city: "Kolkata",
-      state: "West Bengal",
-      location: { latitude: 22.5766, longitude: 88.3609 },
-      address: {
-        area: "College Street",
-        city: "Kolkata",
-        state: "West Bengal",
-        pincode: "700073",
+      "wednesday": {
+        "open": "06:00",
+        "close": "19:00"
       },
-      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-      businessHours: {
-        monday: { open: "09:00", close: "19:00" },
-        tuesday: { open: "09:00", close: "19:00" },
-        wednesday: { open: "09:00", close: "19:00" },
-        thursday: { open: "09:00", close: "19:00" },
-        friday: { open: "09:00", close: "19:00" },
-        saturday: { open: "10:00", close: "20:00" },
-        sunday: { open: "closed", close: "closed" },
+      "thursday": {
+        "open": "06:00",
+        "close": "19:00"
       },
-      isActive: true,
-      createdAt: "2024-01-10T10:00:00.000Z",
-      updatedAt: "2024-01-10T10:00:00.000Z",
-    },
-    {
-      _id: "store_0105",
-      storeName: "Earthly Harvest Organics",
-      slug: "earthly-harvest-organics",
-      description: "Your neighborhood source for farm-fresh organic produce, cold-pressed oils, gluten-free pantry staples, and eco-friendly cleaning supplies.",
-      logo: "/mock/stores/earthly-harvest-organics/logo.webp",
-      images: ["/mock/stores/earthly-harvest-organics/store-front.webp"],
-      storeCategory: "Groceries & Organics",
-      city: "Bengaluru",
-      state: "Karnataka",
-      location: { latitude: 12.9786, longitude: 77.6446 },
-      address: {
-        area: "Indiranagar",
-        city: "Bengaluru",
-        state: "Karnataka",
-        pincode: "560038",
+      "friday": {
+        "open": "06:00",
+        "close": "19:00"
       },
-      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-      businessHours: {
-        monday: { open: "07:00", close: "22:00" },
-        tuesday: { open: "07:00", close: "22:00" },
-        wednesday: { open: "07:00", close: "22:00" },
-        thursday: { open: "07:00", close: "22:00" },
-        friday: { open: "07:00", close: "22:00" },
-        saturday: { open: "07:00", close: "22:00" },
-        sunday: { open: "08:00", close: "21:00" },
+      "saturday": {
+        "open": "06:00",
+        "close": "20:00"
       },
-      isActive: true,
-      createdAt: "2024-02-05T08:15:00.000Z",
-      updatedAt: "2024-03-12T09:00:00.000Z",
+      "sunday": {
+        "open": "06:00",
+        "close": "14:00"
+      }
     },
-    {
-      _id: "store_0106",
-      storeName: "Timber & Twine Interiors",
-      slug: "timber-and-twine-interiors",
-      description: "Curated modern bohemian furniture, sustainable wood furnishings, and handmade home decor accents to transform your living spaces.",
-      logo: "/mock/stores/timber-and-twine/logo.webp",
-      images: [
-        "/mock/stores/timber-and-twine/store-front.webp",
-        "/mock/stores/timber-and-twine/showroom.webp"
-      ],
-      storeCategory: "Furniture & Home Decor",
-      city: "Pune",
-      state: "Maharashtra",
-      location: { latitude: 18.5364, longitude: 73.8967 },
-      address: {
-        area: "Koregaon Park",
-        city: "Pune",
-        state: "Maharashtra",
-        pincode: "411001",
+    "metadata": {
+      "harvestSeason": "Kharif & Rabi 2026 Season",
+      "organicCertified": true,
+      "mandiPriceBenchmark": "Nashik APMC Grade-A Benchmark",
+      "fssaiLicense": "FSSAI-11524036000123",
+      "farmSize": "18 Acres Farm Holding",
+      "produceGuarantee": "100% Natural, Pesticide Free"
+    },
+    "subscription": {
+      "plan": "yearly_pro",
+      "status": "active",
+      "startDate": "2026-01-01T00:00:00.000Z",
+      "expiresAt": "2027-10-24T00:00:00.000Z"
+    },
+    "limits": {
+      "productMonthlyLimit": 200
+    },
+    "isActive": true,
+    "createdAt": "2026-10-24T17:58:31.196Z",
+    "updatedAt": "2026-10-24T17:58:31.197Z"
+  },
+  {
+    "_id": "store_service_01",
+    "storeName": "FixPro Expert Appliance Care & Repairs",
+    "slug": "fixpro-appliance-care",
+    "subdomain": "fixpro",
+    "entityType": "service_provider",
+    "storeCategory": "Services & Repairs",
+    "description": "Certified master technicians for inverter AC servicing, refrigerator repair, washing machine diagnostics, and home electrical audits. 90-day comprehensive service warranty.",
+    "logo": "/assets/images/placeholders/storeLogoPlaceholder.svg",
+    "images": [
+      "/assets/images/placeholders/storePlaceholder.jpeg"
+    ],
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9352,
+      "longitude": 77.6245
+    },
+    "address": {
+      "area": "Koramangala 5th Block",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560095"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "08:30",
+        "close": "21:00"
       },
-      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-      businessHours: {
-        monday: { open: "closed", close: "closed" },
-        tuesday: { open: "10:30", close: "20:30" },
-        wednesday: { open: "10:30", close: "20:30" },
-        thursday: { open: "10:30", close: "20:30" },
-        friday: { open: "10:30", close: "20:30" },
-        saturday: { open: "11:00", close: "21:00" },
-        sunday: { open: "11:00", close: "21:00" },
+      "tuesday": {
+        "open": "08:30",
+        "close": "21:00"
       },
-      isActive: true,
-      createdAt: "2023-09-22T11:45:00.000Z",
-      updatedAt: "2023-10-01T16:30:00.000Z",
-    },
-    {
-      _id: "store_0107",
-      storeName: "Paws & Whiskers Emporium",
-      slug: "paws-and-whiskers-emporium",
-      description: "A luxury pet boutique offering premium nutrition, interactive toys, grooming essentials, and stylish accessories for dogs and cats.",
-      logo: "/mock/stores/paws-and-whiskers/logo.webp",
-      images: ["/mock/stores/paws-and-whiskers/store-front.webp"],
-      storeCategory: "Pet Supplies",
-      city: "Chandigarh",
-      state: "Chandigarh",
-      location: { latitude: 30.7413, longitude: 76.7824 },
-      address: {
-        area: "Sector 17",
-        city: "Chandigarh",
-        state: "Chandigarh",
-        pincode: "160017",
+      "wednesday": {
+        "open": "08:30",
+        "close": "21:00"
       },
-      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-      businessHours: {
-        monday: { open: "09:30", close: "20:00" },
-        tuesday: { open: "09:30", close: "20:00" },
-        wednesday: { open: "09:30", close: "20:00" },
-        thursday: { open: "09:30", close: "20:00" },
-        friday: { open: "09:30", close: "20:00" },
-        saturday: { open: "09:30", close: "21:00" },
-        sunday: { open: "10:00", close: "18:00" },
+      "thursday": {
+        "open": "08:30",
+        "close": "21:00"
       },
-      isActive: true,
-      createdAt: "2024-04-12T10:00:00.000Z",
-      updatedAt: "2024-04-12T10:00:00.000Z",
-    },
-    {
-      _id: "store_0108",
-      storeName: "Apex Sports & Outdoors",
-      slug: "apex-sports-outdoors",
-      description: "The ultimate destination for athletes and adventurers. Featuring top-tier footwear, camping gear, fitness equipment, and activewear.",
-      logo: "/mock/stores/apex-sports/logo.webp",
-      images: ["/mock/stores/apex-sports/store-front.webp"],
-      storeCategory: "Sports & Outdoors",
-      city: "Delhi",
-      state: "Delhi",
-      location: { latitude: 28.5539, longitude: 77.2000 },
-      address: {
-        area: "Hauz Khas",
-        city: "Delhi",
-        state: "Delhi",
-        pincode: "110016",
+      "friday": {
+        "open": "08:30",
+        "close": "21:00"
       },
-      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-      businessHours: {
-        monday: { open: "10:00", close: "21:30" },
-        tuesday: { open: "10:00", close: "21:30" },
-        wednesday: { open: "10:00", close: "21:30" },
-        thursday: { open: "10:00", close: "21:30" },
-        friday: { open: "10:00", close: "21:30" },
-        saturday: { open: "10:00", close: "22:00" },
-        sunday: { open: "10:00", close: "22:00" },
+      "saturday": {
+        "open": "08:30",
+        "close": "21:00"
       },
-      isActive: true,
-      createdAt: "2023-05-18T09:00:00.000Z",
-      updatedAt: "2024-01-20T11:15:00.000Z",
+      "sunday": {
+        "open": "09:00",
+        "close": "18:00"
+      }
     },
-    {
-      _id: "store_0109",
-      storeName: "Aura Fine Jewellery",
-      slug: "aura-fine-jewellery",
-      description: "Exquisite diamond, gold, and platinum collections. From timeless bridal trousseaus to contemporary everyday elegance.",
-      logo: "/mock/stores/aura-jewellery/logo.webp",
-      images: [
-        "/mock/stores/aura-jewellery/store-front.webp",
-        "/mock/stores/aura-jewellery/display-case.webp"
-      ],
-      storeCategory: "Jewelry & Watches",
-      city: "Surat",
-      state: "Gujarat",
-      location: { latitude: 21.1752, longitude: 72.8011 },
-      address: {
-        area: "Vesu",
-        city: "Surat",
-        state: "Gujarat",
-        pincode: "395007",
+    "metadata": {
+      "experienceYears": 12,
+      "licenseNumber": "KAR-EE-2018-9042",
+      "serviceAreas": "Koramangala, Indiranagar, HSR Layout, BTM, Bellandur",
+      "warrantyPolicy": "90-Day Comprehensive Warranty on parts & labor",
+      "emergencyService": true
+    },
+    "subscription": {
+      "plan": "yearly_standard",
+      "status": "active",
+      "startDate": "2026-03-01T00:00:00.000Z",
+      "expiresAt": "2027-10-24T00:00:00.000Z"
+    },
+    "limits": {
+      "productMonthlyLimit": 50
+    },
+    "isActive": true,
+    "createdAt": "2026-10-24T17:58:31.197Z",
+    "updatedAt": "2026-10-24T17:58:31.197Z"
+  },
+  {
+    "_id": "store_0103",
+    "storeName": "Vastra Heritage Boutique",
+    "slug": "vastra-heritage-boutique",
+    "subdomain": "vastra",
+    "entityType": "shopkeeper",
+    "storeCategory": "Apparel & Fashion",
+    "description": "A premium apparel studio blending traditional Rajasthani craftsmanship with modern ethnic fashion. Specializing in hand-block prints, festive bridal wear, and bespoke tailoring.",
+    "logo": "/assets/images/placeholders/storeLogoPlaceholder.svg",
+    "images": [
+      "/assets/images/placeholders/storePlaceholder.jpeg"
+    ],
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9184,
+      "longitude": 75.7903
+    },
+    "address": {
+      "area": "Johari Bazaar",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302003"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "11:00",
+        "close": "21:00"
       },
-      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-      businessHours: {
-        monday: { open: "11:00", close: "20:00" },
-        tuesday: { open: "11:00", close: "20:00" },
-        wednesday: { open: "11:00", close: "20:00" },
-        thursday: { open: "11:00", close: "20:00" },
-        friday: { open: "11:00", close: "20:00" },
-        saturday: { open: "11:00", close: "20:00" },
-        sunday: { open: "closed", close: "closed" },
+      "tuesday": {
+        "open": "11:00",
+        "close": "21:00"
       },
-      isActive: true,
-      createdAt: "2022-11-10T10:30:00.000Z",
-      updatedAt: "2024-02-14T09:45:00.000Z",
-    },
-    {
-      _id: "store_0110",
-      storeName: "The Urban Botanist",
-      slug: "the-urban-botanist",
-      description: "Bring nature indoors. We offer a diverse selection of exotic houseplants, handcrafted ceramic pots, botanical art, and terrarium kits.",
-      logo: "/mock/stores/urban-botanist/logo.webp",
-      images: ["/mock/stores/urban-botanist/store-front.webp"],
-      storeCategory: "Home & Garden",
-      city: "Mumbai",
-      state: "Maharashtra",
-      location: { latitude: 19.0560, longitude: 72.8377 },
-      address: {
-        area: "Bandra West",
-        city: "Mumbai",
-        state: "Maharashtra",
-        pincode: "400050",
+      "wednesday": {
+        "open": "11:00",
+        "close": "21:00"
       },
-      contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-      businessHours: {
-        monday: { open: "10:00", close: "19:00" },
-        tuesday: { open: "10:00", close: "19:00" },
-        wednesday: { open: "10:00", close: "19:00" },
-        thursday: { open: "10:00", close: "19:00" },
-        friday: { open: "10:00", close: "19:00" },
-        saturday: { open: "09:00", close: "20:00" },
-        sunday: { open: "09:00", close: "20:00" },
+      "thursday": {
+        "open": "11:00",
+        "close": "21:00"
       },
-      isActive: true,
-      createdAt: "2024-03-01T08:00:00.000Z",
-      updatedAt: "2024-03-05T12:00:00.000Z",
-    },
-  // --- CITY 1: MUMBAI (Stores 1-10) ---
-  {
-    _id: "store_001",
-    storeName: "TechZone Electronics",
-    slug: "techzone-electronics-mumbai",
-    description:
-      "Electronics and gadgets store offering smartphones, laptops, headphones, accessories.",
-    logo: "/mock/stores/techzone-electronics-mumbai/logo.webp",
-    images: ["/mock/stores/techzone-electronics-mumbai/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.076, longitude: 72.8777 },
-    address: {
-      area: "Andheri West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400058",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_002",
-    storeName: "Mumbai Mobile Hub",
-    slug: "mumbai-mobile-hub",
-    description:
-      "Smartphones, mobile accessories, chargers, cases and other consumer electronics.",
-    logo: "/mock/stores/mumbai-mobile-hub/logo.webp",
-    images: ["/mock/stores/mumbai-mobile-hub/store-front.webp"],
-    storeCategory: "Mobiles",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.077, longitude: 72.8787 },
-    address: {
-      area: "Bandra West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400050",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_003",
-    storeName: "Gadget Gallery",
-    slug: "gadget-gallery-mumbai",
-    description:
-      "Gadget store specializing in smartwatches, wireless earbuds, speakers.",
-    logo: "/mock/stores/gadget-gallery-mumbai/logo.webp",
-    images: ["/mock/stores/gadget-gallery-mumbai/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.078, longitude: 72.8797 },
-    address: {
-      area: "Borivali West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400092",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_004",
-    storeName: "Digital Point",
-    slug: "digital-point-mumbai",
-    description:
-      "Consumer electronics retailer offering laptops, tablets, monitors.",
-    logo: "/mock/stores/digital-point-mumbai/logo.webp",
-    images: ["/mock/stores/digital-point-mumbai/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.079, longitude: 72.8807 },
-    address: {
-      area: "Powai",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400076",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_005",
-    storeName: "CromaTech Solutions",
-    slug: "cromatech-solutions-mumbai",
-    description:
-      "Electronics and computer store offering laptops, desktops, networking equipment.",
-    logo: "/mock/stores/cromatech-solutions-mumbai/logo.webp",
-    images: ["/mock/stores/cromatech-solutions-mumbai/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.08, longitude: 72.8817 },
-    address: {
-      area: "Dadar West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400028",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_006",
-    storeName: "Audio World",
-    slug: "audio-world-mumbai",
-    description:
-      "Audio equipment and accessories store offering headphones, earphones.",
-    logo: "/mock/stores/audio-world-mumbai/logo.webp",
-    images: ["/mock/stores/audio-world-mumbai/store-front.webp"],
-    storeCategory: "Audio",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.081, longitude: 72.8827 },
-    address: {
-      area: "Malad West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400064",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_007",
-    storeName: "Laptop House",
-    slug: "laptop-house-mumbai",
-    description:
-      "Laptop and computer specialist offering notebooks, gaming laptops.",
-    logo: "/mock/stores/laptop-house-mumbai/logo.webp",
-    images: ["/mock/stores/laptop-house-mumbai/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.082, longitude: 72.8837 },
-    address: {
-      area: "Ghatkopar West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400086",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_008",
-    storeName: "Smart Gadgets Mumbai",
-    slug: "smart-gadgets-mumbai",
-    description: "Smart technology store offering smartwatches, fitness bands.",
-    logo: "/mock/stores/smart-gadgets-mumbai/logo.webp",
-    images: ["/mock/stores/smart-gadgets-mumbai/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.083, longitude: 72.8847 },
-    address: {
-      area: "Vile Parle West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400056",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_009",
-    storeName: "Gadget Junction",
-    slug: "gadget-junction-mumbai",
-    description:
-      "Local electronics and gadget store offering mobile accessories.",
-    logo: "/mock/stores/gadget-junction-mumbai/logo.webp",
-    images: ["/mock/stores/gadget-junction-mumbai/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.084, longitude: 72.8857 },
-    address: {
-      area: "Kandivali West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400067",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_010",
-    storeName: "Digital World",
-    slug: "digital-world-mumbai",
-    description:
-      "Consumer electronics store offering smartphones, televisions, laptops.",
-    logo: "/mock/stores/digital-world-mumbai/logo.webp",
-    images: ["/mock/stores/digital-world-mumbai/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Mumbai",
-    state: "Maharashtra",
-    location: { latitude: 19.085, longitude: 72.8867 },
-    address: {
-      area: "Kurla West",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400070",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 2: HYDERABAD (Stores 11-20) ---
-  {
-    _id: "store_011",
-    storeName: "TechPoint Electronics",
-    slug: "techpoint-electronics-hyderabad",
-    description:
-      "Consumer electronics store offering smartphones, laptops, televisions.",
-    logo: "/mock/stores/techpoint-electronics-hyderabad/logo.webp",
-    images: ["/mock/stores/techpoint-electronics-hyderabad/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.385, longitude: 78.4867 },
-    address: {
-      area: "Ameerpet",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500016",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_012",
-    storeName: "Digital Hub",
-    slug: "digital-hub-hyderabad",
-    description:
-      "Local electronics and gadget store specializing in smartphones.",
-    logo: "/mock/stores/digital-hub-hyderabad/logo.webp",
-    images: ["/mock/stores/digital-hub-hyderabad/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.386, longitude: 78.4877 },
-    address: {
-      area: "Himayat Nagar",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500029",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_013",
-    storeName: "Gadget Gallery",
-    slug: "gadget-gallery-hyderabad",
-    description: "Gadget store featuring headphones, smartwatches, speakers.",
-    logo: "/mock/stores/gadget-gallery-hyderabad/logo.webp",
-    images: ["/mock/stores/gadget-gallery-hyderabad/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.387, longitude: 78.4887 },
-    address: {
-      area: "Banjara Hills",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500034",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_014",
-    storeName: "SmartTech Store",
-    slug: "smarttech-store-hyderabad",
-    description: "Technology retailer offering smartphones, laptops, tablets.",
-    logo: "/mock/stores/smarttech-store-hyderabad/logo.webp",
-    images: ["/mock/stores/smarttech-store-hyderabad/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.388, longitude: 78.4897 },
-    address: {
-      area: "Kukatpally",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500072",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_015",
-    storeName: "ElectroMart",
-    slug: "electromart-hyderabad",
-    description:
-      "Electronics retailer with televisions, refrigerators, washing machines.",
-    logo: "/mock/stores/electromart-hyderabad/logo.webp",
-    images: ["/mock/stores/electromart-hyderabad/store-front.webp"],
-    storeCategory: "Home Appliances",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.389, longitude: 78.4907 },
-    address: {
-      area: "Secunderabad",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500003",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_016",
-    storeName: "Mobile Zone",
-    slug: "mobile-zone-hyderabad",
-    description: "Mobile phone store offering smartphones, chargers, cases.",
-    logo: "/mock/stores/mobile-zone-hyderabad/logo.webp",
-    images: ["/mock/stores/mobile-zone-hyderabad/store-front.webp"],
-    storeCategory: "Mobiles",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.39, longitude: 78.4917 },
-    address: {
-      area: "Dilsukhnagar",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500060",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_017",
-    storeName: "Laptop House",
-    slug: "laptop-house-hyderabad",
-    description: "Computer store specializing in laptops, desktops, monitors.",
-    logo: "/mock/stores/laptop-house-hyderabad/logo.webp",
-    images: ["/mock/stores/laptop-house-hyderabad/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.391, longitude: 78.4927 },
-    address: {
-      area: "Ameerpet",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500016",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_018",
-    storeName: "Audio World",
-    slug: "audio-world-hyderabad",
-    description:
-      "Specialized audio store offering headphones, earphones, speakers.",
-    logo: "/mock/stores/audio-world-hyderabad/logo.webp",
-    images: ["/mock/stores/audio-world-hyderabad/store-front.webp"],
-    storeCategory: "Audio",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.392, longitude: 78.4937 },
-    address: {
-      area: "Jubilee Hills",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500033",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_019",
-    storeName: "Gadget Point",
-    slug: "gadget-point-hyderabad",
-    description:
-      "Gadget and accessories store offering smartwatches, power banks.",
-    logo: "/mock/stores/gadget-point-hyderabad/logo.webp",
-    images: ["/mock/stores/gadget-point-hyderabad/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.393, longitude: 78.4947 },
-    address: {
-      area: "Begumpet",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500016",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_020",
-    storeName: "NextGen Electronics",
-    slug: "nextgen-electronics-hyderabad",
-    description:
-      "Modern electronics store offering smart TVs, gaming consoles.",
-    logo: "/mock/stores/nextgen-electronics-hyderabad/logo.webp",
-    images: ["/mock/stores/nextgen-electronics-hyderabad/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Hyderabad",
-    state: "Telangana",
-    location: { latitude: 17.394, longitude: 78.4957 },
-    address: {
-      area: "Madhapur",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500081",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 3: AHMEDABAD (Stores 21-30) ---
-  {
-    _id: "store_021",
-    storeName: "Ahmedabad Electronics Hub",
-    slug: "ahmedabad-electronics-hub",
-    description: "Electronics and gadgets store offering smartphones, laptops.",
-    logo: "/mock/stores/ahmedabad-electronics-hub/logo.webp",
-    images: ["/mock/stores/ahmedabad-electronics-hub/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0225, longitude: 72.5714 },
-    address: {
-      area: "Navrangpura",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380009",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_022",
-    storeName: "Gadget House",
-    slug: "gadget-house-ahmedabad",
-    description:
-      "Gadget store offering smartwatches, wireless headphones, speakers.",
-    logo: "/mock/stores/gadget-house-ahmedabad/logo.webp",
-    images: ["/mock/stores/gadget-house-ahmedabad/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0235, longitude: 72.5724 },
-    address: {
-      area: "C G Road",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380006",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_023",
-    storeName: "Mobile Arena",
-    slug: "mobile-arena-ahmedabad",
-    description: "Mobile phone store offering smartphones, tablets, chargers.",
-    logo: "/mock/stores/mobile-arena-ahmedabad/logo.webp",
-    images: ["/mock/stores/mobile-arena-ahmedabad/store-front.webp"],
-    storeCategory: "Mobiles",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0245, longitude: 72.5734 },
-    address: {
-      area: "Maninagar",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380008",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_024",
-    storeName: "Laptop World",
-    slug: "laptop-world-ahmedabad",
-    description:
-      "Computer and laptop store offering notebooks, desktops, monitors.",
-    logo: "/mock/stores/laptop-world-ahmedabad/logo.webp",
-    images: ["/mock/stores/laptop-world-ahmedabad/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0255, longitude: 72.5744 },
-    address: {
-      area: "Ashram Road",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380009",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_025",
-    storeName: "Smart Electronics",
-    slug: "smart-electronics-ahmedabad",
-    description: "Consumer electronics retailer specializing in smart TVs.",
-    logo: "/mock/stores/smart-electronics-ahmedabad/logo.webp",
-    images: ["/mock/stores/smart-electronics-ahmedabad/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0265, longitude: 72.5754 },
-    address: {
-      area: "Satellite",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380015",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_026",
-    storeName: "Audio Point",
-    slug: "audio-point-ahmedabad",
-    description: "Audio equipment store offering headphones, earphones.",
-    logo: "/mock/stores/audio-point-ahmedabad/logo.webp",
-    images: ["/mock/stores/audio-point-ahmedabad/store-front.webp"],
-    storeCategory: "Audio",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0275, longitude: 72.5764 },
-    address: {
-      area: "Vastrapur",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380015",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_027",
-    storeName: "Digital World",
-    slug: "digital-world-ahmedabad",
-    description:
-      "Technology store offering laptops, smartphones, gaming accessories.",
-    logo: "/mock/stores/digital-world-ahmedabad/logo.webp",
-    images: ["/mock/stores/digital-world-ahmedabad/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0285, longitude: 72.5774 },
-    address: {
-      area: "Bodakdev",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380054",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_028",
-    storeName: "Gadget Junction",
-    slug: "gadget-junction-ahmedabad",
-    description:
-      "Gadget store offering smartwatches, fitness bands, wireless accessories.",
-    logo: "/mock/stores/gadget-junction-ahmedabad/logo.webp",
-    images: ["/mock/stores/gadget-junction-ahmedabad/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0295, longitude: 72.5784 },
-    address: {
-      area: "Prahlad Nagar",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380015",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_029",
-    storeName: "Tech Square",
-    slug: "tech-square-ahmedabad",
-    description:
-      "Electronics and technology store offering smartphones, laptops, tablets.",
-    logo: "/mock/stores/tech-square-ahmedabad/logo.webp",
-    images: ["/mock/stores/tech-square-ahmedabad/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0305, longitude: 72.5794 },
-    address: {
-      area: "Thaltej",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380054",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_030",
-    storeName: "Future Tech Store",
-    slug: "future-tech-store-ahmedabad",
-    description:
-      "Modern electronics retailer offering smart home devices, laptops.",
-    logo: "/mock/stores/future-tech-store-ahmedabad/logo.webp",
-    images: ["/mock/stores/future-tech-store-ahmedabad/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    location: { latitude: 23.0315, longitude: 72.5804 },
-    address: {
-      area: "S G Highway",
-      city: "Ahmedabad",
-      state: "Gujarat",
-      pincode: "380054",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 4: DELHI (Stores 31-40) ---
-  {
-    _id: "store_031",
-    storeName: "Croma Delhi",
-    slug: "croma-delhi",
-    description:
-      "Consumer electronics store offering smartphones, laptops, televisions.",
-    logo: "/mock/stores/croma-delhi/logo.webp",
-    images: ["/mock/stores/croma-delhi/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6139, longitude: 77.209 },
-    address: {
-      area: "Nehru Place",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110019",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_032",
-    storeName: "Reliance Digital Delhi",
-    slug: "reliance-digital-delhi",
-    description:
-      "Electronics and technology store featuring smartphones, laptops, televisions.",
-    logo: "/mock/stores/reliance-digital-delhi/logo.webp",
-    images: ["/mock/stores/reliance-digital-delhi/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6149, longitude: 77.21 },
-    address: {
-      area: "Rohini",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110085",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_033",
-    storeName: "Vijay Sales Delhi",
-    slug: "vijay-sales-delhi",
-    description:
-      "Multi-brand electronics retailer specializing in televisions, smartphones.",
-    logo: "/mock/stores/vijay-sales-delhi/logo.webp",
-    images: ["/mock/stores/vijay-sales-delhi/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6159, longitude: 77.211 },
-    address: {
-      area: "Lajpat Nagar",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110024",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_034",
-    storeName: "Apple Studio Delhi",
-    slug: "apple-studio-delhi",
-    description:
-      "Premium Apple products retailer offering iPhones, MacBooks, iPads.",
-    logo: "/mock/stores/apple-studio-delhi/logo.webp",
-    images: ["/mock/stores/apple-studio-delhi/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6169, longitude: 77.212 },
-    address: {
-      area: "South Extension",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110049",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_035",
-    storeName: "Samsung Smart Plaza",
-    slug: "samsung-smart-plaza-delhi",
-    description:
-      "Samsung-focused store offering smartphones, tablets, televisions.",
-    logo: "/mock/stores/samsung-smart-plaza-delhi/logo.webp",
-    images: ["/mock/stores/samsung-smart-plaza-delhi/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6179, longitude: 77.213 },
-    address: {
-      area: "Karol Bagh",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110005",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_036",
-    storeName: "Sony Center Delhi",
-    slug: "sony-center-delhi",
-    description:
-      "Sony electronics store offering televisions, cameras, headphones.",
-    logo: "/mock/stores/sony-center-delhi/logo.webp",
-    images: ["/mock/stores/sony-center-delhi/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6189, longitude: 77.214 },
-    address: {
-      area: "Connaught Place",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110001",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_037",
-    storeName: "Laptop Hub Delhi",
-    slug: "laptop-hub-delhi",
-    description: "Computer store specializing in laptops, desktops, monitors.",
-    logo: "/mock/stores/laptop-hub-delhi/logo.webp",
-    images: ["/mock/stores/laptop-hub-delhi/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6199, longitude: 77.215 },
-    address: {
-      area: "Nehru Place",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110019",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_038",
-    storeName: "Gadget Point Delhi",
-    slug: "gadget-point-delhi",
-    description:
-      "Gadget and accessories store offering headphones, smartwatches.",
-    logo: "/mock/stores/gadget-point-delhi/logo.webp",
-    images: ["/mock/stores/gadget-point-delhi/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6209, longitude: 77.216 },
-    address: {
-      area: "Rajouri Garden",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110027",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_039",
-    storeName: "Camera House Delhi",
-    slug: "camera-house-delhi",
-    description:
-      "Photography and videography equipment store offering cameras, lenses.",
-    logo: "/mock/stores/camera-house-delhi/logo.webp",
-    images: ["/mock/stores/camera-house-delhi/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6219, longitude: 77.217 },
-    address: {
-      area: "Chandni Chowk",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110006",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_040",
-    storeName: "Gaming Arena Delhi",
-    slug: "gaming-arena-delhi",
-    description: "Gaming store offering gaming PCs, consoles, monitors.",
-    logo: "/mock/stores/gaming-arena-delhi/logo.webp",
-    images: ["/mock/stores/gaming-arena-delhi/store-front.webp"],
-    storeCategory: "Gaming",
-    city: "Delhi",
-    state: "Delhi",
-    location: { latitude: 28.6229, longitude: 77.218 },
-    address: {
-      area: "Laxmi Nagar",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110092",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 5: BENGALURU (Stores 41-50) ---
-  {
-    _id: "store_041",
-    storeName: "Croma Bengaluru",
-    slug: "croma-bengaluru",
-    description:
-      "Consumer electronics store offering smartphones, laptops, televisions.",
-    logo: "/mock/stores/croma-bengaluru/logo.webp",
-    images: ["/mock/stores/croma-bengaluru/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9716, longitude: 77.5946 },
-    address: {
-      area: "Koramangala",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560034",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_042",
-    storeName: "Reliance Digital Bengaluru",
-    slug: "reliance-digital-bengaluru",
-    description:
-      "Electronics and technology store featuring smartphones, laptops, televisions.",
-    logo: "/mock/stores/reliance-digital-bengaluru/logo.webp",
-    images: ["/mock/stores/reliance-digital-bengaluru/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9726, longitude: 77.5956 },
-    address: {
-      area: "Whitefield",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560066",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_043",
-    storeName: "Vijay Sales Bengaluru",
-    slug: "vijay-sales-bengaluru",
-    description:
-      "Multi-brand electronics retailer specializing in televisions, smartphones.",
-    logo: "/mock/stores/vijay-sales-bengaluru/logo.webp",
-    images: ["/mock/stores/vijay-sales-bengaluru/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9736, longitude: 77.5966 },
-    address: {
-      area: "Indiranagar",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560038",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_044",
-    storeName: "Apple Studio Bengaluru",
-    slug: "apple-studio-bengaluru",
-    description:
-      "Premium Apple products retailer offering iPhones, MacBooks, iPads.",
-    logo: "/mock/stores/apple-studio-bengaluru/logo.webp",
-    images: ["/mock/stores/apple-studio-bengaluru/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9746, longitude: 77.5976 },
-    address: {
-      area: "Jayanagar",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560041",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_045",
-    storeName: "Samsung Smart Plaza",
-    slug: "samsung-smart-plaza-bengaluru",
-    description:
-      "Samsung-focused store offering smartphones, tablets, televisions.",
-    logo: "/mock/stores/samsung-smart-plaza-bengaluru/logo.webp",
-    images: ["/mock/stores/samsung-smart-plaza-bengaluru/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9756, longitude: 77.5986 },
-    address: {
-      area: "Malleshwaram",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560003",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_046",
-    storeName: "Sony Center Bengaluru",
-    slug: "sony-center-bengaluru",
-    description:
-      "Sony electronics store offering televisions, cameras, headphones.",
-    logo: "/mock/stores/sony-center-bengaluru/logo.webp",
-    images: ["/mock/stores/sony-center-bengaluru/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9766, longitude: 77.5996 },
-    address: {
-      area: "MG Road",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560001",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_047",
-    storeName: "Laptop Hub Bengaluru",
-    slug: "laptop-hub-bengaluru",
-    description: "Computer store specializing in laptops, desktops, monitors.",
-    logo: "/mock/stores/laptop-hub-bengaluru/logo.webp",
-    images: ["/mock/stores/laptop-hub-bengaluru/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9776, longitude: 77.6006 },
-    address: {
-      area: "SP Road",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560002",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_048",
-    storeName: "Gadget Point Bengaluru",
-    slug: "gadget-point-bengaluru",
-    description:
-      "Gadget and accessories store offering headphones, smartwatches.",
-    logo: "/mock/stores/gadget-point-bengaluru/logo.webp",
-    images: ["/mock/stores/gadget-point-bengaluru/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9786, longitude: 77.6016 },
-    address: {
-      area: "HSR Layout",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560102",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_049",
-    storeName: "Camera House Bengaluru",
-    slug: "camera-house-bengaluru",
-    description:
-      "Photography and videography equipment store offering cameras, lenses.",
-    logo: "/mock/stores/camera-house-bengaluru/logo.webp",
-    images: ["/mock/stores/camera-house-bengaluru/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9796, longitude: 77.6026 },
-    address: {
-      area: "Rajajinagar",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560010",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_050",
-    storeName: "Gaming Arena Bengaluru",
-    slug: "gaming-arena-bengaluru",
-    description: "Gaming store offering gaming PCs, consoles, monitors.",
-    logo: "/mock/stores/gaming-arena-bengaluru/logo.webp",
-    images: ["/mock/stores/gaming-arena-bengaluru/store-front.webp"],
-    storeCategory: "Gaming",
-    city: "Bengaluru",
-    state: "Karnataka",
-    location: { latitude: 12.9806, longitude: 77.6036 },
-    address: {
-      area: "Marathahalli",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560037",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 6: JAIPUR (Stores 51-60) ---
-  {
-    _id: "store_051",
-    storeName: "Jaipur Tech World",
-    slug: "jaipur-tech-world",
-    description:
-      "Consumer electronics store offering smartphones, laptops, headphones.",
-    logo: "/mock/stores/jaipur-tech-world/logo.webp",
-    images: ["/mock/stores/jaipur-tech-world/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9124, longitude: 75.7873 },
-    address: {
-      area: "C Scheme",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302001",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_052",
-    storeName: "Gadget Hub Jaipur",
-    slug: "gadget-hub-jaipur",
-    description:
-      "Gadget store offering smartwatches, wireless earbuds, portable speakers.",
-    logo: "/mock/stores/gadget-hub-jaipur/logo.webp",
-    images: ["/mock/stores/gadget-hub-jaipur/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9134, longitude: 75.7883 },
-    address: {
-      area: "Malviya Nagar",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302017",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_053",
-    storeName: "Laptop House Jaipur",
-    slug: "laptop-house-jaipur",
-    description:
-      "Computer retailer offering laptops, desktops, monitors, printers.",
-    logo: "/mock/stores/laptop-house-jaipur/logo.webp",
-    images: ["/mock/stores/laptop-house-jaipur/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9144, longitude: 75.7893 },
-    address: {
-      area: "Vaishali Nagar",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302021",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_054",
-    storeName: "Mobile World Jaipur",
-    slug: "mobile-world-jaipur",
-    description:
-      "Smartphone store offering mobile phones, tablets, cases, chargers.",
-    logo: "/mock/stores/mobile-world-jaipur/logo.webp",
-    images: ["/mock/stores/mobile-world-jaipur/store-front.webp"],
-    storeCategory: "Mobiles",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9154, longitude: 75.7903 },
-    address: {
-      area: "Mansarovar",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302020",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_055",
-    storeName: "Digital Point Jaipur",
-    slug: "digital-point-jaipur",
-    description:
-      "Electronics store offering televisions, laptops, cameras, smartphones.",
-    logo: "/mock/stores/digital-point-jaipur/logo.webp",
-    images: ["/mock/stores/digital-point-jaipur/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9164, longitude: 75.7913 },
-    address: {
-      area: "Raja Park",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302004",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_056",
-    storeName: "Audio World Jaipur",
-    slug: "audio-world-jaipur",
-    description:
-      "Audio store offering headphones, earphones, Bluetooth speakers.",
-    logo: "/mock/stores/audio-world-jaipur/logo.webp",
-    images: ["/mock/stores/audio-world-jaipur/store-front.webp"],
-    storeCategory: "Audio",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9174, longitude: 75.7923 },
-    address: {
-      area: "Bani Park",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302016",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_057",
-    storeName: "SmartTech Jaipur",
-    slug: "smarttech-jaipur",
-    description:
-      "Smart electronics retailer offering smart TVs, wearables, smart home devices.",
-    logo: "/mock/stores/smarttech-jaipur/logo.webp",
-    images: ["/mock/stores/smarttech-jaipur/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9184, longitude: 75.7933 },
-    address: {
-      area: "Jagatpura",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302017",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_058",
-    storeName: "Gaming Arena Jaipur",
-    slug: "gaming-arena-jaipur",
-    description:
-      "Gaming electronics store offering gaming laptops, consoles, controllers.",
-    logo: "/mock/stores/gaming-arena-jaipur/logo.webp",
-    images: ["/mock/stores/gaming-arena-jaipur/store-front.webp"],
-    storeCategory: "Gaming",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9194, longitude: 75.7943 },
-    address: {
-      area: "Tonk Road",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302018",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_059",
-    storeName: "Tech Avenue Jaipur",
-    slug: "tech-avenue-jaipur",
-    description:
-      "Electronics and gadget retailer offering smartphones, laptops, cameras.",
-    logo: "/mock/stores/tech-avenue-jaipur/logo.webp",
-    images: ["/mock/stores/tech-avenue-jaipur/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9204, longitude: 75.7953 },
-    address: {
-      area: "M I Road",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302001",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_060",
-    storeName: "Prime Electronics Jaipur",
-    slug: "prime-electronics-jaipur",
-    description:
-      "Multi-brand electronics store offering smartphones, laptops, televisions.",
-    logo: "/mock/stores/prime-electronics-jaipur/logo.webp",
-    images: ["/mock/stores/prime-electronics-jaipur/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Jaipur",
-    state: "Rajasthan",
-    location: { latitude: 26.9214, longitude: 75.7963 },
-    address: {
-      area: "Durgapura",
-      city: "Jaipur",
-      state: "Rajasthan",
-      pincode: "302018",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 7: PUNE (Stores 61-70) ---
-  {
-    _id: "store_061",
-    storeName: "Pune Tech Hub",
-    slug: "pune-tech-hub",
-    description:
-      "Your local destination for smartphones, laptops, and gadgets.",
-    logo: "/mock/stores/pune-tech-hub/logo.webp",
-    images: ["/mock/stores/pune-tech-hub/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5204, longitude: 73.8567 },
-    address: {
-      area: "Baner",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411045",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_062",
-    storeName: "Gadget World Pune",
-    slug: "gadget-world-pune",
-    description:
-      "Premium gadget store featuring headphones, wearables, and accessories.",
-    logo: "/mock/stores/gadget-world-pune/logo.webp",
-    images: ["/mock/stores/gadget-world-pune/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5214, longitude: 73.8577 },
-    address: {
-      area: "Koregaon Park",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411001",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_063",
-    storeName: "Laptop Zone Pune",
-    slug: "laptop-zone-pune",
-    description: "Dedicated laptop and PC store for gamers and professionals.",
-    logo: "/mock/stores/laptop-zone-pune/logo.webp",
-    images: ["/mock/stores/laptop-zone-pune/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5224, longitude: 73.8587 },
-    address: {
-      area: "Viman Nagar",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411014",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_064",
-    storeName: "Mobile Planet Pune",
-    slug: "mobile-planet-pune",
-    description:
-      "Latest smartphones, cases, chargers, and mobile repair services.",
-    logo: "/mock/stores/mobile-planet-pune/logo.webp",
-    images: ["/mock/stores/mobile-planet-pune/store-front.webp"],
-    storeCategory: "Mobiles",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5234, longitude: 73.8597 },
-    address: {
-      area: "Hinjewadi",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411057",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_065",
-    storeName: "Digital Avenue Pune",
-    slug: "digital-avenue-pune",
-    description: "One-stop shop for home appliances and digital electronics.",
-    logo: "/mock/stores/digital-avenue-pune/logo.webp",
-    images: ["/mock/stores/digital-avenue-pune/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5244, longitude: 73.8607 },
-    address: {
-      area: "Shivaji Nagar",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411005",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_066",
-    storeName: "Audio Space Pune",
-    slug: "audio-space-pune",
-    description:
-      "High-fidelity audio systems, soundbars, and premium earphones.",
-    logo: "/mock/stores/audio-space-pune/logo.webp",
-    images: ["/mock/stores/audio-space-pune/store-front.webp"],
-    storeCategory: "Audio",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5254, longitude: 73.8617 },
-    address: {
-      area: "Kothrud",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411038",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_067",
-    storeName: "Smart Devices Pune",
-    slug: "smart-devices-pune",
-    description:
-      "IoT devices, smart lighting, and automation products for your home.",
-    logo: "/mock/stores/smart-devices-pune/logo.webp",
-    images: ["/mock/stores/smart-devices-pune/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5264, longitude: 73.8627 },
-    address: {
-      area: "Kalyani Nagar",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411006",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_068",
-    storeName: "Gaming World Pune",
-    slug: "gaming-world-pune",
-    description:
-      "Everything a gamer needs: Consoles, graphic cards, and peripherals.",
-    logo: "/mock/stores/gaming-world-pune/logo.webp",
-    images: ["/mock/stores/gaming-world-pune/store-front.webp"],
-    storeCategory: "Gaming",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5274, longitude: 73.8637 },
-    address: {
-      area: "Hadapsar",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411028",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_069",
-    storeName: "Tech Prime Pune",
-    slug: "tech-prime-pune",
-    description: "Premium tech products from the world's leading brands.",
-    logo: "/mock/stores/tech-prime-pune/logo.webp",
-    images: ["/mock/stores/tech-prime-pune/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5284, longitude: 73.8647 },
-    address: {
-      area: "Magarpatta",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411013",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_070",
-    storeName: "Prime Gadgets Pune",
-    slug: "prime-gadgets-pune",
-    description: "Daily use electronics, cables, powerbanks and portable tech.",
-    logo: "/mock/stores/prime-gadgets-pune/logo.webp",
-    images: ["/mock/stores/prime-gadgets-pune/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Pune",
-    state: "Maharashtra",
-    location: { latitude: 18.5294, longitude: 73.8657 },
-    address: {
-      area: "Wakad",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411057",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 8: CHENNAI (Stores 71-80) ---
-  {
-    _id: "store_071",
-    storeName: "Chennai Electronics Hub",
-    slug: "chennai-electronics-hub",
-    description:
-      "Your local destination for smartphones, laptops, and gadgets.",
-    logo: "/mock/stores/chennai-electronics-hub/logo.webp",
-    images: ["/mock/stores/chennai-electronics-hub/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0827, longitude: 80.2707 },
-    address: {
-      area: "T Nagar",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600017",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_072",
-    storeName: "Tech Gadget Chennai",
-    slug: "tech-gadget-chennai",
-    description:
-      "Premium gadget store featuring headphones, wearables, and accessories.",
-    logo: "/mock/stores/tech-gadget-chennai/logo.webp",
-    images: ["/mock/stores/tech-gadget-chennai/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0837, longitude: 80.2717 },
-    address: {
-      area: "Velachery",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600042",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_073",
-    storeName: "Laptop Arena Chennai",
-    slug: "laptop-arena-chennai",
-    description: "Dedicated laptop and PC store for gamers and professionals.",
-    logo: "/mock/stores/laptop-arena-chennai/logo.webp",
-    images: ["/mock/stores/laptop-arena-chennai/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0847, longitude: 80.2727 },
-    address: {
-      area: "Adyar",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600020",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_074",
-    storeName: "Mobile World Chennai",
-    slug: "mobile-world-chennai",
-    description:
-      "Latest smartphones, cases, chargers, and mobile repair services.",
-    logo: "/mock/stores/mobile-world-chennai/logo.webp",
-    images: ["/mock/stores/mobile-world-chennai/store-front.webp"],
-    storeCategory: "Mobiles",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0857, longitude: 80.2737 },
-    address: {
-      area: "Anna Nagar",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600040",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_075",
-    storeName: "Digital Space Chennai",
-    slug: "digital-space-chennai",
-    description: "One-stop shop for home appliances and digital electronics.",
-    logo: "/mock/stores/digital-space-chennai/logo.webp",
-    images: ["/mock/stores/digital-space-chennai/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0867, longitude: 80.2747 },
-    address: {
-      area: "OMR",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600096",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_076",
-    storeName: "Audio Hub Chennai",
-    slug: "audio-hub-chennai",
-    description:
-      "High-fidelity audio systems, soundbars, and premium earphones.",
-    logo: "/mock/stores/audio-hub-chennai/logo.webp",
-    images: ["/mock/stores/audio-hub-chennai/store-front.webp"],
-    storeCategory: "Audio",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0877, longitude: 80.2757 },
-    address: {
-      area: "Guindy",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600032",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_077",
-    storeName: "SmartTech Chennai",
-    slug: "smarttech-chennai",
-    description:
-      "IoT devices, smart lighting, and automation products for your home.",
-    logo: "/mock/stores/smarttech-chennai/logo.webp",
-    images: ["/mock/stores/smarttech-chennai/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0887, longitude: 80.2767 },
-    address: {
-      area: "Nungambakkam",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600034",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_078",
-    storeName: "Gaming Point Chennai",
-    slug: "gaming-point-chennai",
-    description:
-      "Everything a gamer needs: Consoles, graphic cards, and peripherals.",
-    logo: "/mock/stores/gaming-point-chennai/logo.webp",
-    images: ["/mock/stores/gaming-point-chennai/store-front.webp"],
-    storeCategory: "Gaming",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0897, longitude: 80.2777 },
-    address: {
-      area: "Mylapore",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600004",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_079",
-    storeName: "Future Tech Chennai",
-    slug: "future-tech-chennai",
-    description: "Premium tech products from the world's leading brands.",
-    logo: "/mock/stores/future-tech-chennai/logo.webp",
-    images: ["/mock/stores/future-tech-chennai/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0907, longitude: 80.2787 },
-    address: {
-      area: "Tambaram",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600045",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_080",
-    storeName: "Prime Electronics Chennai",
-    slug: "prime-electronics-chennai",
-    description: "Daily use electronics, cables, powerbanks and portable tech.",
-    logo: "/mock/stores/prime-electronics-chennai/logo.webp",
-    images: ["/mock/stores/prime-electronics-chennai/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    location: { latitude: 13.0917, longitude: 80.2797 },
-    address: {
-      area: "Alwarpet",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600018",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 9: KOLKATA (Stores 81-90) ---
-  {
-    _id: "store_081",
-    storeName: "Kolkata Tech Centre",
-    slug: "kolkata-tech-centre",
-    description:
-      "Your local destination for smartphones, laptops, and gadgets.",
-    logo: "/mock/stores/kolkata-tech-centre/logo.webp",
-    images: ["/mock/stores/kolkata-tech-centre/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5726, longitude: 88.3639 },
-    address: {
-      area: "Park Street",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700016",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_082",
-    storeName: "Gadget Galaxy Kolkata",
-    slug: "gadget-galaxy-kolkata",
-    description:
-      "Premium gadget store featuring headphones, wearables, and accessories.",
-    logo: "/mock/stores/gadget-galaxy-kolkata/logo.webp",
-    images: ["/mock/stores/gadget-galaxy-kolkata/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5736, longitude: 88.3649 },
-    address: {
-      area: "Salt Lake",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700091",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_083",
-    storeName: "Laptop Hub Kolkata",
-    slug: "laptop-hub-kolkata",
-    description: "Dedicated laptop and PC store for gamers and professionals.",
-    logo: "/mock/stores/laptop-hub-kolkata/logo.webp",
-    images: ["/mock/stores/laptop-hub-kolkata/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5746, longitude: 88.3659 },
-    address: {
-      area: "New Town",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700156",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_084",
-    storeName: "Mobile Zone Kolkata",
-    slug: "mobile-zone-kolkata",
-    description:
-      "Latest smartphones, cases, chargers, and mobile repair services.",
-    logo: "/mock/stores/mobile-zone-kolkata/logo.webp",
-    images: ["/mock/stores/mobile-zone-kolkata/store-front.webp"],
-    storeCategory: "Mobiles",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5756, longitude: 88.3669 },
-    address: {
-      area: "Ballygunge",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700019",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_085",
-    storeName: "Digital Avenue Kolkata",
-    slug: "digital-avenue-kolkata",
-    description: "One-stop shop for home appliances and digital electronics.",
-    logo: "/mock/stores/digital-avenue-kolkata/logo.webp",
-    images: ["/mock/stores/digital-avenue-kolkata/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5766, longitude: 88.3679 },
-    address: {
-      area: "Howrah",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "711101",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_086",
-    storeName: "Audio Studio Kolkata",
-    slug: "audio-studio-kolkata",
-    description:
-      "High-fidelity audio systems, soundbars, and premium earphones.",
-    logo: "/mock/stores/audio-studio-kolkata/logo.webp",
-    images: ["/mock/stores/audio-studio-kolkata/store-front.webp"],
-    storeCategory: "Audio",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5776, longitude: 88.3689 },
-    address: {
-      area: "Jadavpur",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700032",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_087",
-    storeName: "Smart Home Kolkata",
-    slug: "smart-home-kolkata",
-    description:
-      "IoT devices, smart lighting, and automation products for your home.",
-    logo: "/mock/stores/smart-home-kolkata/logo.webp",
-    images: ["/mock/stores/smart-home-kolkata/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5786, longitude: 88.3699 },
-    address: {
-      area: "Gariahat",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700029",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_088",
-    storeName: "Gaming Galaxy Kolkata",
-    slug: "gaming-galaxy-kolkata",
-    description:
-      "Everything a gamer needs: Consoles, graphic cards, and peripherals.",
-    logo: "/mock/stores/gaming-galaxy-kolkata/logo.webp",
-    images: ["/mock/stores/gaming-galaxy-kolkata/store-front.webp"],
-    storeCategory: "Gaming",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5796, longitude: 88.3709 },
-    address: {
-      area: "Rajarhat",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700135",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_089",
-    storeName: "Tech Square Kolkata",
-    slug: "tech-square-kolkata",
-    description: "Premium tech products from the world's leading brands.",
-    logo: "/mock/stores/tech-square-kolkata/logo.webp",
-    images: ["/mock/stores/tech-square-kolkata/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5806, longitude: 88.3719 },
-    address: {
-      area: "Alipore",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700027",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_090",
-    storeName: "Prime Gadgets Kolkata",
-    slug: "prime-gadgets-kolkata",
-    description: "Daily use electronics, cables, powerbanks and portable tech.",
-    logo: "/mock/stores/prime-gadgets-kolkata/logo.webp",
-    images: ["/mock/stores/prime-gadgets-kolkata/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Kolkata",
-    state: "West Bengal",
-    location: { latitude: 22.5816, longitude: 88.3729 },
-    address: {
-      area: "Bhowanipore",
-      city: "Kolkata",
-      state: "West Bengal",
-      pincode: "700025",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-
-  // --- CITY 10: INDORE (Stores 91-100) ---
-  {
-    _id: "store_091",
-    storeName: "Indore Tech Hub",
-    slug: "indore-tech-hub",
-    description:
-      "Your local destination for smartphones, laptops, and gadgets.",
-    logo: "/mock/stores/indore-tech-hub/logo.webp",
-    images: ["/mock/stores/indore-tech-hub/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7196, longitude: 75.8577 },
-    address: {
-      area: "Palasia",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452001",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_092",
-    storeName: "Gadget Zone Indore",
-    slug: "gadget-zone-indore",
-    description:
-      "Premium gadget store featuring headphones, wearables, and accessories.",
-    logo: "/mock/stores/gadget-zone-indore/logo.webp",
-    images: ["/mock/stores/gadget-zone-indore/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7206, longitude: 75.8587 },
-    address: {
-      area: "Vijay Nagar",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452010",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_093",
-    storeName: "Laptop World Indore",
-    slug: "laptop-world-indore",
-    description: "Dedicated laptop and PC store for gamers and professionals.",
-    logo: "/mock/stores/laptop-world-indore/logo.webp",
-    images: ["/mock/stores/laptop-world-indore/store-front.webp"],
-    storeCategory: "Computers",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7216, longitude: 75.8597 },
-    address: {
-      area: "Bhawar Kuan",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452014",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_094",
-    storeName: "Mobile Galaxy Indore",
-    slug: "mobile-galaxy-indore",
-    description:
-      "Latest smartphones, cases, chargers, and mobile repair services.",
-    logo: "/mock/stores/mobile-galaxy-indore/logo.webp",
-    images: ["/mock/stores/mobile-galaxy-indore/store-front.webp"],
-    storeCategory: "Mobiles",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7226, longitude: 75.8607 },
-    address: {
-      area: "Rajwada",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452002",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_095",
-    storeName: "Digital Point Indore",
-    slug: "digital-point-indore",
-    description: "One-stop shop for home appliances and digital electronics.",
-    logo: "/mock/stores/digital-point-indore/logo.webp",
-    images: ["/mock/stores/digital-point-indore/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7236, longitude: 75.8617 },
-    address: {
-      area: "AB Road",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452011",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_096",
-    storeName: "Audio Arena Indore",
-    slug: "audio-arena-indore",
-    description:
-      "High-fidelity audio systems, soundbars, and premium earphones.",
-    logo: "/mock/stores/audio-arena-indore/logo.webp",
-    images: ["/mock/stores/audio-arena-indore/store-front.webp"],
-    storeCategory: "Audio",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7246, longitude: 75.8627 },
-    address: {
-      area: "Sapna Sangeeta",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452001",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_097",
-    storeName: "SmartTech Indore",
-    slug: "smarttech-indore",
-    description:
-      "IoT devices, smart lighting, and automation products for your home.",
-    logo: "/mock/stores/smarttech-indore/logo.webp",
-    images: ["/mock/stores/smarttech-indore/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7256, longitude: 75.8637 },
-    address: {
-      area: "Geeta Bhawan",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452001",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_098",
-    storeName: "Gaming Hub Indore",
-    slug: "gaming-hub-indore",
-    description:
-      "Everything a gamer needs: Consoles, graphic cards, and peripherals.",
-    logo: "/mock/stores/gaming-hub-indore/logo.webp",
-    images: ["/mock/stores/gaming-hub-indore/store-front.webp"],
-    storeCategory: "Gaming",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7266, longitude: 75.8647 },
-    address: {
-      area: "MR 10",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452010",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_099",
-    storeName: "Future Electronics Indore",
-    slug: "future-electronics-indore",
-    description: "Premium tech products from the world's leading brands.",
-    logo: "/mock/stores/future-electronics-indore/logo.webp",
-    images: ["/mock/stores/future-electronics-indore/store-front.webp"],
-    storeCategory: "Electronics",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7276, longitude: 75.8657 },
-    address: {
-      area: "Sudama Nagar",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452009",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
-  {
-    _id: "store_100",
-    storeName: "Prime Gadgets Indore",
-    slug: "prime-gadgets-indore",
-    description: "Daily use electronics, cables, powerbanks and portable tech.",
-    logo: "/mock/stores/prime-gadgets-indore/logo.webp",
-    images: ["/mock/stores/prime-gadgets-indore/store-front.webp"],
-    storeCategory: "Gadgets",
-    city: "Indore",
-    state: "Madhya Pradesh",
-    location: { latitude: 22.7286, longitude: 75.8667 },
-    address: {
-      area: "Annapurna",
-      city: "Indore",
-      state: "Madhya Pradesh",
-      pincode: "452009",
-    },
-    contact: { phone: "+916261667099", whatsapp: "+916261667099" },
-    businessHours: {
-      monday: { open: "10:00", close: "20:00" },
-      tuesday: { open: "10:00", close: "20:00" },
-      wednesday: { open: "10:00", close: "20:00" },
-      thursday: { open: "10:00", close: "20:00" },
-      friday: { open: "10:00", close: "20:00" },
-      saturday: { open: "10:00", close: "20:00" },
-      sunday: { open: "11:00", close: "18:00" },
-    },
-    isActive: true,
-    createdAt: "2026-08-22T10:00:00.000Z",
-    updatedAt: "2026-08-22T10:00:00.000Z",
-  },
+      "friday": {
+        "open": "11:00",
+        "close": "21:00"
+      },
+      "saturday": {
+        "open": "11:00",
+        "close": "21:00"
+      },
+      "sunday": {
+        "open": "10:00",
+        "close": "16:00"
+      }
+    },
+    "metadata": {
+      "gstin": "08AABCV1234F1Z8",
+      "returnPolicy": "7 Days Hassle-Free Exchange on unworn garments",
+      "deliveryNotes": "Complimentary doorstep trial & custom alteration in Jaipur",
+      "customTailoringAvailable": true
+    },
+    "subscription": {
+      "plan": "yearly_standard",
+      "status": "active",
+      "startDate": "2026-02-15T00:00:00.000Z",
+      "expiresAt": "2027-10-24T00:00:00.000Z"
+    },
+    "limits": {
+      "productMonthlyLimit": 50
+    },
+    "isActive": true,
+    "createdAt": "2026-10-24T17:58:31.197Z",
+    "updatedAt": "2026-10-24T17:58:31.197Z"
+  },
+  {
+    "_id": "store_expired_01",
+    "storeName": "The Vintage Attic Antiques",
+    "slug": "vintage-attic",
+    "subdomain": "vintage-attic",
+    "entityType": "shopkeeper",
+    "storeCategory": "Furniture & Home Decor",
+    "description": "Curators of colonial brass collectibles, hand-carved teakwood artifacts, and antique pendulum clocks. (Listing currently pending annual subscription renewal).",
+    "logo": "/assets/images/placeholders/storeLogoPlaceholder.svg",
+    "images": [
+      "/assets/images/placeholders/storePlaceholder.jpeg"
+    ],
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6139,
+      "longitude": 77.209
+    },
+    "address": {
+      "area": "Hauz Khas Village",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110016"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "metadata": {
+      "gstin": "07AAACR4567B1Z2",
+      "returnPolicy": "Antique appraisal certificate included with all orders",
+      "deliveryNotes": "Specialized fragile freight shipping with transit insurance"
+    },
+    "subscription": {
+      "plan": "yearly_standard",
+      "status": "expired",
+      "startDate": "2025-08-01T00:00:00.000Z",
+      "expiresAt": "2026-08-01T00:00:00.000Z"
+    },
+    "limits": {
+      "productMonthlyLimit": 50
+    },
+    "isActive": true,
+    "createdAt": "2025-08-01T00:00:00.000Z",
+    "updatedAt": "2026-10-24T17:58:31.197Z"
+  },
+  {
+    "_id": "store_capped_01",
+    "storeName": "Daily Kirana & General Mart",
+    "slug": "daily-kirana",
+    "subdomain": "daily-kirana",
+    "entityType": "shopkeeper",
+    "storeCategory": "Groceries & Organics",
+    "description": "Your friendly neighborhood kirana store for fresh essentials, daily dairy, pulses, and snacks. (Operating on Starter Free Tier, quota ceiling of 15 items reached).",
+    "logo": "/assets/images/placeholders/storeLogoPlaceholder.svg",
+    "images": [
+      "/assets/images/placeholders/storePlaceholder.jpeg"
+    ],
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7196,
+      "longitude": 75.8577
+    },
+    "address": {
+      "area": "Vijay Nagar",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452010"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "tuesday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "wednesday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "thursday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "friday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "saturday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "sunday": {
+        "open": "07:00",
+        "close": "22:00"
+      }
+    },
+    "metadata": {
+      "gstin": "23AABCK8899P1Z9",
+      "deliveryNotes": "Free doorstep delivery on orders above ₹300 within 2km"
+    },
+    "subscription": {
+      "plan": "starter_free",
+      "status": "active",
+      "startDate": "2026-01-01T00:00:00.000Z",
+      "expiresAt": null
+    },
+    "limits": {
+      "productMonthlyLimit": 15
+    },
+    "isActive": true,
+    "createdAt": "2026-10-24T17:58:31.197Z",
+    "updatedAt": "2026-10-24T17:58:31.197Z"
+  },
+  {
+    "_id": "store_0104",
+    "storeName": "Chapter & Verse Booksellers",
+    "slug": "chapter-and-verse-booksellers",
+    "description": "An independent bookstore and cozy reading cafe offering curated selections of fiction, rare antiquarian books, and artisanal coffees.",
+    "logo": "/mock/stores/chapter-and-verse/logo.webp",
+    "images": [
+      "/mock/stores/chapter-and-verse/store-front.webp",
+      "/mock/stores/chapter-and-verse/reading-nook.webp"
+    ],
+    "storeCategory": "Books & Stationery",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5766,
+      "longitude": 88.3609
+    },
+    "address": {
+      "area": "College Street",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700073"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "09:00",
+        "close": "19:00"
+      },
+      "tuesday": {
+        "open": "09:00",
+        "close": "19:00"
+      },
+      "wednesday": {
+        "open": "09:00",
+        "close": "19:00"
+      },
+      "thursday": {
+        "open": "09:00",
+        "close": "19:00"
+      },
+      "friday": {
+        "open": "09:00",
+        "close": "19:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "closed",
+        "close": "closed"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2024-01-10T10:00:00.000Z",
+    "updatedAt": "2024-01-10T10:00:00.000Z"
+  },
+  {
+    "_id": "store_0105",
+    "storeName": "Earthly Harvest Organics",
+    "slug": "earthly-harvest-organics",
+    "description": "Your neighborhood source for farm-fresh organic produce, cold-pressed oils, gluten-free pantry staples, and eco-friendly cleaning supplies.",
+    "logo": "/mock/stores/earthly-harvest-organics/logo.webp",
+    "images": [
+      "/mock/stores/earthly-harvest-organics/store-front.webp"
+    ],
+    "storeCategory": "Groceries & Organics",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9786,
+      "longitude": 77.6446
+    },
+    "address": {
+      "area": "Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "tuesday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "wednesday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "thursday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "friday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "saturday": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "sunday": {
+        "open": "08:00",
+        "close": "21:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2024-02-05T08:15:00.000Z",
+    "updatedAt": "2024-03-12T09:00:00.000Z"
+  },
+  {
+    "_id": "store_0106",
+    "storeName": "Timber & Twine Interiors",
+    "slug": "timber-and-twine-interiors",
+    "description": "Curated modern bohemian furniture, sustainable wood furnishings, and handmade home decor accents to transform your living spaces.",
+    "logo": "/mock/stores/timber-and-twine/logo.webp",
+    "images": [
+      "/mock/stores/timber-and-twine/store-front.webp",
+      "/mock/stores/timber-and-twine/showroom.webp"
+    ],
+    "storeCategory": "Furniture & Home Decor",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5364,
+      "longitude": 73.8967
+    },
+    "address": {
+      "area": "Koregaon Park",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "closed",
+        "close": "closed"
+      },
+      "tuesday": {
+        "open": "10:30",
+        "close": "20:30"
+      },
+      "wednesday": {
+        "open": "10:30",
+        "close": "20:30"
+      },
+      "thursday": {
+        "open": "10:30",
+        "close": "20:30"
+      },
+      "friday": {
+        "open": "10:30",
+        "close": "20:30"
+      },
+      "saturday": {
+        "open": "11:00",
+        "close": "21:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "21:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2023-09-22T11:45:00.000Z",
+    "updatedAt": "2023-10-01T16:30:00.000Z"
+  },
+  {
+    "_id": "store_0107",
+    "storeName": "Paws & Whiskers Emporium",
+    "slug": "paws-and-whiskers-emporium",
+    "description": "A luxury pet boutique offering premium nutrition, interactive toys, grooming essentials, and stylish accessories for dogs and cats.",
+    "logo": "/mock/stores/paws-and-whiskers/logo.webp",
+    "images": [
+      "/mock/stores/paws-and-whiskers/store-front.webp"
+    ],
+    "storeCategory": "Pet Supplies",
+    "city": "Chandigarh",
+    "state": "Chandigarh",
+    "location": {
+      "latitude": 30.7413,
+      "longitude": 76.7824
+    },
+    "address": {
+      "area": "Sector 17",
+      "city": "Chandigarh",
+      "state": "Chandigarh",
+      "pincode": "160017"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "09:30",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "09:30",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "09:30",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "09:30",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "09:30",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "09:30",
+        "close": "21:00"
+      },
+      "sunday": {
+        "open": "10:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2024-04-12T10:00:00.000Z",
+    "updatedAt": "2024-04-12T10:00:00.000Z"
+  },
+  {
+    "_id": "store_0108",
+    "storeName": "Apex Sports & Outdoors",
+    "slug": "apex-sports-outdoors",
+    "description": "The ultimate destination for athletes and adventurers. Featuring top-tier footwear, camping gear, fitness equipment, and activewear.",
+    "logo": "/mock/stores/apex-sports/logo.webp",
+    "images": [
+      "/mock/stores/apex-sports/store-front.webp"
+    ],
+    "storeCategory": "Sports & Outdoors",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.5539,
+      "longitude": 77.2
+    },
+    "address": {
+      "area": "Hauz Khas",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110016"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "21:30"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "21:30"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "21:30"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "21:30"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "21:30"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "22:00"
+      },
+      "sunday": {
+        "open": "10:00",
+        "close": "22:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2023-05-18T09:00:00.000Z",
+    "updatedAt": "2024-01-20T11:15:00.000Z"
+  },
+  {
+    "_id": "store_0109",
+    "storeName": "Aura Fine Jewellery",
+    "slug": "aura-fine-jewellery",
+    "description": "Exquisite diamond, gold, and platinum collections. From timeless bridal trousseaus to contemporary everyday elegance.",
+    "logo": "/mock/stores/aura-jewellery/logo.webp",
+    "images": [
+      "/mock/stores/aura-jewellery/store-front.webp",
+      "/mock/stores/aura-jewellery/display-case.webp"
+    ],
+    "storeCategory": "Jewelry & Watches",
+    "city": "Surat",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 21.1752,
+      "longitude": 72.8011
+    },
+    "address": {
+      "area": "Vesu",
+      "city": "Surat",
+      "state": "Gujarat",
+      "pincode": "395007"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "11:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "11:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "11:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "11:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "11:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "11:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "closed",
+        "close": "closed"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2022-11-10T10:30:00.000Z",
+    "updatedAt": "2024-02-14T09:45:00.000Z"
+  },
+  {
+    "_id": "store_0110",
+    "storeName": "The Urban Botanist",
+    "slug": "the-urban-botanist",
+    "description": "Bring nature indoors. We offer a diverse selection of exotic houseplants, handcrafted ceramic pots, botanical art, and terrarium kits.",
+    "logo": "/mock/stores/urban-botanist/logo.webp",
+    "images": [
+      "/mock/stores/urban-botanist/store-front.webp"
+    ],
+    "storeCategory": "Home & Garden",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.056,
+      "longitude": 72.8377
+    },
+    "address": {
+      "area": "Bandra West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400050"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "19:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "19:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "19:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "19:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "19:00"
+      },
+      "saturday": {
+        "open": "09:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "09:00",
+        "close": "20:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2024-03-01T08:00:00.000Z",
+    "updatedAt": "2024-03-05T12:00:00.000Z"
+  },
+  {
+    "_id": "store_001",
+    "storeName": "TechZone Electronics",
+    "slug": "techzone-electronics-mumbai",
+    "description": "Electronics and gadgets store offering smartphones, laptops, headphones, accessories.",
+    "logo": "/mock/stores/techzone-electronics-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/techzone-electronics-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.076,
+      "longitude": 72.8777
+    },
+    "address": {
+      "area": "Andheri West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400058"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_002",
+    "storeName": "Mumbai Mobile Hub",
+    "slug": "mumbai-mobile-hub",
+    "description": "Smartphones, mobile accessories, chargers, cases and other consumer electronics.",
+    "logo": "/mock/stores/mumbai-mobile-hub/logo.webp",
+    "images": [
+      "/mock/stores/mumbai-mobile-hub/store-front.webp"
+    ],
+    "storeCategory": "Mobiles",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.077,
+      "longitude": 72.8787
+    },
+    "address": {
+      "area": "Bandra West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400050"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_003",
+    "storeName": "Gadget Gallery",
+    "slug": "gadget-gallery-mumbai",
+    "description": "Gadget store specializing in smartwatches, wireless earbuds, speakers.",
+    "logo": "/mock/stores/gadget-gallery-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/gadget-gallery-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.078,
+      "longitude": 72.8797
+    },
+    "address": {
+      "area": "Borivali West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400092"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_004",
+    "storeName": "Digital Point",
+    "slug": "digital-point-mumbai",
+    "description": "Consumer electronics retailer offering laptops, tablets, monitors.",
+    "logo": "/mock/stores/digital-point-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/digital-point-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.079,
+      "longitude": 72.8807
+    },
+    "address": {
+      "area": "Powai",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400076"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_005",
+    "storeName": "CromaTech Solutions",
+    "slug": "cromatech-solutions-mumbai",
+    "description": "Electronics and computer store offering laptops, desktops, networking equipment.",
+    "logo": "/mock/stores/cromatech-solutions-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/cromatech-solutions-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.08,
+      "longitude": 72.8817
+    },
+    "address": {
+      "area": "Dadar West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400028"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_006",
+    "storeName": "Audio World",
+    "slug": "audio-world-mumbai",
+    "description": "Audio equipment and accessories store offering headphones, earphones.",
+    "logo": "/mock/stores/audio-world-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/audio-world-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Audio",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.081,
+      "longitude": 72.8827
+    },
+    "address": {
+      "area": "Malad West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400064"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_007",
+    "storeName": "Laptop House",
+    "slug": "laptop-house-mumbai",
+    "description": "Laptop and computer specialist offering notebooks, gaming laptops.",
+    "logo": "/mock/stores/laptop-house-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/laptop-house-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.082,
+      "longitude": 72.8837
+    },
+    "address": {
+      "area": "Ghatkopar West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400086"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_008",
+    "storeName": "Smart Gadgets Mumbai",
+    "slug": "smart-gadgets-mumbai",
+    "description": "Smart technology store offering smartwatches, fitness bands.",
+    "logo": "/mock/stores/smart-gadgets-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/smart-gadgets-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.083,
+      "longitude": 72.8847
+    },
+    "address": {
+      "area": "Vile Parle West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400056"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_009",
+    "storeName": "Gadget Junction",
+    "slug": "gadget-junction-mumbai",
+    "description": "Local electronics and gadget store offering mobile accessories.",
+    "logo": "/mock/stores/gadget-junction-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/gadget-junction-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.084,
+      "longitude": 72.8857
+    },
+    "address": {
+      "area": "Kandivali West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400067"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_010",
+    "storeName": "Digital World",
+    "slug": "digital-world-mumbai",
+    "description": "Consumer electronics store offering smartphones, televisions, laptops.",
+    "logo": "/mock/stores/digital-world-mumbai/logo.webp",
+    "images": [
+      "/mock/stores/digital-world-mumbai/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 19.085,
+      "longitude": 72.8867
+    },
+    "address": {
+      "area": "Kurla West",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400070"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_011",
+    "storeName": "TechPoint Electronics",
+    "slug": "techpoint-electronics-hyderabad",
+    "description": "Consumer electronics store offering smartphones, laptops, televisions.",
+    "logo": "/mock/stores/techpoint-electronics-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/techpoint-electronics-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.385,
+      "longitude": 78.4867
+    },
+    "address": {
+      "area": "Ameerpet",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500016"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_012",
+    "storeName": "Digital Hub",
+    "slug": "digital-hub-hyderabad",
+    "description": "Local electronics and gadget store specializing in smartphones.",
+    "logo": "/mock/stores/digital-hub-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/digital-hub-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.386,
+      "longitude": 78.4877
+    },
+    "address": {
+      "area": "Himayat Nagar",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500029"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_013",
+    "storeName": "Gadget Gallery",
+    "slug": "gadget-gallery-hyderabad",
+    "description": "Gadget store featuring headphones, smartwatches, speakers.",
+    "logo": "/mock/stores/gadget-gallery-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/gadget-gallery-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.387,
+      "longitude": 78.4887
+    },
+    "address": {
+      "area": "Banjara Hills",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500034"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_014",
+    "storeName": "SmartTech Store",
+    "slug": "smarttech-store-hyderabad",
+    "description": "Technology retailer offering smartphones, laptops, tablets.",
+    "logo": "/mock/stores/smarttech-store-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/smarttech-store-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.388,
+      "longitude": 78.4897
+    },
+    "address": {
+      "area": "Kukatpally",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500072"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_015",
+    "storeName": "ElectroMart",
+    "slug": "electromart-hyderabad",
+    "description": "Electronics retailer with televisions, refrigerators, washing machines.",
+    "logo": "/mock/stores/electromart-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/electromart-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Home Appliances",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.389,
+      "longitude": 78.4907
+    },
+    "address": {
+      "area": "Secunderabad",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500003"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_016",
+    "storeName": "Mobile Zone",
+    "slug": "mobile-zone-hyderabad",
+    "description": "Mobile phone store offering smartphones, chargers, cases.",
+    "logo": "/mock/stores/mobile-zone-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/mobile-zone-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Mobiles",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.39,
+      "longitude": 78.4917
+    },
+    "address": {
+      "area": "Dilsukhnagar",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500060"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_017",
+    "storeName": "Laptop House",
+    "slug": "laptop-house-hyderabad",
+    "description": "Computer store specializing in laptops, desktops, monitors.",
+    "logo": "/mock/stores/laptop-house-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/laptop-house-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.391,
+      "longitude": 78.4927
+    },
+    "address": {
+      "area": "Ameerpet",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500016"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_018",
+    "storeName": "Audio World",
+    "slug": "audio-world-hyderabad",
+    "description": "Specialized audio store offering headphones, earphones, speakers.",
+    "logo": "/mock/stores/audio-world-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/audio-world-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Audio",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.392,
+      "longitude": 78.4937
+    },
+    "address": {
+      "area": "Jubilee Hills",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500033"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_019",
+    "storeName": "Gadget Point",
+    "slug": "gadget-point-hyderabad",
+    "description": "Gadget and accessories store offering smartwatches, power banks.",
+    "logo": "/mock/stores/gadget-point-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/gadget-point-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.393,
+      "longitude": 78.4947
+    },
+    "address": {
+      "area": "Begumpet",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500016"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_020",
+    "storeName": "NextGen Electronics",
+    "slug": "nextgen-electronics-hyderabad",
+    "description": "Modern electronics store offering smart TVs, gaming consoles.",
+    "logo": "/mock/stores/nextgen-electronics-hyderabad/logo.webp",
+    "images": [
+      "/mock/stores/nextgen-electronics-hyderabad/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "location": {
+      "latitude": 17.394,
+      "longitude": 78.4957
+    },
+    "address": {
+      "area": "Madhapur",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "500081"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_021",
+    "storeName": "Ahmedabad Electronics Hub",
+    "slug": "ahmedabad-electronics-hub",
+    "description": "Electronics and gadgets store offering smartphones, laptops.",
+    "logo": "/mock/stores/ahmedabad-electronics-hub/logo.webp",
+    "images": [
+      "/mock/stores/ahmedabad-electronics-hub/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0225,
+      "longitude": 72.5714
+    },
+    "address": {
+      "area": "Navrangpura",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380009"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_022",
+    "storeName": "Gadget House",
+    "slug": "gadget-house-ahmedabad",
+    "description": "Gadget store offering smartwatches, wireless headphones, speakers.",
+    "logo": "/mock/stores/gadget-house-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/gadget-house-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0235,
+      "longitude": 72.5724
+    },
+    "address": {
+      "area": "C G Road",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380006"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_023",
+    "storeName": "Mobile Arena",
+    "slug": "mobile-arena-ahmedabad",
+    "description": "Mobile phone store offering smartphones, tablets, chargers.",
+    "logo": "/mock/stores/mobile-arena-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/mobile-arena-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Mobiles",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0245,
+      "longitude": 72.5734
+    },
+    "address": {
+      "area": "Maninagar",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380008"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_024",
+    "storeName": "Laptop World",
+    "slug": "laptop-world-ahmedabad",
+    "description": "Computer and laptop store offering notebooks, desktops, monitors.",
+    "logo": "/mock/stores/laptop-world-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/laptop-world-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0255,
+      "longitude": 72.5744
+    },
+    "address": {
+      "area": "Ashram Road",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380009"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_025",
+    "storeName": "Smart Electronics",
+    "slug": "smart-electronics-ahmedabad",
+    "description": "Consumer electronics retailer specializing in smart TVs.",
+    "logo": "/mock/stores/smart-electronics-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/smart-electronics-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0265,
+      "longitude": 72.5754
+    },
+    "address": {
+      "area": "Satellite",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380015"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_026",
+    "storeName": "Audio Point",
+    "slug": "audio-point-ahmedabad",
+    "description": "Audio equipment store offering headphones, earphones.",
+    "logo": "/mock/stores/audio-point-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/audio-point-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Audio",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0275,
+      "longitude": 72.5764
+    },
+    "address": {
+      "area": "Vastrapur",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380015"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_027",
+    "storeName": "Digital World",
+    "slug": "digital-world-ahmedabad",
+    "description": "Technology store offering laptops, smartphones, gaming accessories.",
+    "logo": "/mock/stores/digital-world-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/digital-world-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0285,
+      "longitude": 72.5774
+    },
+    "address": {
+      "area": "Bodakdev",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380054"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_028",
+    "storeName": "Gadget Junction",
+    "slug": "gadget-junction-ahmedabad",
+    "description": "Gadget store offering smartwatches, fitness bands, wireless accessories.",
+    "logo": "/mock/stores/gadget-junction-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/gadget-junction-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0295,
+      "longitude": 72.5784
+    },
+    "address": {
+      "area": "Prahlad Nagar",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380015"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_029",
+    "storeName": "Tech Square",
+    "slug": "tech-square-ahmedabad",
+    "description": "Electronics and technology store offering smartphones, laptops, tablets.",
+    "logo": "/mock/stores/tech-square-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/tech-square-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0305,
+      "longitude": 72.5794
+    },
+    "address": {
+      "area": "Thaltej",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380054"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_030",
+    "storeName": "Future Tech Store",
+    "slug": "future-tech-store-ahmedabad",
+    "description": "Modern electronics retailer offering smart home devices, laptops.",
+    "logo": "/mock/stores/future-tech-store-ahmedabad/logo.webp",
+    "images": [
+      "/mock/stores/future-tech-store-ahmedabad/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "location": {
+      "latitude": 23.0315,
+      "longitude": 72.5804
+    },
+    "address": {
+      "area": "S G Highway",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "pincode": "380054"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_031",
+    "storeName": "Croma Delhi",
+    "slug": "croma-delhi",
+    "description": "Consumer electronics store offering smartphones, laptops, televisions.",
+    "logo": "/mock/stores/croma-delhi/logo.webp",
+    "images": [
+      "/mock/stores/croma-delhi/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6139,
+      "longitude": 77.209
+    },
+    "address": {
+      "area": "Nehru Place",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110019"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_032",
+    "storeName": "Reliance Digital Delhi",
+    "slug": "reliance-digital-delhi",
+    "description": "Electronics and technology store featuring smartphones, laptops, televisions.",
+    "logo": "/mock/stores/reliance-digital-delhi/logo.webp",
+    "images": [
+      "/mock/stores/reliance-digital-delhi/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6149,
+      "longitude": 77.21
+    },
+    "address": {
+      "area": "Rohini",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110085"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_033",
+    "storeName": "Vijay Sales Delhi",
+    "slug": "vijay-sales-delhi",
+    "description": "Multi-brand electronics retailer specializing in televisions, smartphones.",
+    "logo": "/mock/stores/vijay-sales-delhi/logo.webp",
+    "images": [
+      "/mock/stores/vijay-sales-delhi/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6159,
+      "longitude": 77.211
+    },
+    "address": {
+      "area": "Lajpat Nagar",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110024"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_034",
+    "storeName": "Apple Studio Delhi",
+    "slug": "apple-studio-delhi",
+    "description": "Premium Apple products retailer offering iPhones, MacBooks, iPads.",
+    "logo": "/mock/stores/apple-studio-delhi/logo.webp",
+    "images": [
+      "/mock/stores/apple-studio-delhi/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6169,
+      "longitude": 77.212
+    },
+    "address": {
+      "area": "South Extension",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110049"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_035",
+    "storeName": "Samsung Smart Plaza",
+    "slug": "samsung-smart-plaza-delhi",
+    "description": "Samsung-focused store offering smartphones, tablets, televisions.",
+    "logo": "/mock/stores/samsung-smart-plaza-delhi/logo.webp",
+    "images": [
+      "/mock/stores/samsung-smart-plaza-delhi/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6179,
+      "longitude": 77.213
+    },
+    "address": {
+      "area": "Karol Bagh",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110005"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_036",
+    "storeName": "Sony Center Delhi",
+    "slug": "sony-center-delhi",
+    "description": "Sony electronics store offering televisions, cameras, headphones.",
+    "logo": "/mock/stores/sony-center-delhi/logo.webp",
+    "images": [
+      "/mock/stores/sony-center-delhi/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6189,
+      "longitude": 77.214
+    },
+    "address": {
+      "area": "Connaught Place",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_037",
+    "storeName": "Laptop Hub Delhi",
+    "slug": "laptop-hub-delhi",
+    "description": "Computer store specializing in laptops, desktops, monitors.",
+    "logo": "/mock/stores/laptop-hub-delhi/logo.webp",
+    "images": [
+      "/mock/stores/laptop-hub-delhi/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6199,
+      "longitude": 77.215
+    },
+    "address": {
+      "area": "Nehru Place",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110019"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_038",
+    "storeName": "Gadget Point Delhi",
+    "slug": "gadget-point-delhi",
+    "description": "Gadget and accessories store offering headphones, smartwatches.",
+    "logo": "/mock/stores/gadget-point-delhi/logo.webp",
+    "images": [
+      "/mock/stores/gadget-point-delhi/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6209,
+      "longitude": 77.216
+    },
+    "address": {
+      "area": "Rajouri Garden",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110027"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_039",
+    "storeName": "Camera House Delhi",
+    "slug": "camera-house-delhi",
+    "description": "Photography and videography equipment store offering cameras, lenses.",
+    "logo": "/mock/stores/camera-house-delhi/logo.webp",
+    "images": [
+      "/mock/stores/camera-house-delhi/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6219,
+      "longitude": 77.217
+    },
+    "address": {
+      "area": "Chandni Chowk",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110006"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_040",
+    "storeName": "Gaming Arena Delhi",
+    "slug": "gaming-arena-delhi",
+    "description": "Gaming store offering gaming PCs, consoles, monitors.",
+    "logo": "/mock/stores/gaming-arena-delhi/logo.webp",
+    "images": [
+      "/mock/stores/gaming-arena-delhi/store-front.webp"
+    ],
+    "storeCategory": "Gaming",
+    "city": "Delhi",
+    "state": "Delhi",
+    "location": {
+      "latitude": 28.6229,
+      "longitude": 77.218
+    },
+    "address": {
+      "area": "Laxmi Nagar",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110092"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_041",
+    "storeName": "Croma Bengaluru",
+    "slug": "croma-bengaluru",
+    "description": "Consumer electronics store offering smartphones, laptops, televisions.",
+    "logo": "/mock/stores/croma-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/croma-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9716,
+      "longitude": 77.5946
+    },
+    "address": {
+      "area": "Koramangala",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560034"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_042",
+    "storeName": "Reliance Digital Bengaluru",
+    "slug": "reliance-digital-bengaluru",
+    "description": "Electronics and technology store featuring smartphones, laptops, televisions.",
+    "logo": "/mock/stores/reliance-digital-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/reliance-digital-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9726,
+      "longitude": 77.5956
+    },
+    "address": {
+      "area": "Whitefield",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560066"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_043",
+    "storeName": "Vijay Sales Bengaluru",
+    "slug": "vijay-sales-bengaluru",
+    "description": "Multi-brand electronics retailer specializing in televisions, smartphones.",
+    "logo": "/mock/stores/vijay-sales-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/vijay-sales-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9736,
+      "longitude": 77.5966
+    },
+    "address": {
+      "area": "Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_044",
+    "storeName": "Apple Studio Bengaluru",
+    "slug": "apple-studio-bengaluru",
+    "description": "Premium Apple products retailer offering iPhones, MacBooks, iPads.",
+    "logo": "/mock/stores/apple-studio-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/apple-studio-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9746,
+      "longitude": 77.5976
+    },
+    "address": {
+      "area": "Jayanagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560041"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_045",
+    "storeName": "Samsung Smart Plaza",
+    "slug": "samsung-smart-plaza-bengaluru",
+    "description": "Samsung-focused store offering smartphones, tablets, televisions.",
+    "logo": "/mock/stores/samsung-smart-plaza-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/samsung-smart-plaza-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9756,
+      "longitude": 77.5986
+    },
+    "address": {
+      "area": "Malleshwaram",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560003"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_046",
+    "storeName": "Sony Center Bengaluru",
+    "slug": "sony-center-bengaluru",
+    "description": "Sony electronics store offering televisions, cameras, headphones.",
+    "logo": "/mock/stores/sony-center-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/sony-center-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9766,
+      "longitude": 77.5996
+    },
+    "address": {
+      "area": "MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_047",
+    "storeName": "Laptop Hub Bengaluru",
+    "slug": "laptop-hub-bengaluru",
+    "description": "Computer store specializing in laptops, desktops, monitors.",
+    "logo": "/mock/stores/laptop-hub-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/laptop-hub-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9776,
+      "longitude": 77.6006
+    },
+    "address": {
+      "area": "SP Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560002"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_048",
+    "storeName": "Gadget Point Bengaluru",
+    "slug": "gadget-point-bengaluru",
+    "description": "Gadget and accessories store offering headphones, smartwatches.",
+    "logo": "/mock/stores/gadget-point-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/gadget-point-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9786,
+      "longitude": 77.6016
+    },
+    "address": {
+      "area": "HSR Layout",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560102"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_049",
+    "storeName": "Camera House Bengaluru",
+    "slug": "camera-house-bengaluru",
+    "description": "Photography and videography equipment store offering cameras, lenses.",
+    "logo": "/mock/stores/camera-house-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/camera-house-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9796,
+      "longitude": 77.6026
+    },
+    "address": {
+      "area": "Rajajinagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560010"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_050",
+    "storeName": "Gaming Arena Bengaluru",
+    "slug": "gaming-arena-bengaluru",
+    "description": "Gaming store offering gaming PCs, consoles, monitors.",
+    "logo": "/mock/stores/gaming-arena-bengaluru/logo.webp",
+    "images": [
+      "/mock/stores/gaming-arena-bengaluru/store-front.webp"
+    ],
+    "storeCategory": "Gaming",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "location": {
+      "latitude": 12.9806,
+      "longitude": 77.6036
+    },
+    "address": {
+      "area": "Marathahalli",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560037"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_051",
+    "storeName": "Jaipur Tech World",
+    "slug": "jaipur-tech-world",
+    "description": "Consumer electronics store offering smartphones, laptops, headphones.",
+    "logo": "/mock/stores/jaipur-tech-world/logo.webp",
+    "images": [
+      "/mock/stores/jaipur-tech-world/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9124,
+      "longitude": 75.7873
+    },
+    "address": {
+      "area": "C Scheme",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_052",
+    "storeName": "Gadget Hub Jaipur",
+    "slug": "gadget-hub-jaipur",
+    "description": "Gadget store offering smartwatches, wireless earbuds, portable speakers.",
+    "logo": "/mock/stores/gadget-hub-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/gadget-hub-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9134,
+      "longitude": 75.7883
+    },
+    "address": {
+      "area": "Malviya Nagar",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302017"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_053",
+    "storeName": "Laptop House Jaipur",
+    "slug": "laptop-house-jaipur",
+    "description": "Computer retailer offering laptops, desktops, monitors, printers.",
+    "logo": "/mock/stores/laptop-house-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/laptop-house-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9144,
+      "longitude": 75.7893
+    },
+    "address": {
+      "area": "Vaishali Nagar",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302021"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_054",
+    "storeName": "Mobile World Jaipur",
+    "slug": "mobile-world-jaipur",
+    "description": "Smartphone store offering mobile phones, tablets, cases, chargers.",
+    "logo": "/mock/stores/mobile-world-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/mobile-world-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Mobiles",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9154,
+      "longitude": 75.7903
+    },
+    "address": {
+      "area": "Mansarovar",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302020"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_055",
+    "storeName": "Digital Point Jaipur",
+    "slug": "digital-point-jaipur",
+    "description": "Electronics store offering televisions, laptops, cameras, smartphones.",
+    "logo": "/mock/stores/digital-point-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/digital-point-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9164,
+      "longitude": 75.7913
+    },
+    "address": {
+      "area": "Raja Park",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302004"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_056",
+    "storeName": "Audio World Jaipur",
+    "slug": "audio-world-jaipur",
+    "description": "Audio store offering headphones, earphones, Bluetooth speakers.",
+    "logo": "/mock/stores/audio-world-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/audio-world-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Audio",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9174,
+      "longitude": 75.7923
+    },
+    "address": {
+      "area": "Bani Park",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302016"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_057",
+    "storeName": "SmartTech Jaipur",
+    "slug": "smarttech-jaipur",
+    "description": "Smart electronics retailer offering smart TVs, wearables, smart home devices.",
+    "logo": "/mock/stores/smarttech-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/smarttech-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9184,
+      "longitude": 75.7933
+    },
+    "address": {
+      "area": "Jagatpura",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302017"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_058",
+    "storeName": "Gaming Arena Jaipur",
+    "slug": "gaming-arena-jaipur",
+    "description": "Gaming electronics store offering gaming laptops, consoles, controllers.",
+    "logo": "/mock/stores/gaming-arena-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/gaming-arena-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Gaming",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9194,
+      "longitude": 75.7943
+    },
+    "address": {
+      "area": "Tonk Road",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302018"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_059",
+    "storeName": "Tech Avenue Jaipur",
+    "slug": "tech-avenue-jaipur",
+    "description": "Electronics and gadget retailer offering smartphones, laptops, cameras.",
+    "logo": "/mock/stores/tech-avenue-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/tech-avenue-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9204,
+      "longitude": 75.7953
+    },
+    "address": {
+      "area": "M I Road",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_060",
+    "storeName": "Prime Electronics Jaipur",
+    "slug": "prime-electronics-jaipur",
+    "description": "Multi-brand electronics store offering smartphones, laptops, televisions.",
+    "logo": "/mock/stores/prime-electronics-jaipur/logo.webp",
+    "images": [
+      "/mock/stores/prime-electronics-jaipur/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "location": {
+      "latitude": 26.9214,
+      "longitude": 75.7963
+    },
+    "address": {
+      "area": "Durgapura",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "pincode": "302018"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_061",
+    "storeName": "Pune Tech Hub",
+    "slug": "pune-tech-hub",
+    "description": "Your local destination for smartphones, laptops, and gadgets.",
+    "logo": "/mock/stores/pune-tech-hub/logo.webp",
+    "images": [
+      "/mock/stores/pune-tech-hub/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5204,
+      "longitude": 73.8567
+    },
+    "address": {
+      "area": "Baner",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411045"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_062",
+    "storeName": "Gadget World Pune",
+    "slug": "gadget-world-pune",
+    "description": "Premium gadget store featuring headphones, wearables, and accessories.",
+    "logo": "/mock/stores/gadget-world-pune/logo.webp",
+    "images": [
+      "/mock/stores/gadget-world-pune/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5214,
+      "longitude": 73.8577
+    },
+    "address": {
+      "area": "Koregaon Park",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_063",
+    "storeName": "Laptop Zone Pune",
+    "slug": "laptop-zone-pune",
+    "description": "Dedicated laptop and PC store for gamers and professionals.",
+    "logo": "/mock/stores/laptop-zone-pune/logo.webp",
+    "images": [
+      "/mock/stores/laptop-zone-pune/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5224,
+      "longitude": 73.8587
+    },
+    "address": {
+      "area": "Viman Nagar",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411014"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_064",
+    "storeName": "Mobile Planet Pune",
+    "slug": "mobile-planet-pune",
+    "description": "Latest smartphones, cases, chargers, and mobile repair services.",
+    "logo": "/mock/stores/mobile-planet-pune/logo.webp",
+    "images": [
+      "/mock/stores/mobile-planet-pune/store-front.webp"
+    ],
+    "storeCategory": "Mobiles",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5234,
+      "longitude": 73.8597
+    },
+    "address": {
+      "area": "Hinjewadi",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411057"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_065",
+    "storeName": "Digital Avenue Pune",
+    "slug": "digital-avenue-pune",
+    "description": "One-stop shop for home appliances and digital electronics.",
+    "logo": "/mock/stores/digital-avenue-pune/logo.webp",
+    "images": [
+      "/mock/stores/digital-avenue-pune/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5244,
+      "longitude": 73.8607
+    },
+    "address": {
+      "area": "Shivaji Nagar",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411005"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_066",
+    "storeName": "Audio Space Pune",
+    "slug": "audio-space-pune",
+    "description": "High-fidelity audio systems, soundbars, and premium earphones.",
+    "logo": "/mock/stores/audio-space-pune/logo.webp",
+    "images": [
+      "/mock/stores/audio-space-pune/store-front.webp"
+    ],
+    "storeCategory": "Audio",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5254,
+      "longitude": 73.8617
+    },
+    "address": {
+      "area": "Kothrud",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411038"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_067",
+    "storeName": "Smart Devices Pune",
+    "slug": "smart-devices-pune",
+    "description": "IoT devices, smart lighting, and automation products for your home.",
+    "logo": "/mock/stores/smart-devices-pune/logo.webp",
+    "images": [
+      "/mock/stores/smart-devices-pune/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5264,
+      "longitude": 73.8627
+    },
+    "address": {
+      "area": "Kalyani Nagar",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411006"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_068",
+    "storeName": "Gaming World Pune",
+    "slug": "gaming-world-pune",
+    "description": "Everything a gamer needs: Consoles, graphic cards, and peripherals.",
+    "logo": "/mock/stores/gaming-world-pune/logo.webp",
+    "images": [
+      "/mock/stores/gaming-world-pune/store-front.webp"
+    ],
+    "storeCategory": "Gaming",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5274,
+      "longitude": 73.8637
+    },
+    "address": {
+      "area": "Hadapsar",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411028"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_069",
+    "storeName": "Tech Prime Pune",
+    "slug": "tech-prime-pune",
+    "description": "Premium tech products from the world's leading brands.",
+    "logo": "/mock/stores/tech-prime-pune/logo.webp",
+    "images": [
+      "/mock/stores/tech-prime-pune/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5284,
+      "longitude": 73.8647
+    },
+    "address": {
+      "area": "Magarpatta",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411013"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_070",
+    "storeName": "Prime Gadgets Pune",
+    "slug": "prime-gadgets-pune",
+    "description": "Daily use electronics, cables, powerbanks and portable tech.",
+    "logo": "/mock/stores/prime-gadgets-pune/logo.webp",
+    "images": [
+      "/mock/stores/prime-gadgets-pune/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "location": {
+      "latitude": 18.5294,
+      "longitude": 73.8657
+    },
+    "address": {
+      "area": "Wakad",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "pincode": "411057"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_071",
+    "storeName": "Chennai Electronics Hub",
+    "slug": "chennai-electronics-hub",
+    "description": "Your local destination for smartphones, laptops, and gadgets.",
+    "logo": "/mock/stores/chennai-electronics-hub/logo.webp",
+    "images": [
+      "/mock/stores/chennai-electronics-hub/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0827,
+      "longitude": 80.2707
+    },
+    "address": {
+      "area": "T Nagar",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600017"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_072",
+    "storeName": "Tech Gadget Chennai",
+    "slug": "tech-gadget-chennai",
+    "description": "Premium gadget store featuring headphones, wearables, and accessories.",
+    "logo": "/mock/stores/tech-gadget-chennai/logo.webp",
+    "images": [
+      "/mock/stores/tech-gadget-chennai/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0837,
+      "longitude": 80.2717
+    },
+    "address": {
+      "area": "Velachery",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600042"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_073",
+    "storeName": "Laptop Arena Chennai",
+    "slug": "laptop-arena-chennai",
+    "description": "Dedicated laptop and PC store for gamers and professionals.",
+    "logo": "/mock/stores/laptop-arena-chennai/logo.webp",
+    "images": [
+      "/mock/stores/laptop-arena-chennai/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0847,
+      "longitude": 80.2727
+    },
+    "address": {
+      "area": "Adyar",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600020"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_074",
+    "storeName": "Mobile World Chennai",
+    "slug": "mobile-world-chennai",
+    "description": "Latest smartphones, cases, chargers, and mobile repair services.",
+    "logo": "/mock/stores/mobile-world-chennai/logo.webp",
+    "images": [
+      "/mock/stores/mobile-world-chennai/store-front.webp"
+    ],
+    "storeCategory": "Mobiles",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0857,
+      "longitude": 80.2737
+    },
+    "address": {
+      "area": "Anna Nagar",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600040"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_075",
+    "storeName": "Digital Space Chennai",
+    "slug": "digital-space-chennai",
+    "description": "One-stop shop for home appliances and digital electronics.",
+    "logo": "/mock/stores/digital-space-chennai/logo.webp",
+    "images": [
+      "/mock/stores/digital-space-chennai/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0867,
+      "longitude": 80.2747
+    },
+    "address": {
+      "area": "OMR",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600096"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_076",
+    "storeName": "Audio Hub Chennai",
+    "slug": "audio-hub-chennai",
+    "description": "High-fidelity audio systems, soundbars, and premium earphones.",
+    "logo": "/mock/stores/audio-hub-chennai/logo.webp",
+    "images": [
+      "/mock/stores/audio-hub-chennai/store-front.webp"
+    ],
+    "storeCategory": "Audio",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0877,
+      "longitude": 80.2757
+    },
+    "address": {
+      "area": "Guindy",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600032"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_077",
+    "storeName": "SmartTech Chennai",
+    "slug": "smarttech-chennai",
+    "description": "IoT devices, smart lighting, and automation products for your home.",
+    "logo": "/mock/stores/smarttech-chennai/logo.webp",
+    "images": [
+      "/mock/stores/smarttech-chennai/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0887,
+      "longitude": 80.2767
+    },
+    "address": {
+      "area": "Nungambakkam",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600034"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_078",
+    "storeName": "Gaming Point Chennai",
+    "slug": "gaming-point-chennai",
+    "description": "Everything a gamer needs: Consoles, graphic cards, and peripherals.",
+    "logo": "/mock/stores/gaming-point-chennai/logo.webp",
+    "images": [
+      "/mock/stores/gaming-point-chennai/store-front.webp"
+    ],
+    "storeCategory": "Gaming",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0897,
+      "longitude": 80.2777
+    },
+    "address": {
+      "area": "Mylapore",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600004"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_079",
+    "storeName": "Future Tech Chennai",
+    "slug": "future-tech-chennai",
+    "description": "Premium tech products from the world's leading brands.",
+    "logo": "/mock/stores/future-tech-chennai/logo.webp",
+    "images": [
+      "/mock/stores/future-tech-chennai/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0907,
+      "longitude": 80.2787
+    },
+    "address": {
+      "area": "Tambaram",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600045"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_080",
+    "storeName": "Prime Electronics Chennai",
+    "slug": "prime-electronics-chennai",
+    "description": "Daily use electronics, cables, powerbanks and portable tech.",
+    "logo": "/mock/stores/prime-electronics-chennai/logo.webp",
+    "images": [
+      "/mock/stores/prime-electronics-chennai/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "location": {
+      "latitude": 13.0917,
+      "longitude": 80.2797
+    },
+    "address": {
+      "area": "Alwarpet",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600018"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_081",
+    "storeName": "Kolkata Tech Centre",
+    "slug": "kolkata-tech-centre",
+    "description": "Your local destination for smartphones, laptops, and gadgets.",
+    "logo": "/mock/stores/kolkata-tech-centre/logo.webp",
+    "images": [
+      "/mock/stores/kolkata-tech-centre/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5726,
+      "longitude": 88.3639
+    },
+    "address": {
+      "area": "Park Street",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700016"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_082",
+    "storeName": "Gadget Galaxy Kolkata",
+    "slug": "gadget-galaxy-kolkata",
+    "description": "Premium gadget store featuring headphones, wearables, and accessories.",
+    "logo": "/mock/stores/gadget-galaxy-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/gadget-galaxy-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5736,
+      "longitude": 88.3649
+    },
+    "address": {
+      "area": "Salt Lake",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700091"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_083",
+    "storeName": "Laptop Hub Kolkata",
+    "slug": "laptop-hub-kolkata",
+    "description": "Dedicated laptop and PC store for gamers and professionals.",
+    "logo": "/mock/stores/laptop-hub-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/laptop-hub-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5746,
+      "longitude": 88.3659
+    },
+    "address": {
+      "area": "New Town",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700156"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_084",
+    "storeName": "Mobile Zone Kolkata",
+    "slug": "mobile-zone-kolkata",
+    "description": "Latest smartphones, cases, chargers, and mobile repair services.",
+    "logo": "/mock/stores/mobile-zone-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/mobile-zone-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Mobiles",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5756,
+      "longitude": 88.3669
+    },
+    "address": {
+      "area": "Ballygunge",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700019"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_085",
+    "storeName": "Digital Avenue Kolkata",
+    "slug": "digital-avenue-kolkata",
+    "description": "One-stop shop for home appliances and digital electronics.",
+    "logo": "/mock/stores/digital-avenue-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/digital-avenue-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5766,
+      "longitude": 88.3679
+    },
+    "address": {
+      "area": "Howrah",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "711101"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_086",
+    "storeName": "Audio Studio Kolkata",
+    "slug": "audio-studio-kolkata",
+    "description": "High-fidelity audio systems, soundbars, and premium earphones.",
+    "logo": "/mock/stores/audio-studio-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/audio-studio-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Audio",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5776,
+      "longitude": 88.3689
+    },
+    "address": {
+      "area": "Jadavpur",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700032"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_087",
+    "storeName": "Smart Home Kolkata",
+    "slug": "smart-home-kolkata",
+    "description": "IoT devices, smart lighting, and automation products for your home.",
+    "logo": "/mock/stores/smart-home-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/smart-home-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5786,
+      "longitude": 88.3699
+    },
+    "address": {
+      "area": "Gariahat",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700029"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_088",
+    "storeName": "Gaming Galaxy Kolkata",
+    "slug": "gaming-galaxy-kolkata",
+    "description": "Everything a gamer needs: Consoles, graphic cards, and peripherals.",
+    "logo": "/mock/stores/gaming-galaxy-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/gaming-galaxy-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Gaming",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5796,
+      "longitude": 88.3709
+    },
+    "address": {
+      "area": "Rajarhat",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700135"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_089",
+    "storeName": "Tech Square Kolkata",
+    "slug": "tech-square-kolkata",
+    "description": "Premium tech products from the world's leading brands.",
+    "logo": "/mock/stores/tech-square-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/tech-square-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5806,
+      "longitude": 88.3719
+    },
+    "address": {
+      "area": "Alipore",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700027"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_090",
+    "storeName": "Prime Gadgets Kolkata",
+    "slug": "prime-gadgets-kolkata",
+    "description": "Daily use electronics, cables, powerbanks and portable tech.",
+    "logo": "/mock/stores/prime-gadgets-kolkata/logo.webp",
+    "images": [
+      "/mock/stores/prime-gadgets-kolkata/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "location": {
+      "latitude": 22.5816,
+      "longitude": 88.3729
+    },
+    "address": {
+      "area": "Bhowanipore",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "pincode": "700025"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_091",
+    "storeName": "Indore Tech Hub",
+    "slug": "indore-tech-hub",
+    "description": "Your local destination for smartphones, laptops, and gadgets.",
+    "logo": "/mock/stores/indore-tech-hub/logo.webp",
+    "images": [
+      "/mock/stores/indore-tech-hub/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7196,
+      "longitude": 75.8577
+    },
+    "address": {
+      "area": "Palasia",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_092",
+    "storeName": "Gadget Zone Indore",
+    "slug": "gadget-zone-indore",
+    "description": "Premium gadget store featuring headphones, wearables, and accessories.",
+    "logo": "/mock/stores/gadget-zone-indore/logo.webp",
+    "images": [
+      "/mock/stores/gadget-zone-indore/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7206,
+      "longitude": 75.8587
+    },
+    "address": {
+      "area": "Vijay Nagar",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452010"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_093",
+    "storeName": "Laptop World Indore",
+    "slug": "laptop-world-indore",
+    "description": "Dedicated laptop and PC store for gamers and professionals.",
+    "logo": "/mock/stores/laptop-world-indore/logo.webp",
+    "images": [
+      "/mock/stores/laptop-world-indore/store-front.webp"
+    ],
+    "storeCategory": "Computers",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7216,
+      "longitude": 75.8597
+    },
+    "address": {
+      "area": "Bhawar Kuan",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452014"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_094",
+    "storeName": "Mobile Galaxy Indore",
+    "slug": "mobile-galaxy-indore",
+    "description": "Latest smartphones, cases, chargers, and mobile repair services.",
+    "logo": "/mock/stores/mobile-galaxy-indore/logo.webp",
+    "images": [
+      "/mock/stores/mobile-galaxy-indore/store-front.webp"
+    ],
+    "storeCategory": "Mobiles",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7226,
+      "longitude": 75.8607
+    },
+    "address": {
+      "area": "Rajwada",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452002"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_095",
+    "storeName": "Digital Point Indore",
+    "slug": "digital-point-indore",
+    "description": "One-stop shop for home appliances and digital electronics.",
+    "logo": "/mock/stores/digital-point-indore/logo.webp",
+    "images": [
+      "/mock/stores/digital-point-indore/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7236,
+      "longitude": 75.8617
+    },
+    "address": {
+      "area": "AB Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452011"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_096",
+    "storeName": "Audio Arena Indore",
+    "slug": "audio-arena-indore",
+    "description": "High-fidelity audio systems, soundbars, and premium earphones.",
+    "logo": "/mock/stores/audio-arena-indore/logo.webp",
+    "images": [
+      "/mock/stores/audio-arena-indore/store-front.webp"
+    ],
+    "storeCategory": "Audio",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7246,
+      "longitude": 75.8627
+    },
+    "address": {
+      "area": "Sapna Sangeeta",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_097",
+    "storeName": "SmartTech Indore",
+    "slug": "smarttech-indore",
+    "description": "IoT devices, smart lighting, and automation products for your home.",
+    "logo": "/mock/stores/smarttech-indore/logo.webp",
+    "images": [
+      "/mock/stores/smarttech-indore/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7256,
+      "longitude": 75.8637
+    },
+    "address": {
+      "area": "Geeta Bhawan",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452001"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_098",
+    "storeName": "Gaming Hub Indore",
+    "slug": "gaming-hub-indore",
+    "description": "Everything a gamer needs: Consoles, graphic cards, and peripherals.",
+    "logo": "/mock/stores/gaming-hub-indore/logo.webp",
+    "images": [
+      "/mock/stores/gaming-hub-indore/store-front.webp"
+    ],
+    "storeCategory": "Gaming",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7266,
+      "longitude": 75.8647
+    },
+    "address": {
+      "area": "MR 10",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452010"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_099",
+    "storeName": "Future Electronics Indore",
+    "slug": "future-electronics-indore",
+    "description": "Premium tech products from the world's leading brands.",
+    "logo": "/mock/stores/future-electronics-indore/logo.webp",
+    "images": [
+      "/mock/stores/future-electronics-indore/store-front.webp"
+    ],
+    "storeCategory": "Electronics",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7276,
+      "longitude": 75.8657
+    },
+    "address": {
+      "area": "Sudama Nagar",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452009"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "_id": "store_100",
+    "storeName": "Prime Gadgets Indore",
+    "slug": "prime-gadgets-indore",
+    "description": "Daily use electronics, cables, powerbanks and portable tech.",
+    "logo": "/mock/stores/prime-gadgets-indore/logo.webp",
+    "images": [
+      "/mock/stores/prime-gadgets-indore/store-front.webp"
+    ],
+    "storeCategory": "Gadgets",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "location": {
+      "latitude": 22.7286,
+      "longitude": 75.8667
+    },
+    "address": {
+      "area": "Annapurna",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "pincode": "452009"
+    },
+    "contact": {
+      "phone": "+916261667099",
+      "whatsapp": "+916261667099"
+    },
+    "businessHours": {
+      "monday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "tuesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "wednesday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "thursday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "friday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "saturday": {
+        "open": "10:00",
+        "close": "20:00"
+      },
+      "sunday": {
+        "open": "11:00",
+        "close": "18:00"
+      }
+    },
+    "isActive": true,
+    "createdAt": "2026-08-22T10:00:00.000Z",
+    "updatedAt": "2026-08-22T10:00:00.000Z"
+  }
 ];
 
 export default stores;
