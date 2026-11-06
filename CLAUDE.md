@@ -71,7 +71,7 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 | H1 | P1 | Scope product writes to the store | C1 | CHANGES REQUESTED | See `R1` |
 | H4 | P1 | Hide soft-deleted products in feeds | T0 | TODO | |
 | H5 | P1 | Enforce visibility on direct pages | T0 | TODO | |
-| H6 | P1 | Fix subscription approval logic | C1 | TODO | |
+| H6 | P1 | Fix subscription approval logic | C1 | IN REVIEW | Batch 2 |
 | H3 | P1 | Fix tenant detection on platform hosts | T0 | TODO | |
 | H2 | P1 | Move images to Cloudinary | R1 | TODO | Batch 2 |
 | H7 | P1 | Update vulnerable dependencies | T0 | TODO | |

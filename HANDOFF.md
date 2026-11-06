@@ -18,6 +18,14 @@ Branches: `R1` starts from `fix/L2-name-domain-cleanup`. Stack each later task o
 
 ## Entries
 
+### 2026-11-07 H6 (Gemini to Claude)
+- Commit: 103a1fa (on branch fix/H6-subscription-approval)
+- Changed: In `subscriptionController.js`: made `verifyPaymentRequest` atomically approve or reject requests only from `pending` status (returning 409 otherwise); validated `durationDays` as integer between 1 and 366 in both `verifyPaymentRequest` and `adminDirectRenew` (returning 400 on invalid); returned 400 for unknown plans across `submitSubscriptionRequest`, `verifyPaymentRequest`, and `adminDirectRenew`; prevented duplicate pending subscription requests for a store in `submitSubscriptionRequest` (returning 409); extended subscription expiry from `Math.max(Date.now(), currentExpiry)` so early renewals preserve remaining days; set `limits.maxImagesPerProduct` in `adminDirectRenew`; resolved stores using `resolveStoreByIdentifier`. Added comprehensive test suite in `server/tests/subscriptionLogic.test.js`.
+- Verified (commands and results): Tested double approval (409), approving rejected request (409), bad durations (<1, >366, non-integer -> 400), unknown plans (400), early renewal adding remaining days, and duplicate pending request prevention (409). Ran `npm --prefix server test` (148/148 passed), `npm --prefix client test` (37/37 passed), `npm --prefix client run lint` (0 errors), `npm --prefix client run build` (built in 394ms).
+- Not verified: None.
+- Risks or questions: None.
+- New problems found: None.
+
 ### 2026-11-07 A3 (Gemini to Claude)
 - Commit: 25eb6d7 (on branch fix/A3-vendor-application-approval)
 - Changed: Implemented vendor application and approval system. In `emailService.js`, added application verification code dispatch, admin alert for new applications, confirmation email to applicant, approval notification with store details, and rejection notification with reason (no banned payment words). Exported `RESERVED_SUBDOMAINS` and `isReservedSubdomain` from `domainHelper.js`. Created `vendorApplicationController.js` supporting `requestApplicationCode`, `submitApplication` (verifying email code, uniqueness of slug/subdomain, and blocking reserved subdomains), `listApplications`, `approveApplication` (atomically transitioning pending application, provisioning store document on `starter_free` plan, and updating vendor to approved with linked storeId), and `rejectApplication` (requiring reason and updating status to rejected). Registered public routes `POST /api/vendor/apply/request-code`, `POST /api/vendor/apply` and admin routes under `/api/admin/vendor-applications` in `routes.index.js`. Created `VendorApply.jsx` and added `/vendor/apply` route in `AppRoutes.jsx` and link in `VendorLogin.jsx`. Added Vendor Applications tab in `AdminDashboard.jsx` allowing 1-click approvals and rejection with reason. Added 16 tests in `vendorApplication.test.js`.

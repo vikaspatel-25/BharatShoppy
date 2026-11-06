@@ -1,9 +1,22 @@
 import mongoose from "mongoose";
 import { defaultPlans, calculateDiscount } from "../data/mockData/subscriptionPlans.js";
+import { resolveStoreByIdentifier } from "../middleware/authMiddleware.js";
 
 // In-memory fallback stores for subscription requests when DB collection is simulated
 let inMemoryRequests = [];
 let inMemoryPlans = [...defaultPlans];
+
+export function resetInMemorySubscriptionRequests() {
+  inMemoryRequests = [];
+}
+
+export function setInMemorySubscriptionRequest(req) {
+  inMemoryRequests.push(req);
+}
+
+export function getInMemorySubscriptionRequests() {
+  return inMemoryRequests;
+}
 
 /**
  * Returns available subscription plans for vendors.
@@ -45,14 +58,7 @@ export async function getStoreSubscriptionInfo(req, res) {
     }
 
     const storesCollection = mongoose.connection?.db?.collection("stores");
-    let store = req.store;
-
-    if (!store && storesCollection) {
-      const normalized = storeId.trim().toLowerCase();
-      store = await storesCollection.findOne({
-        $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
-      });
-    }
+    let store = req.store || (await resolveStoreByIdentifier(storeId));
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
@@ -103,26 +109,24 @@ export async function getStoreSubscriptionInfo(req, res) {
       storeRequests = inMemoryRequests.filter((r) => r.storeId === store._id);
     }
 
+    // Match plan metadata
+    const activePlan =
+      inMemoryPlans.find((p) => p.planId === subscription.plan) || defaultPlans[1];
+
     return res.json({
-      storeId: store._id,
-      storeName: store.storeName,
       subscription: {
         ...subscription,
-        status: effectiveStatus,
+        effectiveStatus,
         daysRemaining,
-        isExpired,
+        planDetails: activePlan,
       },
-      limits,
-      usage: {
-        totalProducts,
-        limit: limits.productMonthlyLimit || 50,
-        remaining: Math.max(0, (limits.productMonthlyLimit || 50) - totalProducts),
-        percentageUsed: Math.min(
-          100,
-          Math.round((totalProducts / (limits.productMonthlyLimit || 50)) * 100)
-        ),
+      limits: {
+        productMonthlyLimit: limits.productMonthlyLimit || activePlan.productMonthlyLimit,
+        maxImagesPerProduct: limits.maxImagesPerProduct || activePlan.maxImagesPerProduct,
+        currentProductCount: totalProducts,
+        isUploadQuotaReached: totalProducts >= (limits.productMonthlyLimit || activePlan.productMonthlyLimit),
       },
-      requests: storeRequests,
+      recentRequests: storeRequests.slice(0, 5),
     });
   } catch (error) {
     console.error("getStoreSubscriptionInfo error:", error);
@@ -131,31 +135,52 @@ export async function getStoreSubscriptionInfo(req, res) {
 }
 
 /**
- * Vendor submits an activation or renewal request for a chosen plan.
+ * Vendor submits offline subscription activation/renewal request.
  */
 export async function submitSubscriptionRequest(req, res) {
   try {
     const { storeId } = req.params;
-    const { planId, vendorNote = "" } = req.body;
+    const { planId, vendorNote = "" } = req.body || {};
 
-    if (!planId) {
+    if (!planId || typeof planId !== "string") {
       return res.status(400).json({ message: "Plan selection is required" });
     }
 
     const storesCollection = mongoose.connection?.db?.collection("stores");
-    let store = req.store;
-    if (!store && storesCollection) {
-      const normalized = storeId.trim().toLowerCase();
-      store = await storesCollection.findOne({
-        $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
-      });
-    }
+    let store = req.store || (await resolveStoreByIdentifier(storeId));
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
     }
 
-    const selectedPlan = inMemoryPlans.find((p) => p.planId === planId) || defaultPlans[1];
+    // 1. Unknown plan check (reject with 400 instead of falling back to defaultPlans[1])
+    const selectedPlan = inMemoryPlans.find((p) => p.planId === planId);
+    if (!selectedPlan) {
+      return res.status(400).json({ message: `Unknown subscription plan '${planId}'` });
+    }
+
+    // 2. Prevent duplicate pending requests for a store
+    const requestsCollection = mongoose.connection?.db?.collection("subscription_requests");
+    if (requestsCollection) {
+      const existingPending = await requestsCollection.findOne({
+        storeId: store._id,
+        status: "pending",
+      });
+      if (existingPending) {
+        return res.status(409).json({
+          message: "A subscription request is already pending approval for this store.",
+        });
+      }
+    } else {
+      const existingPending = inMemoryRequests.find(
+        (r) => r.storeId === store._id && r.status === "pending"
+      );
+      if (existingPending) {
+        return res.status(409).json({
+          message: "A subscription request is already pending approval for this store.",
+        });
+      }
+    }
 
     const newRequest = {
       _id: `req_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
@@ -167,14 +192,13 @@ export async function submitSubscriptionRequest(req, res) {
       discountedPrice: selectedPlan.discountedPrice,
       billingCycle: selectedPlan.billingCycle,
       productMonthlyLimit: selectedPlan.productMonthlyLimit,
-      vendorNote: vendorNote.trim(),
+      vendorNote: typeof vendorNote === "string" ? vendorNote.trim() : "",
       status: "pending",
       createdAt: new Date().toISOString(),
       verifiedAt: null,
       adminNotes: "",
     };
 
-    const requestsCollection = mongoose.connection?.db?.collection("subscription_requests");
     if (requestsCollection) {
       await requestsCollection.insertOne(newRequest);
     } else {
@@ -200,12 +224,12 @@ export async function submitSubscriptionRequest(req, res) {
     });
   } catch (error) {
     console.error("submitSubscriptionRequest error:", error);
-    return res.status(500).json({ message: "Failed to submit request", error: error.message });
+    return res.status(500).json({ message: "Failed to submit subscription request", error: error.message });
   }
 }
 
 /**
- * Admin: List all subscription requests with optional status filter.
+ * Admin: View all subscription requests.
  */
 export async function getAdminPaymentRequests(req, res) {
   try {
@@ -214,35 +238,42 @@ export async function getAdminPaymentRequests(req, res) {
     let requests = [];
 
     if (requestsCollection) {
-      const query = status && status !== "all" ? { status } : {};
-      requests = await requestsCollection.find(query).sort({ createdAt: -1 }).toArray();
+      const filter = status ? { status } : {};
+      requests = await requestsCollection.find(filter).sort({ createdAt: -1 }).toArray();
     } else {
-      requests = status && status !== "all"
+      requests = status
         ? inMemoryRequests.filter((r) => r.status === status)
         : [...inMemoryRequests];
     }
 
-    const counts = {
-      all: requests.length,
-      pending: requests.filter((r) => r.status === "pending").length,
-      approved: requests.filter((r) => r.status === "approved").length,
-      rejected: requests.filter((r) => r.status === "rejected").length,
-    };
+    const formattedRequests = requests.map((r) => ({
+      requestId: r._id,
+      storeId: r.storeId,
+      storeName: r.storeName,
+      planId: r.selectedPlan,
+      planName: r.planName,
+      amount: r.discountedPrice,
+      vendorNote: r.vendorNote,
+      status: r.status,
+      createdAt: r.createdAt,
+      verifiedAt: r.verifiedAt,
+      adminNotes: r.adminNotes,
+    }));
 
-    return res.json({ requests, counts });
+    return res.json({ requests: formattedRequests });
   } catch (error) {
     console.error("getAdminPaymentRequests error:", error);
-    return res.status(500).json({ message: "Failed to load requests", error: error.message });
+    return res.status(500).json({ message: "Failed to fetch requests", error: error.message });
   }
 }
 
 /**
- * Admin: 1-Click Approve (+365 days) or Reject subscription request.
+ * Admin: 1-Click Approve (+durationDays) or Reject subscription request.
  */
 export async function verifyPaymentRequest(req, res) {
   try {
     const { requestId } = req.params;
-    const { action, adminNotes = "", durationDays = 365 } = req.body;
+    const { action, adminNotes = "", durationDays = 365 } = req.body || {};
 
     if (!["approve", "reject"].includes(action)) {
       return res.status(400).json({ message: "Action must be 'approve' or 'reject'" });
@@ -261,16 +292,55 @@ export async function verifyPaymentRequest(req, res) {
       return res.status(404).json({ message: "Subscription request not found" });
     }
 
-    const now = new Date();
+    // 1. Atomically change requests from pending only, and return 409 otherwise
+    if (request.status !== "pending") {
+      return res.status(409).json({
+        message: `Cannot ${action} request with status '${request.status}'. Only pending requests can be processed.`,
+      });
+    }
+
     const isApproval = action === "approve";
 
     if (isApproval) {
-      const selectedPlan =
-        inMemoryPlans.find((p) => p.planId === request.selectedPlan) || defaultPlans[1];
+      // 2. Validate durationDays: integer between 1 and 366
+      const days = Number(durationDays);
+      if (!Number.isInteger(days) || days < 1 || days > 366) {
+        return res.status(400).json({
+          message: "durationDays must be an integer between 1 and 366",
+        });
+      }
 
-      const expiresAt = new Date(now.getTime() + durationDays * 86400000).toISOString();
+      // 3. Return 400 for unknown plan
+      const selectedPlan = inMemoryPlans.find((p) => p.planId === request.selectedPlan);
+      if (!selectedPlan) {
+        return res.status(400).json({
+          message: `Unknown plan '${request.selectedPlan}'`,
+        });
+      }
+
+      // 4. Early renewal: extend from the later of now and current expiry
+      const now = new Date();
+      let currentExpiry = 0;
 
       const storesCollection = mongoose.connection?.db?.collection("stores");
+      let store = null;
+      if (storesCollection) {
+        store = await storesCollection.findOne({ _id: request.storeId });
+      }
+      if (!store) {
+        store = await resolveStoreByIdentifier(request.storeId);
+      }
+
+      if (store?.subscription?.expiresAt) {
+        const parsedExpiry = new Date(store.subscription.expiresAt).getTime();
+        if (!isNaN(parsedExpiry)) {
+          currentExpiry = parsedExpiry;
+        }
+      }
+
+      const baseTime = Math.max(now.getTime(), currentExpiry);
+      const expiresAt = new Date(baseTime + days * 86400000).toISOString();
+
       if (storesCollection) {
         await storesCollection.updateOne(
           { _id: request.storeId },
@@ -290,17 +360,38 @@ export async function verifyPaymentRequest(req, res) {
         );
       }
 
+      if (store) {
+        store.subscription = store.subscription || {};
+        store.subscription.plan = request.selectedPlan;
+        store.subscription.status = "active";
+        store.subscription.startDate = now.toISOString();
+        store.subscription.expiresAt = expiresAt;
+        store.limits = store.limits || {};
+        store.limits.productMonthlyLimit = selectedPlan.productMonthlyLimit || 50;
+        store.limits.maxImagesPerProduct = selectedPlan.maxImagesPerProduct || 8;
+        store.isActive = true;
+      }
+
       const updateData = {
         status: "approved",
         verifiedAt: now.toISOString(),
-        adminNotes: adminNotes || "Approved by Administrator (+365 days activated)",
-        durationDays,
+        adminNotes: adminNotes || `Approved by Administrator (+${days} days activated)`,
+        durationDays: days,
         activatedExpiresAt: expiresAt,
       };
 
       if (requestsCollection) {
-        await requestsCollection.updateOne({ _id: requestId }, { $set: updateData });
+        const updateResult = await requestsCollection.updateOne(
+          { _id: requestId, status: "pending" },
+          { $set: updateData }
+        );
+        if (updateResult.matchedCount === 0) {
+          return res.status(409).json({
+            message: "Subscription request was already processed or is no longer pending.",
+          });
+        }
       }
+
       Object.assign(request, updateData);
 
       return res.json({
@@ -309,15 +400,25 @@ export async function verifyPaymentRequest(req, res) {
       });
     } else {
       // Rejection
+      const now = new Date().toISOString();
       const updateData = {
         status: "rejected",
-        verifiedAt: now.toISOString(),
+        verifiedAt: now,
         adminNotes: adminNotes || "Payment could not be verified.",
       };
 
       if (requestsCollection) {
-        await requestsCollection.updateOne({ _id: requestId }, { $set: updateData });
+        const updateResult = await requestsCollection.updateOne(
+          { _id: requestId, status: "pending" },
+          { $set: updateData }
+        );
+        if (updateResult.matchedCount === 0) {
+          return res.status(409).json({
+            message: "Subscription request was already processed or is no longer pending.",
+          });
+        }
       }
+
       Object.assign(request, updateData);
 
       return res.json({
@@ -332,29 +433,48 @@ export async function verifyPaymentRequest(req, res) {
 }
 
 /**
- * Admin: Direct Renew a store (+365 days).
+ * Admin: Direct Renew a store (+durationDays).
  */
 export async function adminDirectRenew(req, res) {
   try {
     const { storeId } = req.params;
-    const { planId = "yearly_standard", durationDays = 365, adminNotes = "" } = req.body;
+    const { planId = "yearly_standard", durationDays = 365, adminNotes = "" } = req.body || {};
 
-    const storesCollection = mongoose.connection?.db?.collection("stores");
-    let store = req.store;
-    if (!store && storesCollection) {
-      const normalized = storeId.trim().toLowerCase();
-      store = await storesCollection.findOne({
-        $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
+    // 1. Validate durationDays: integer between 1 and 366
+    const days = Number(durationDays);
+    if (!Number.isInteger(days) || days < 1 || days > 366) {
+      return res.status(400).json({
+        message: "durationDays must be an integer between 1 and 366",
       });
     }
+
+    // 2. Validate plan: return 400 for unknown plan
+    const selectedPlan = inMemoryPlans.find((p) => p.planId === planId);
+    if (!selectedPlan) {
+      return res.status(400).json({
+        message: `Unknown plan '${planId}'`,
+      });
+    }
+
+    const storesCollection = mongoose.connection?.db?.collection("stores");
+    let store = req.store || (await resolveStoreByIdentifier(storeId));
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
     }
 
-    const selectedPlan = inMemoryPlans.find((p) => p.planId === planId) || defaultPlans[1];
+    // 3. Early renewal: extend from the later of now and current expiry
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + durationDays * 86400000).toISOString();
+    let currentExpiry = 0;
+    if (store.subscription?.expiresAt) {
+      const parsedExpiry = new Date(store.subscription.expiresAt).getTime();
+      if (!isNaN(parsedExpiry)) {
+        currentExpiry = parsedExpiry;
+      }
+    }
+
+    const baseTime = Math.max(now.getTime(), currentExpiry);
+    const expiresAt = new Date(baseTime + days * 86400000).toISOString();
 
     if (storesCollection) {
       await storesCollection.updateOne(
@@ -367,6 +487,7 @@ export async function adminDirectRenew(req, res) {
             "subscription.expiresAt": expiresAt,
             "subscription.lastPaymentReceivedDate": now.toISOString(),
             "limits.productMonthlyLimit": selectedPlan.productMonthlyLimit || 50,
+            "limits.maxImagesPerProduct": selectedPlan.maxImagesPerProduct || 8,
             isActive: true,
             updatedAt: now.toISOString(),
           },
@@ -374,8 +495,18 @@ export async function adminDirectRenew(req, res) {
       );
     }
 
+    store.subscription = store.subscription || {};
+    store.subscription.plan = selectedPlan.planId;
+    store.subscription.status = "active";
+    store.subscription.startDate = now.toISOString();
+    store.subscription.expiresAt = expiresAt;
+    store.limits = store.limits || {};
+    store.limits.productMonthlyLimit = selectedPlan.productMonthlyLimit || 50;
+    store.limits.maxImagesPerProduct = selectedPlan.maxImagesPerProduct || 8;
+    store.isActive = true;
+
     return res.json({
-      message: `Store subscription directly renewed (+${durationDays} days) under ${selectedPlan.name}.`,
+      message: `Store subscription directly renewed (+${days} days) under ${selectedPlan.name}.`,
       expiresAt,
       status: "active",
     });
@@ -392,13 +523,7 @@ export async function adminDirectDiscontinue(req, res) {
   try {
     const { storeId } = req.params;
     const storesCollection = mongoose.connection?.db?.collection("stores");
-    let store = req.store;
-    if (!store && storesCollection) {
-      const normalized = storeId.trim().toLowerCase();
-      store = await storesCollection.findOne({
-        $or: [{ _id: storeId }, { slug: normalized }, { subdomain: normalized }],
-      });
-    }
+    let store = req.store || (await resolveStoreByIdentifier(storeId));
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
@@ -418,6 +543,10 @@ export async function adminDirectDiscontinue(req, res) {
         }
       );
     }
+
+    store.subscription = store.subscription || {};
+    store.subscription.status = "expired";
+    store.subscription.expiresAt = now.toISOString();
 
     return res.json({
       message: "Subscription discontinued. Products are now shielded from public discovery.",
