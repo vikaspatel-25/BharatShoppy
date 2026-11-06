@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { apiFetch } from "../lib/apiClient.js";
 
 export default function VendorLogin() {
@@ -178,6 +178,15 @@ export default function VendorLogin() {
               </div>
             </form>
           )}
+
+          <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+            <p className="text-xs text-slate-500">
+              New to BharatShopy?{" "}
+              <Link to="/vendor/apply" className="font-semibold text-emerald-600 hover:text-emerald-700">
+                Apply for a Vendor Account
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

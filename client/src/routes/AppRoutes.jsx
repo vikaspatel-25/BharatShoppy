@@ -6,6 +6,7 @@ import Store from "../pages/store.jsx";
 import Search from "../pages/search.jsx";
 import VendorDashboard from "../pages/vendorDashboard.jsx";
 import VendorLogin from "../pages/VendorLogin.jsx";
+import VendorApply from "../pages/VendorApply.jsx";
 import AdminLogin from "../pages/AdminLogin.jsx";
 import AdminDashboard from "../pages/AdminDashboard.jsx";
 import Header from "../components/layout/header/header.jsx";
@@ -58,6 +59,7 @@ function AppRoutes() {
         {/* Vendor Management Dashboard & Product Upload */}
         <Route path="/vendor" element={<VendorDashboard />} />
         <Route path="/vendor/login" element={<VendorLogin />} />
+        <Route path="/vendor/apply" element={<VendorApply />} />
         {/* Admin Operations & Subscription Desk */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminDashboard />} />

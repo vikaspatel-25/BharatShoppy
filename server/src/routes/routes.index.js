@@ -1,12 +1,11 @@
 import express from "express";
-
 import { searchLocations } from "../controllers/locationController.js";
 import { getProducts } from "../controllers/productController.js";
 import { getProductPage } from "../controllers/productPageController.js";
-import { globalSearch } from "../controllers/globalSearchController.js";
 import getStores from "../controllers/storeController.js";
 import { getStorePage } from "../controllers/storePageController.js";
 import { searchStoreProducts } from "../controllers/storeProductSearchController.js";
+import { globalSearch } from "../controllers/globalSearchController.js";
 import { resolveTenant } from "../controllers/tenantController.js";
 import {
   getVendorDashboardData,
@@ -15,6 +14,7 @@ import {
   updateVendorProduct,
   deleteVendorProduct,
 } from "../controllers/vendorCatalogController.js";
+
 import {
   getSubscriptionPlans,
   getStoreSubscriptionInfo,
@@ -35,6 +35,14 @@ import {
   verifyCode,
   vendorLogout,
 } from "../controllers/vendorAuthController.js";
+
+import {
+  requestApplicationCode,
+  submitApplication,
+  listApplications,
+  approveApplication,
+  rejectApplication,
+} from "../controllers/vendorApplicationController.js";
 
 import {
   requireAdmin,
@@ -63,6 +71,10 @@ router.get("/subscription/plans", getSubscriptionPlans);
 router.get("/vendor/store/:storeId/subscription", requireVendor, requireStoreOwner, getStoreSubscriptionInfo);
 router.post("/vendor/store/:storeId/subscription-request", requireVendor, requireStoreOwner, submitSubscriptionRequest);
 
+// Vendor Application & Onboarding
+router.post("/vendor/apply/request-code", requestApplicationCode);
+router.post("/vendor/apply", submitApplication);
+
 // Admin Authentication Desk
 router.post("/admin/auth/login", adminLogin);
 router.post("/admin/auth/verify", adminVerify);
@@ -73,6 +85,11 @@ router.get("/admin/subscription-requests", requireAdmin, getAdminPaymentRequests
 router.post("/admin/subscription-requests/:requestId/verify", requireAdmin, verifyPaymentRequest);
 router.post("/admin/store/:storeId/renew", requireAdmin, adminDirectRenew);
 router.post("/admin/store/:storeId/discontinue", requireAdmin, adminDirectDiscontinue);
+
+// Admin Vendor Applications Management Desk
+router.get("/admin/vendor-applications", requireAdmin, listApplications);
+router.post("/admin/vendor-applications/:id/approve", requireAdmin, approveApplication);
+router.post("/admin/vendor-applications/:id/reject", requireAdmin, rejectApplication);
 
 // Vendor Authentication Desk
 router.post("/vendor/auth/request-code", requestCode);

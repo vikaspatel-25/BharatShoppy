@@ -36,7 +36,7 @@ Decided 2026-11-06. Do not report these as bugs.
 - **Implementer:** Gemini.
 - **Live data:** the production database holds demo data only, per the owner. Production changes still need owner approval.
 - **Name and domain:** the name is `BharatShopy` everywhere the code displays it, and the domain is `www.bharatshopy.com`. All other spellings are wrong.
-- **Vendor accounts:** phone OTP sign-up and login. An admin approves a vendor before they can go live. No self-service activation.
+- **Vendor accounts:** email verification code sign-up and login, sent by email. No phone OTP or SMS. An admin approves a vendor before they can go live. No self-service activation.
 - **Admin account:** one admin record and no admin sign-up page. Login is password plus a 6-digit code sent to the admin email, which creates an httpOnly cookie. The session lasts 1 hour by default and renews while active. The code step must require a completed password step.
 - **Admin role:** moderation and management only. Admins do not add or edit products from the admin area.
 - **Payments:** manual. The vendor requests a plan and pays offline, then an admin activates it. No gateway for now. Only an admin can activate or renew.
@@ -45,32 +45,38 @@ Decided 2026-11-06. Do not report these as bugs.
 - **Expired stores:** the store page stays visible with WhatsApp contact, products are hidden, and no data is deleted.
 - **Deleting a product:** the vendor action stays a soft delete (`isActive: false`).
 - **Vendor removal:** a 7-day hold with listings hidden, then permanent deletion of the profile, listings and media.
+- **Email:** `nodemailer` over Gmail SMTP for now, with all sending in one file, `server/src/services/emailService.js`. Every send is awaited. Moving to a transactional provider before real launch is tracked as `E2`.
+- **Images:** photos are stored in Cloudinary. MongoDB stores product details and photo links.
 - **Demo data:** all stores sharing one phone number, and the made-up demo store details, are acceptable only as demo data. See `M6` for what must happen before real launch.
 
 ## Open questions for the owner
-- `Q2`: SMS provider for vendor OTP and email provider for the admin code. `A1` and `A2` are built behind provider interfaces, but real login in production needs these chosen.
+- `Q2`: The owner must create a Gmail app password and set `GMAIL_USER`, `GMAIL_APP_PASSWORD` and `ADMIN_EMAIL`. Real login in production needs them.
 - `Q3`: Should paid plans keep promising analytics, priority ranking and 24/7 support? Blocks `M6`.
+- `Q4`: The owner must create a Cloudinary account and set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET`. Real uploads in production need them.
 
 ## Status
 Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOCKED`.
 
 | ID | Priority | Task | Depends on | Status | Notes |
 |---|---|---|---|---|---|
-| T0 | P0 | Commit uncommitted work as a baseline | none | TODO | Batch 1 |
-| C3 | P0 | Guard seeding and auto-seeding | T0 | TODO | Batch 1 |
-| A1 | P0 | Admin authentication | T0 | TODO | Batch 1 |
-| A2 | P0 | Vendor phone OTP authentication | T0 | TODO | Batch 1 |
-| C1 | P0 | Protect vendor and admin routes | A1, A2 | TODO | Batch 1 |
-| C2 | P0 | Remove public admin and demo UI | C1 | TODO | Batch 1 |
-| H1 | P1 | Scope product writes to the store | C1 | TODO | Batch 1 |
+| T0 | P0 | Commit uncommitted work as a baseline | none | DONE | Batch 1 |
+| C3 | P0 | Guard seeding and auto-seeding | T0 | DONE | Batch 1 |
+| A1 | P0 | Admin authentication | T0 | CHANGES REQUESTED | See `R1` |
+| A2 | P0 | Vendor authentication (now email, not phone) | T0 | CHANGES REQUESTED | See `R1` |
+| C1 | P0 | Protect vendor and admin routes | A1, A2 | CHANGES REQUESTED | See `R1` |
+| C2 | P0 | Remove public admin and demo UI | C1 | CHANGES REQUESTED | See `R1` |
+| R1 | P0 | Batch 1 review fixes and email login | L2 | IN REVIEW | Batch 2 |
+| E1 | P1 | Email notifications and failure handling | R1, A3, H6 | TODO | Batch 2 |
+| E2 | P2 | Move email to a transactional provider | E1 | BLOCKED | Needs an owner account, SPF and DKIM. Do before real launch |
+| H1 | P1 | Scope product writes to the store | C1 | CHANGES REQUESTED | See `R1` |
 | H4 | P1 | Hide soft-deleted products in feeds | T0 | TODO | |
 | H5 | P1 | Enforce visibility on direct pages | T0 | TODO | |
 | H6 | P1 | Fix subscription approval logic | C1 | TODO | |
 | H3 | P1 | Fix tenant detection on platform hosts | T0 | TODO | |
-| H2 | P1 | Move images out of JSON and MongoDB | C1 | BLOCKED | Needs a storage choice from the owner when assigned |
+| H2 | P1 | Move images to Cloudinary | R1 | TODO | Batch 2 |
 | H7 | P1 | Update vulnerable dependencies | T0 | TODO | |
-| H8 | P1 | Add rate limits, headers, CORS, health check | C1 | TODO | |
-| A3 | P1 | Vendor application and approval flow | A1, A2 | TODO | |
+| H8 | P1 | Add rate limits, headers, CORS, health check | C1 | IN REVIEW | Batch 2 |
+| A3 | P1 | Vendor application and approval flow | A1, A2 | IN REVIEW | Batch 2 |
 | A4 | P2 | Vendor removal with 7-day hold | A3 | TODO | Needs a scheduled job design |
 | M1 | P2 | Validate write input | C1 | TODO | |
 | M2 | P2 | Correct quota behaviour | H1 | TODO | |
@@ -81,12 +87,38 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 | M7 | P2 | Add legal pages | owner text | BLOCKED | Needs reviewed legal text from the owner |
 | M8 | P3 | Fix missing product images | T0 | TODO | |
 | L1 | P3 | Accessibility fixes | C2 | TODO | |
-| L2 | P1 | Name and domain cleanup | H1 | TODO | Batch 1, owner decision |
+| L2 | P1 | Name and domain cleanup | H1 | DONE | Batch 1, owner decision |
 | L3 | P3 | Restrict the `?tenant=` override to development | H3 | TODO | |
 
 Line numbers refer to the uncommitted working tree at audit time. If they have moved, find the code by name.
 
 ## Task prompts
+
+### R1: Batch 1 review fixes and email login
+**Problem:** The owner replaced phone OTP with email codes over SMTP. The Batch 1 review also found the defects listed under Fix. This supersedes the phone parts of `A2`.
+**Fix:**
+1. Create `server/src/services/emailService.js` as the only file that uses `nodemailer`, sending over Gmail SMTP with `GMAIL_USER` and `GMAIL_APP_PASSWORD`, and using `ADMIN_EMAIL` as the single name for the admin address. Replace `server/src/services/emailProvider.js`, whose production class (`:30-37`) reports success without sending anything. Keep the development logging behaviour. In production it must really send, and throw if unconfigured or if sending fails. Every caller must `await` sending, so Vercel can't stop the function first. Document the variables in both `.env.example` files. Use it for admin and vendor codes.
+2. Replace vendor phone login with email: `request-code` and `verify-code` under `/api/vendor/auth/`, a vendor record keyed by normalised email, and an updated `VendorLogin.jsx`. Keep the 5-minute expiry, single use and attempt limit. Delete `smsProvider.js`, `phoneHelper.js` and the OTP routes, and replace their tests with equal coverage for email. Store contact and WhatsApp numbers are unchanged. Return the same response for known and unknown emails.
+3. Move request and attempt limits from in-memory maps (`vendorAuthController.js:9-10`) to MongoDB, because memory isn't shared between Vercel instances. Set `trust proxy` correctly so limits don't treat all users as one IP.
+4. Make `requireStoreOwner` load the vendor from the database on each request and use its current status and `storeId`. The session token's `status` (`authMiddleware.js:159`) stays "approved" for up to 24 hours after removal.
+5. Escape `:storeId` before building the regular expressions at `authMiddleware.js:17-18`, or use exact matching on a normalised value. `(` makes the expression invalid, and `.*` matches every store. Don't fall back to mock stores in production (`:24-31`). All vendor and subscription store controllers must use `req.store`, not look the store up again from the raw parameter.
+6. Make the admin `tempToken` single-use, as `A1` required, by binding it to the code issued in that login so older tokens stop working. Reject non-string `email`, `password` and `code` with 400: a non-string email currently returns 500.
+7. In `apiFetch` (`client/src/lib/apiClient.js:15-24`), don't redirect on 401 from `/auth/` routes. Currently a wrong admin password reloads the page and the error message is lost.
+8. After vendor login, navigate to `/vendor`: `VendorLogin.jsx:62` goes to `/vendor/:storeId`, which tenant routes don't have, so on a subdomain the vendor lands on the storefront. Have the dashboard always take the store from the session as `C2` required, and remove `routeStoreId` (`vendorDashboard.jsx:27-28`) and the `/vendor/:storeId` route.
+9. Add `brand` and `subCategory` to the `H1` update allowlist (`vendorCatalogController.js:265-275`). The edit form sends them, and they are now silently dropped.
+10. Add a documented local script that creates an approved vendor record for testing, since nobody can log in as a vendor until `A3`. It must refuse to run when `NODE_ENV=production`.
+11. In `.env.example` files, leave `AUTH_SECRET` blank instead of giving a usable value.
+**Verify:** Tests cover: the SMTP provider sending through a fake transport and throwing when unconfigured or failing; email login success, wrong, expired and reused codes; limits stored in the collection; a vendor removed after login getting 403; `(` and `.*` as `:storeId`; an old `tempToken` rejected; non-string input returning 400; `brand` and `subCategory` saved on edit. Search finds no `request-otp`, `verify-otp` or `smsProvider`. Server tests, client tests, lint and build pass. Do not send real email unless the owner supplies test SMTP settings.
+
+### E1: Email notifications and failure handling
+**Problem:** Beyond login codes, nobody is told about applications or subscription changes.
+**Fix:** Add these to `emailService.js`, using the plan and store data on record: a new-application alert to the admin, an application confirmation to the applicant, vendor approval and rejection (with the reason), subscription activation, discontinuation, and a renewal reminder that the admin sends with a button. If an approval or subscription email fails, keep the database change, return a warning to the admin, and offer a resend action. Never lose access or data because email failed. Emails must not say "Payment Received", "UTR", "Invoice" or "Receipt", because payments are manual and aren't recorded. Don't add scheduled reminders or password reset.
+**Verify:** Tests use a fake transport to cover each email, that sends are awaited, and a failed approval email returning a warning with the approval kept. Search finds no `nodemailer` outside `emailService.js`, and none of the banned wording in emails.
+
+### E2: Move email to a transactional provider
+**Problem:** Gmail SMTP has low sending limits and is unsuitable for real launch volume.
+**Fix:** Blocked until the owner creates a provider account and sets up SPF and DKIM. Claude will complete this prompt when assigning it. Only `emailService.js` should need to change.
+**Verify:** To be specified on assignment.
 
 ### T0: Baseline commit
 **Problem:** 48 paths are uncommitted, including the whole vendor, admin, subscription and tenant system. Fixes can't be reviewed against it.
@@ -143,10 +175,17 @@ Line numbers refer to the uncommitted working tree at audit time. If they have m
 **Fix:** Treat only known base domains as tenant hosts: `bharatshopy.com`, plus `localhost` and `lvh.me` for development. Everything else, including `*.vercel.app`, is the marketplace. Keep the client and server rules matching.
 **Verify:** Tests cover `vastra.bharatshopy.com` (tenant), `www.bharatshopy.com` and `bharatshopy.com` (none), and `bharat-shoppy-client.vercel.app` (none). Note in `HANDOFF.md` any existing test expecting Vercel subdomains to be tenants, and stop to ask rather than deleting it.
 
-### H2: Move images out of JSON and MongoDB
-**Problem:** `productUploadModal.jsx:134-146` sends base64 images in JSON. `server/src/index.js:36` keeps the default 100 KB limit: a local test returned 200 at 90 KB and 413 at 150 KB. Raising the limit would store large images in product records and inflate every response.
-**Fix:** Waiting on the owner's storage choice. Claude will complete this prompt when assigning it.
-**Verify:** To be specified on assignment.
+### H2: Move images to Cloudinary
+**Problem:** `productUploadModal.jsx:134-146` sends base64 images in JSON. `server/src/index.js` keeps the default 100 KB limit: a local test returned 200 at 90 KB and 413 at 150 KB. Raising the limit would store large images in product records and inflate every response.
+**Fix:**
+1. Add `POST /api/vendor/store/:storeId/media/sign`, behind `requireVendor` and `requireStoreOwner`, returning a signed Cloudinary upload for the folder `bharatshopy/<store._id>`, limited to JPEG, PNG and WebP and a 5 MB maximum. `CLOUDINARY_API_SECRET` stays on the server. Fail closed if Cloudinary isn't configured. Add the three variables to both `.env.example` files.
+2. Change the form to compress as it does now, upload directly to Cloudinary, then submit the returned details. Show upload progress and a clear error on failure. Saving must wait until uploads finish.
+3. Keep `images` as an array of URL strings, so public pages and existing demo data keep working. Add `imageAssets`, an array of `{ url, publicId }`, for uploaded photos.
+4. On add and edit, the server accepts only URLs from `https://res.cloudinary.com/<cloud name>/` with a `publicId` in that store's folder, plus URLs already on the product. Reject `data:` values and anything else with 400. Enforce the plan's `maxImagesPerProduct` on the server, and use it in the form in place of the fixed 6.
+5. When a vendor removes a photo from a product, delete it from Cloudinary after the save succeeds. Log a failed delete without failing the save. Soft-deleting a product keeps its photos. Export a helper that `A4` can use to delete a store's media.
+6. Make the Remove and Cover buttons usable on touchscreens: they only appear on hover (`productUploadModal.jsx:433`).
+7. Report any other base64 upload you find in `HANDOFF.md`. Don't raise the JSON body limit.
+**Verify:** Tests use a fake Cloudinary client to cover: signing requires login and store ownership, another vendor gets 403, missing configuration fails closed, foreign URLs and other stores' `publicId` values are rejected, `data:` is rejected, the plan's image limit applies, removed photos are deleted, and old string-only products still display and save. Client tests, lint and build pass. List real-phone and real-Cloudinary checks you did not run. Do not use a production Cloudinary account without the owner's approval.
 
 ### H7: Update vulnerable dependencies
 **Problem:** `npm audit --omit=dev` shows 6 vulnerabilities in the server and 21 in the client, each with 1 critical. `nodemon` is in server `dependencies`, and `shadcn` is in client `dependencies`.
@@ -160,7 +199,7 @@ Line numbers refer to the uncommitted working tree at audit time. If they have m
 
 ### A3: Vendor application and approval flow
 **Problem:** There's no way for a real vendor to join, and no admin screen to approve one.
-**Fix:** A phone-verified applicant submits store details and is saved as `pending`. Admins can list, approve (creates the store and links the vendor, on `starter_free`) and reject (with a reason). Check that slugs and subdomains are unique and not reserved. Notify through the provider interfaces.
+**Fix:** An email-verified applicant submits store details and is saved as `pending`. Admins can list, approve (creates the store and links the vendor, on `starter_free`) and reject (with a reason). Check that slugs and subdomains are unique and not reserved. Notify through the provider interfaces.
 **Verify:** Tests cover apply, duplicate apply, approve, reject, reserved subdomains, and that a pending vendor can't reach store routes.
 
 ### A4: Vendor removal with 7-day hold

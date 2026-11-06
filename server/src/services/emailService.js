@@ -105,7 +105,6 @@ export async function sendAdminLoginCode(to, code) {
     </div>
   `;
 
-  // Ensure dev console log format matches expectation
   if (!getTransporter() && process.env.NODE_ENV !== "production") {
     console.log(`[DEV EMAIL] Admin 6-digit login verification code for ${to}: ${code}`);
     return { success: true, simulated: true };
@@ -131,9 +130,139 @@ export async function sendVendorLoginCode(to, code) {
     </div>
   `;
 
-  // Ensure dev console log format matches expectation
   if (!getTransporter() && process.env.NODE_ENV !== "production") {
     console.log(`[DEV EMAIL] Vendor 6-digit login verification code for ${to}: ${code}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}
+
+/**
+ * Sends a 6-digit verification code to an applicant verifying their email.
+ */
+export async function sendApplicationVerificationCode(to, code) {
+  const subject = "BharatShopy Vendor Application Verification Code";
+  const text = `Your 6-digit verification code to submit your vendor application is: ${code}. It expires in 10 minutes.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #0f172a;">BharatShopy Vendor Application</h2>
+      <p style="color: #475569;">Your verification code to submit your store application is:</p>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 4px; text-align: center; color: #059669;">
+        ${code}
+      </div>
+      <p style="color: #64748b; font-size: 12px; margin-top: 16px;">This code will expire in 10 minutes. Please enter this code in the application form.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Application verification code for ${to}: ${code}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}
+
+/**
+ * Alerts administrator when a new vendor application is submitted.
+ */
+export async function sendNewApplicationAlert({ storeName, email, name, city, entityType }) {
+  const adminEmail = getAdminEmail();
+  const subject = `New Vendor Application: ${storeName}`;
+  const text = `A new vendor application has been received for "${storeName}".\nApplicant: ${name} (${email})\nEntity: ${entityType || "shopkeeper"}\nCity: ${city || "N/A"}\n\nPlease review it in the admin dashboard.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #0f172a;">New Vendor Application</h2>
+      <p style="color: #475569;">A new store application has been submitted for review:</p>
+      <ul style="color: #334155; line-height: 1.6;">
+        <li><strong>Store Name:</strong> ${storeName}</li>
+        <li><strong>Applicant:</strong> ${name} (${email})</li>
+        <li><strong>Entity Type:</strong> ${entityType || "shopkeeper"}</li>
+        <li><strong>City:</strong> ${city || "N/A"}</li>
+      </ul>
+      <p style="color: #64748b; font-size: 12px; margin-top: 16px;">Log in to the Admin Dashboard to review and approve or reject this application.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] New application alert sent to ${adminEmail} for store: ${storeName}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to: adminEmail, subject, text, html });
+}
+
+/**
+ * Confirms submission of application to the applicant.
+ */
+export async function sendApplicationConfirmation(to, { storeName, name }) {
+  const subject = `BharatShopy - Application Received for ${storeName}`;
+  const text = `Dear ${name || "Vendor"},\n\nWe have received your application for "${storeName}". Our administration team is reviewing your application and you will receive an update once a decision has been made.\n\nThank you for choosing BharatShopy.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #0f172a;">Application Received</h2>
+      <p style="color: #475569;">Dear ${name || "Vendor"},</p>
+      <p style="color: #475569;">We have received your application for <strong>${storeName}</strong>.</p>
+      <p style="color: #475569;">Our administration team is reviewing your store details. You will receive an email notification as soon as your application is processed.</p>
+      <p style="color: #64748b; font-size: 12px; margin-top: 16px;">Thank you for partnering with BharatShopy.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Application confirmation sent to ${to} for store: ${storeName}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}
+
+/**
+ * Notifies vendor that their store application has been approved.
+ */
+export async function sendVendorApprovalEmail(to, { storeName, slug, subdomain }) {
+  const subject = `Welcome to BharatShopy - Your Store "${storeName}" is Approved!`;
+  const text = `Congratulations! Your vendor application for "${storeName}" has been approved.\n\nYour store is now active on the Starter Free Plan.\nYou can now sign in to your vendor dashboard using your email (${to}) to manage your catalog.\nStore slug: ${slug}\nSubdomain: ${subdomain}`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #059669;">Congratulations! Store Approved</h2>
+      <p style="color: #475569;">Your vendor application for <strong>${storeName}</strong> has been approved by our administrators.</p>
+      <div style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="color: #065f46; margin: 0;"><strong>Active Plan:</strong> Starter Free Plan</p>
+        <p style="color: #065f46; margin: 4px 0 0 0;"><strong>Store Slug:</strong> ${slug}</p>
+        <p style="color: #065f46; margin: 4px 0 0 0;"><strong>Subdomain:</strong> ${subdomain}</p>
+      </div>
+      <p style="color: #475569;">You can now log in to the Vendor Portal using your email address (${to}) to list your products and configure your store.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Vendor approval email sent to ${to} for store: ${storeName}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}
+
+/**
+ * Notifies vendor that their application was rejected with a reason.
+ */
+export async function sendVendorRejectionEmail(to, { storeName, reason }) {
+  const subject = `Update regarding your BharatShopy application for "${storeName}"`;
+  const text = `Thank you for your interest in BharatShopy. After reviewing your application for "${storeName}", we are unable to approve it at this time.\n\nReason: ${reason}\n\nIf you have any questions or would like to submit updated information, please feel free to reach out.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #0f172a;">Application Status Update</h2>
+      <p style="color: #475569;">Thank you for your interest in BharatShopy. After reviewing your store application for <strong>${storeName}</strong>, we are unable to approve it at this time.</p>
+      <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="color: #991b1b; margin: 0;"><strong>Reason:</strong></p>
+        <p style="color: #991b1b; margin: 4px 0 0 0;">${reason}</p>
+      </div>
+      <p style="color: #64748b; font-size: 12px; margin-top: 16px;">If you have any questions, you can contact our support team.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Vendor rejection email sent to ${to} for store: ${storeName}`);
     return { success: true, simulated: true };
   }
 

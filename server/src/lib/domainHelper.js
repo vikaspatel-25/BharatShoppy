@@ -10,6 +10,24 @@
  * - "www", "app", "api", "admin", "mail", "cdn", "staging"
  * - Direct IP addresses and bare localhost
  */
+
+export const RESERVED_SUBDOMAINS = new Set([
+  "www",
+  "app",
+  "api",
+  "admin",
+  "mail",
+  "cdn",
+  "staging",
+  "preview",
+  "bharatshopy",
+]);
+
+export function isReservedSubdomain(subdomain) {
+  if (!subdomain) return false;
+  return RESERVED_SUBDOMAINS.has(String(subdomain).trim().toLowerCase());
+}
+
 export function extractSubdomain(host) {
   if (!host || typeof host !== "string") {
     return null;
@@ -23,17 +41,7 @@ export function extractSubdomain(host) {
     return null;
   }
 
-  const reserved = new Set([
-    "www",
-    "app",
-    "api",
-    "admin",
-    "mail",
-    "cdn",
-    "staging",
-    "preview",
-    "bharatshopy",
-  ]);
+  const reserved = RESERVED_SUBDOMAINS;
 
   // Handle localhost subdomains: e.g. "tenant.localhost"
   if (hostname.endsWith(".localhost")) {
