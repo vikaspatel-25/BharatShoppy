@@ -14,6 +14,7 @@ import {
   updateVendorProduct,
   deleteVendorProduct,
 } from "../controllers/vendorCatalogController.js";
+import { signMediaUpload } from "../controllers/mediaSignController.js";
 
 import {
   getSubscriptionPlans,
@@ -118,5 +119,6 @@ router.put("/vendor/store/:storeId", requireVendor, requireStoreOwner, updateVen
 router.post("/vendor/store/:storeId/products", requireVendor, requireStoreOwner, addVendorProduct);
 router.put("/vendor/store/:storeId/products/:productId", requireVendor, requireStoreOwner, updateVendorProduct);
 router.delete("/vendor/store/:storeId/products/:productId", requireVendor, requireStoreOwner, deleteVendorProduct);
+router.post("/vendor/store/:storeId/media/sign", requireVendor, requireStoreOwner, signMediaUpload);
 
 export default router;

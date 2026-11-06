@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { compressImage } from "@/lib/imageCompressor";
 import { getEntityConfig } from "@/lib/entityTypes";
+import { apiFetch } from "@/lib/apiClient";
 
 const UNIT_PRESETS = {
   shopkeeper: ["piece", "set", "pair", "meter", "pack"],
@@ -40,10 +41,13 @@ export default function ProductUploadModal({
   initialData = null,
   isSaving = false,
   quotaInfo = null,
+  storeId = null,
+  maxImages = 5,
 }) {
   const entityConfig = getEntityConfig(entityType);
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
+  const maxAllowedImages = maxImages || quotaInfo?.maxImagesPerProduct || 5;
 
   const [form, setForm] = useState({
     productName: "",
@@ -56,6 +60,7 @@ export default function ProductUploadModal({
     shortDescription: "",
     description: "",
     images: [],
+    imageAssets: [],
     inStock: true,
     isActive: true,
     tags: [],
@@ -86,6 +91,7 @@ export default function ProductUploadModal({
         shortDescription: initialData.shortDescription || "",
         description: initialData.description || "",
         images: initialData.images || [],
+        imageAssets: initialData.imageAssets || [],
         inStock: initialData.inStock !== false,
         isActive: initialData.isActive !== false,
         tags: Array.isArray(initialData.tags) ? initialData.tags : [],
@@ -109,6 +115,7 @@ export default function ProductUploadModal({
         shortDescription: "",
         description: "",
         images: [],
+        imageAssets: [],
         inStock: true,
         isActive: true,
         tags: [],
@@ -120,53 +127,116 @@ export default function ProductUploadModal({
 
   if (!isOpen) return null;
 
-  // Handle mobile camera and file uploads
+  // Handle mobile camera and file uploads to Cloudinary
   const handleFileProcess = async (files) => {
     if (!files || files.length === 0) return;
+
+    if (!storeId) {
+      setValidationError("Store context is missing. Please refresh and try again.");
+      return;
+    }
 
     try {
       setCompressing(true);
       setValidationError("");
 
-      const newCompressedImages = [];
-      for (const file of Array.from(files)) {
-        if (!file.type.startsWith("image/")) continue;
+      const fileList = Array.from(files).filter((f) => f.type.startsWith("image/"));
+      if (fileList.length === 0) return;
+
+      const remainingSlots = maxAllowedImages - form.images.length;
+      if (remainingSlots <= 0) {
+        setValidationError(`You can upload a maximum of ${maxAllowedImages} photos per product.`);
+        return;
+      }
+
+      const filesToProcess = fileList.slice(0, remainingSlots);
+
+      // Request signed upload credentials from server
+      const signRes = await apiFetch(`/api/vendor/store/${storeId}/media/sign`, {
+        method: "POST",
+      });
+      if (!signRes.ok) {
+        const errorData = await signRes.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || "Failed to get upload authorization. Image service may be unavailable."
+        );
+      }
+      const signData = await signRes.json();
+
+      const newUrls = [];
+      const newAssets = [];
+
+      for (const file of filesToProcess) {
         const compressedDataUrl = await compressImage(file, {
           maxWidth: 1200,
           maxHeight: 1200,
           quality: 0.82,
         });
-        if (compressedDataUrl) {
-          newCompressedImages.push(compressedDataUrl);
+        if (!compressedDataUrl) continue;
+
+        const formData = new FormData();
+        formData.append("file", compressedDataUrl);
+        formData.append("api_key", signData.apiKey);
+        formData.append("timestamp", signData.timestamp);
+        formData.append("signature", signData.signature);
+        formData.append("folder", signData.folder);
+
+        const uploadRes = await fetch(
+          `https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!uploadRes.ok) {
+          const errBody = await uploadRes.json().catch(() => ({}));
+          throw new Error(errBody.error?.message || "Failed to upload photo to Cloudinary");
         }
+
+        const uploadData = await uploadRes.json();
+        newUrls.push(uploadData.secure_url);
+        newAssets.push({
+          url: uploadData.secure_url,
+          publicId: uploadData.public_id,
+        });
       }
 
       setForm((prev) => ({
         ...prev,
-        images: [...prev.images, ...newCompressedImages].slice(0, 6), // Max 6 images
+        images: [...prev.images, ...newUrls].slice(0, maxAllowedImages),
+        imageAssets: [...(prev.imageAssets || []), ...newAssets].slice(0, maxAllowedImages),
       }));
     } catch (err) {
       console.error("Image processing error:", err);
-      setValidationError("Failed to process image. Please try again.");
+      setValidationError(err.message || "Failed to process image. Please try again.");
     } finally {
       setCompressing(false);
     }
   };
 
   const handleRemoveImage = (indexToRemove) => {
-    setForm((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, idx) => idx !== indexToRemove),
-    }));
+    setForm((prev) => {
+      const removedUrl = prev.images[indexToRemove];
+      return {
+        ...prev,
+        images: prev.images.filter((_, idx) => idx !== indexToRemove),
+        imageAssets: (prev.imageAssets || []).filter((a) => a.url !== removedUrl),
+      };
+    });
   };
 
   const handleSetCoverImage = (indexToCover) => {
     setForm((prev) => {
-      const selected = prev.images[indexToCover];
-      const rest = prev.images.filter((_, idx) => idx !== indexToCover);
+      const selectedUrl = prev.images[indexToCover];
+      const restUrls = prev.images.filter((_, idx) => idx !== indexToCover);
+      const selectedAsset = (prev.imageAssets || []).find((a) => a.url === selectedUrl);
+      const restAssets = (prev.imageAssets || []).filter((a) => a.url !== selectedUrl);
+
       return {
         ...prev,
-        images: [selected, ...rest],
+        images: [selectedUrl, ...restUrls],
+        imageAssets: selectedAsset ? [selectedAsset, ...restAssets] : prev.imageAssets,
       };
     });
   };
@@ -240,6 +310,7 @@ export default function ProductUploadModal({
       shortDescription: form.shortDescription.trim(),
       description: form.description.trim() || form.shortDescription.trim(),
       images: form.images.length > 0 ? form.images : [],
+      imageAssets: form.imageAssets || [],
       attributes: form.attributes,
       tags: form.tags,
       inStock: form.inStock,
@@ -356,11 +427,11 @@ export default function ProductUploadModal({
                   Product / Service Photos
                 </label>
                 <p className="text-[11px] text-stone-500">
-                  Take a photo with your phone camera or select up to 6 pictures.
+                  Take a photo with your phone camera or select up to {maxAllowedImages} pictures.
                 </p>
               </div>
               <span className="text-xs text-stone-400 font-medium">
-                {form.images.length}/6
+                {form.images.length}/{maxAllowedImages}
               </span>
             </div>
 
@@ -387,7 +458,7 @@ export default function ProductUploadModal({
               <button
                 type="button"
                 onClick={() => cameraInputRef.current?.click()}
-                disabled={compressing || form.images.length >= 6}
+                disabled={compressing || form.images.length >= maxAllowedImages}
                 className="flex items-center justify-center gap-2 p-3 rounded-2xl border-2 border-dashed border-orange-300 bg-orange-50/50 text-orange-700 font-semibold text-xs hover:bg-orange-100/70 active:scale-98 transition disabled:opacity-50"
               >
                 <Camera className="w-4 h-4 text-orange-600" />
@@ -397,7 +468,7 @@ export default function ProductUploadModal({
               <button
                 type="button"
                 onClick={() => galleryInputRef.current?.click()}
-                disabled={compressing || form.images.length >= 6}
+                disabled={compressing || form.images.length >= maxAllowedImages}
                 className="flex items-center justify-center gap-2 p-3 rounded-2xl border-2 border-dashed border-stone-300 bg-stone-50 text-stone-700 font-semibold text-xs hover:bg-stone-100 active:scale-98 transition disabled:opacity-50"
               >
                 <ImageIcon className="w-4 h-4 text-stone-600" />
@@ -408,7 +479,7 @@ export default function ProductUploadModal({
             {compressing && (
               <p className="text-xs text-orange-600 font-medium flex items-center gap-1.5 animate-pulse">
                 <Sparkles className="w-3.5 h-3.5" />
-                Compressing and optimizing images...
+                Compressing and uploading images to cloud...
               </p>
             )}
 
@@ -430,7 +501,7 @@ export default function ProductUploadModal({
                         Cover
                       </span>
                     )}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1.5 transition">
+                    <div className="absolute inset-0 bg-black/40 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 flex items-center justify-center gap-1.5 transition">
                       {idx !== 0 && (
                         <button
                           type="button"

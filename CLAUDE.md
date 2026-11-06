@@ -73,7 +73,7 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 | H5 | P1 | Enforce visibility on direct pages | T0 | TODO | |
 | H6 | P1 | Fix subscription approval logic | C1 | IN REVIEW | Batch 2 |
 | H3 | P1 | Fix tenant detection on platform hosts | T0 | TODO | |
-| H2 | P1 | Move images to Cloudinary | R1 | TODO | Batch 2 |
+| H2 | P1 | Move images to Cloudinary | R1 | IN REVIEW | Batch 2 |
 | H7 | P1 | Update vulnerable dependencies | T0 | TODO | |
 | H8 | P1 | Add rate limits, headers, CORS, health check | C1 | IN REVIEW | Batch 2 |
 | A3 | P1 | Vendor application and approval flow | A1, A2 | IN REVIEW | Batch 2 |

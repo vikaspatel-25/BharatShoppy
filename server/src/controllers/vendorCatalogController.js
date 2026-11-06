@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { checkProductUploadQuota } from "../services/quotaService.js";
+import { validateProductMedia, deleteCloudinaryMedia } from "../services/cloudinaryService.js";
 
 /**
  * Retrieves the vendor dashboard data for a given store.
@@ -116,6 +117,7 @@ export async function addVendorProduct(req, res) {
       shortDescription = "",
       description = "",
       images = [],
+      imageAssets = [],
       attributes = {},
       tags = [],
       inStock = true,
@@ -130,6 +132,28 @@ export async function addVendorProduct(req, res) {
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
+    }
+
+    // Enforce plan's maxImagesPerProduct limit on server
+    const maxImages = store.limits?.maxImagesPerProduct || 5;
+    const incomingImages = Array.isArray(images) ? images : [];
+    const incomingAssets = Array.isArray(imageAssets) ? imageAssets : [];
+
+    if (incomingImages.length > maxImages || incomingAssets.length > maxImages) {
+      return res.status(400).json({
+        message: `Images exceed maximum allowed limit of ${maxImages} for your plan.`,
+      });
+    }
+
+    // Validate media format and reject base64 data: URLs
+    const mediaCheck = validateProductMedia({
+      images: incomingImages,
+      imageAssets: incomingAssets,
+      storeId: store._id,
+      existingProduct: null,
+    });
+    if (!mediaCheck.valid) {
+      return res.status(400).json({ message: mediaCheck.message });
     }
 
     const productsCollection = mongoose.connection.db.collection("products");
@@ -174,7 +198,8 @@ export async function addVendorProduct(req, res) {
       price: formattedPrice,
       shortDescription: shortDescription.trim(),
       description: description.trim() || shortDescription.trim(),
-      images: images.length > 0 ? images : ["/mock/products/default.webp"],
+      images: incomingImages.length > 0 ? incomingImages : ["/mock/products/default.webp"],
+      imageAssets: incomingAssets,
       attributes: typeof attributes === "object" && attributes !== null ? attributes : {},
       tags: Array.isArray(tags) ? tags : [],
       isActive: isActive !== false,
@@ -236,6 +261,32 @@ export async function updateVendorProduct(req, res) {
       return res.status(404).json({ message: "Product not found" });
     }
 
+    // Enforce plan's maxImagesPerProduct limit on server
+    const maxImages = store.limits?.maxImagesPerProduct || 5;
+    if (Array.isArray(updates.images) && updates.images.length > maxImages) {
+      return res.status(400).json({
+        message: `Images exceed maximum allowed limit of ${maxImages} for your plan.`,
+      });
+    }
+    if (Array.isArray(updates.imageAssets) && updates.imageAssets.length > maxImages) {
+      return res.status(400).json({
+        message: `Images exceed maximum allowed limit of ${maxImages} for your plan.`,
+      });
+    }
+
+    // Validate media format and reject base64 data: URLs
+    if (updates.images !== undefined || updates.imageAssets !== undefined) {
+      const mediaCheck = validateProductMedia({
+        images: Array.isArray(updates.images) ? updates.images : [],
+        imageAssets: Array.isArray(updates.imageAssets) ? updates.imageAssets : [],
+        storeId: store._id,
+        existingProduct: existing,
+      });
+      if (!mediaCheck.valid) {
+        return res.status(400).json({ message: mediaCheck.message });
+      }
+    }
+
     // Explicit allowlist of editable product fields to prevent tampering
     const ALLOWED_UPDATE_FIELDS = [
       "productName",
@@ -245,6 +296,7 @@ export async function updateVendorProduct(req, res) {
       "shortDescription",
       "description",
       "images",
+      "imageAssets",
       "attributes",
       "tags",
       "isActive",
@@ -279,10 +331,44 @@ export async function updateVendorProduct(req, res) {
       }
     }
 
+    let removedAssets = [];
+    const existingAssets = Array.isArray(existing.imageAssets) ? existing.imageAssets : [];
+    if (updates.imageAssets !== undefined || updates.images !== undefined) {
+      const newAssets = Array.isArray(updates.imageAssets) ? updates.imageAssets : [];
+      const newImages = Array.isArray(updates.images) ? updates.images : [];
+      const newPublicIds = new Set(newAssets.map((a) => a?.publicId).filter(Boolean));
+      const newUrls = new Set(newImages);
+
+      removedAssets = existingAssets.filter((a) => {
+        if (!a?.publicId) return false;
+        if (updates.imageAssets !== undefined && !newPublicIds.has(a.publicId)) {
+          return true;
+        }
+        if (updates.images !== undefined && a.url && !newUrls.has(a.url)) {
+          return true;
+        }
+        return false;
+      });
+    }
+
+    if (updates.images !== undefined && updates.imageAssets === undefined && existing.imageAssets) {
+      const newUrls = new Set(Array.isArray(updates.images) ? updates.images : []);
+      updateFields.imageAssets = existing.imageAssets.filter((a) => newUrls.has(a.url));
+    }
+
     await productsCollection.updateOne(
       { _id: productId, storeId: store._id },
       { $set: updateFields }
     );
+
+    // Asynchronously delete removed photos from Cloudinary without failing save
+    if (removedAssets.length > 0) {
+      for (const asset of removedAssets) {
+        Promise.resolve(deleteCloudinaryMedia(asset.publicId)).catch((err) => {
+          console.warn("Background deletion of Cloudinary media failed:", err);
+        });
+      }
+    }
 
     const updated = await productsCollection.findOne({
       _id: productId,

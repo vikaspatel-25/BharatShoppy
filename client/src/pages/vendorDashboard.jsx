@@ -893,6 +893,8 @@ export default function VendorDashboard({
           initialData={editingProduct}
           isSaving={saving}
           quotaInfo={quotaInfo}
+          storeId={storeId}
+          maxImages={store?.limits?.maxImagesPerProduct || 5}
         />
 
         {/* QR Modal */}
