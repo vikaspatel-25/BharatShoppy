@@ -115,7 +115,7 @@ function Store({ isolated = false, tenantSubdomain = null }) {
     tenantSubdomain ||
     paramStoreId ||
     getTenantSubdomain() ||
-    "store_0103";
+    null;
 
   const [store, setStore] = useState(null);
   const [products, setProducts] = useState([]);

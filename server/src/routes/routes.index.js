@@ -77,6 +77,16 @@ router.post("/admin/store/:storeId/discontinue", requireAdmin, adminDirectDiscon
 router.post("/vendor/auth/request-otp", requestOtp);
 router.post("/vendor/auth/verify-otp", verifyOtp);
 router.post("/vendor/auth/logout", vendorLogout);
+router.get("/vendor/auth/me", requireVendor, (req, res) => {
+  return res.json({
+    vendor: {
+      _id: req.vendor.vendorId,
+      phone: req.vendor.phone,
+      storeId: req.vendor.storeId,
+      status: req.vendor.status,
+    },
+  });
+});
 
 // Isolated Vendor Catalog & Profile Management
 router.get("/vendor/store/:storeId", requireVendor, requireStoreOwner, getVendorDashboardData);

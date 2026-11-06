@@ -7,6 +7,7 @@ import Search from "../pages/search.jsx";
 import VendorDashboard from "../pages/vendorDashboard.jsx";
 import VendorLogin from "../pages/VendorLogin.jsx";
 import AdminLogin from "../pages/AdminLogin.jsx";
+import AdminDashboard from "../pages/AdminDashboard.jsx";
 import Header from "../components/layout/header/header.jsx";
 import { getTenantSubdomain } from "../lib/domainUtils.js";
 
@@ -33,13 +34,6 @@ function AppRoutes() {
         <Route path="/manage" element={<VendorDashboard />} />
         <Route path="/vendor" element={<VendorDashboard />} />
         <Route path="/vendor/login" element={<VendorLogin />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin"
-          element={
-            <VendorDashboard defaultTab="subscription" defaultShowAdmin={true} />
-          }
-        />
         <Route
           path="*"
           element={<Store isolated={true} tenantSubdomain={tenantSubdomain} />}
@@ -67,18 +61,8 @@ function AppRoutes() {
         <Route path="/vendor/:storeId" element={<VendorDashboard />} />
         {/* Admin Operations & Subscription Desk */}
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin"
-          element={
-            <VendorDashboard defaultTab="subscription" defaultShowAdmin={true} />
-          }
-        />
-        <Route
-          path="/admin/:storeId"
-          element={
-            <VendorDashboard defaultTab="subscription" defaultShowAdmin={true} />
-          }
-        />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/:storeId" element={<AdminDashboard />} />
       </Routes>
     </>
   );

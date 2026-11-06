@@ -14,7 +14,6 @@ import { apiFetch } from "@/lib/apiClient";
 export default function SubscriptionManager({
   storeId,
   onSubscriptionUpdated,
-  defaultShowAdmin = false,
 }) {
   const [plans, setPlans] = useState([]);
   const [subscriptionInfo, setSubscriptionInfo] = useState(null);
@@ -26,10 +25,6 @@ export default function SubscriptionManager({
   const [selectedPlanForRequest, setSelectedPlanForRequest] = useState(null);
   const [vendorNote, setVendorNote] = useState("");
   const [submittingRequest, setSubmittingRequest] = useState(false);
-
-  // Admin testing controls toggle
-  const [showAdminDesk, setShowAdminDesk] = useState(defaultShowAdmin);
-  const [adminRequests, setAdminRequests] = useState([]);
 
   const fetchSubscriptionData = async () => {
     try {
@@ -58,29 +53,11 @@ export default function SubscriptionManager({
     }
   };
 
-  const fetchAdminRequests = async () => {
-    try {
-      const res = await apiFetch("/api/admin/subscription-requests");
-      if (res.ok) {
-        const data = await res.json();
-        setAdminRequests(data.requests || []);
-      }
-    } catch (err) {
-      console.error("Failed to load admin requests:", err);
-    }
-  };
-
   useEffect(() => {
     if (storeId) {
       fetchSubscriptionData();
     }
   }, [storeId]);
-
-  useEffect(() => {
-    if (showAdminDesk) {
-      fetchAdminRequests();
-    }
-  }, [showAdminDesk]);
 
   const handleOpenRequestModal = (plan) => {
     setSelectedPlanForRequest(plan);
@@ -112,73 +89,12 @@ export default function SubscriptionManager({
       });
 
       fetchSubscriptionData();
-      if (showAdminDesk) fetchAdminRequests();
       if (onSubscriptionUpdated) onSubscriptionUpdated();
       setTimeout(() => setActionFeedback(null), 4000);
     } catch (err) {
       setActionFeedback({ type: "error", message: err.message });
     } finally {
       setSubmittingRequest(false);
-    }
-  };
-
-  // Admin Controls (Direct 1-Click Actions for testing)
-  const handleAdminVerify = async (requestId, action) => {
-    try {
-      const res = await apiFetch(`/api/admin/subscription-requests/${requestId}/verify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
-      });
-
-      if (!res.ok) throw new Error("Verification failed");
-      const data = await res.json();
-
-      setActionFeedback({ type: "success", message: data.message });
-      fetchSubscriptionData();
-      fetchAdminRequests();
-      if (onSubscriptionUpdated) onSubscriptionUpdated();
-      setTimeout(() => setActionFeedback(null), 4000);
-    } catch (err) {
-      setActionFeedback({ type: "error", message: err.message });
-    }
-  };
-
-  const handleAdminDirectRenew = async (planId = "yearly_standard") => {
-    try {
-      const res = await apiFetch(`/api/admin/store/${storeId}/renew`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId, durationDays: 365 }),
-      });
-
-      if (!res.ok) throw new Error("Direct renewal failed");
-      const data = await res.json();
-
-      setActionFeedback({ type: "success", message: data.message });
-      fetchSubscriptionData();
-      if (onSubscriptionUpdated) onSubscriptionUpdated();
-      setTimeout(() => setActionFeedback(null), 4000);
-    } catch (err) {
-      setActionFeedback({ type: "error", message: err.message });
-    }
-  };
-
-  const handleAdminDirectDiscontinue = async () => {
-    try {
-      const res = await apiFetch(`/api/admin/store/${storeId}/discontinue`, {
-        method: "POST",
-      });
-
-      if (!res.ok) throw new Error("Discontinuation failed");
-      const data = await res.json();
-
-      setActionFeedback({ type: "warning", message: data.message });
-      fetchSubscriptionData();
-      if (onSubscriptionUpdated) onSubscriptionUpdated();
-      setTimeout(() => setActionFeedback(null), 4000);
-    } catch (err) {
-      setActionFeedback({ type: "error", message: err.message });
     }
   };
 
@@ -265,19 +181,15 @@ export default function SubscriptionManager({
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => handleAdminDirectRenew("yearly_standard")}
+              onClick={() => {
+                const upgradePlan =
+                  plans.find((p) => p.planId === "yearly_standard") || plans[0] || null;
+                setSelectedPlanForRequest(upgradePlan);
+              }}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-orange-600 text-white text-xs font-bold hover:bg-orange-700 transition shadow-xs"
             >
               <Zap className="w-4 h-4" />
               <span>Renew / Upgrade Plan</span>
-            </button>
-            <button
-              onClick={() => setShowAdminDesk(!showAdminDesk)}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-stone-300 text-stone-600 text-xs font-medium hover:bg-stone-100 transition"
-              title="Toggle Admin Control Desk"
-            >
-              <ShieldCheck className="w-4 h-4 text-stone-500" />
-              <span className="hidden sm:inline">Admin Desk</span>
             </button>
           </div>
         </div>
@@ -316,95 +228,7 @@ export default function SubscriptionManager({
         </div>
       </div>
 
-      {/* 2. ADMIN DEMO TESTING CONTROLS (Simulate 1-Click Operations) */}
-      {showAdminDesk && (
-        <div className="bg-stone-900 text-stone-100 p-5 rounded-2xl space-y-4 shadow-xl border border-stone-800 animate-in fade-in">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-orange-400" />
-              <h4 className="font-bold text-sm text-white">
-                Admin Operations Desk (Test Live Lifecycle)
-              </h4>
-            </div>
-            <span className="text-[10px] bg-stone-800 px-2 py-0.5 rounded text-stone-400 font-mono">
-              Role: System Administrator
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
-            <button
-              onClick={() => handleAdminDirectRenew("yearly_standard")}
-              className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
-            >
-              <Check className="w-4 h-4" />
-              <span>1-Click Renew (+365 Days)</span>
-            </button>
-            <button
-              onClick={() => handleAdminDirectRenew("yearly_pro")}
-              className="p-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
-            >
-              <Zap className="w-4 h-4" />
-              <span>Upgrade to Pro Tier (200 Items)</span>
-            </button>
-            <button
-              onClick={handleAdminDirectDiscontinue}
-              className="p-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
-            >
-              <X className="w-4 h-4" />
-              <span>Discontinue (Shield Store)</span>
-            </button>
-          </div>
-
-          {/* Pending Requests Queue */}
-          {adminRequests.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-stone-800 space-y-2">
-              <span className="text-xs font-semibold text-stone-300">
-                Pending Activation Requests Desk:
-              </span>
-              <div className="space-y-1.5">
-                {adminRequests.slice(0, 3).map((req) => (
-                  <div
-                    key={req._id}
-                    className="p-2.5 bg-stone-800/80 rounded-xl flex items-center justify-between text-xs"
-                  >
-                    <div>
-                      <span className="font-bold text-white">{req.storeName}</span>
-                      <span className="text-stone-400 text-[11px] ml-2">
-                        {req.planName} · ₹{req.discountedPrice}
-                      </span>
-                      {req.vendorNote && (
-                        <p className="text-[11px] text-stone-400 italic">"{req.vendorNote}"</p>
-                      )}
-                    </div>
-                    {req.status === "pending" ? (
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          onClick={() => handleAdminVerify(req._id, "approve")}
-                          className="px-2.5 py-1 bg-emerald-600 rounded text-white text-[11px] font-bold"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleAdminVerify(req._id, "reject")}
-                          className="px-2.5 py-1 bg-red-600 rounded text-white text-[11px] font-bold"
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    ) : (
-                      <span className="text-[11px] capitalize font-semibold text-stone-400">
-                        {req.status}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* 3. DYNAMIC SUBSCRIPTION PLANS GRID */}
+      {/* 2. DYNAMIC SUBSCRIPTION PLANS GRID */}
       <div>
         <div className="mb-4">
           <h3 className="text-base font-bold text-stone-900">

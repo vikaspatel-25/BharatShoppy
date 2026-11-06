@@ -23,10 +23,9 @@ import { apiFetch } from "@/lib/apiClient";
 
 export default function VendorDashboard({
   defaultTab = "catalog",
-  defaultShowAdmin = false,
 }) {
   const { storeId: routeStoreId } = useParams();
-  const [storeId, setStoreId] = useState(routeStoreId || "store_0103");
+  const [storeId, setStoreId] = useState(routeStoreId || null);
   const [store, setStore] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,18 +48,33 @@ export default function VendorDashboard({
     area: "",
     city: "",
     state: "",
-    // Entity specific metadata
     metadata: {},
   });
 
-  // Available sample stores for demo switcher across all implemented scenarios
-  const demoStores = [
-    { id: "store_0103", name: "🛍️ Vastra Boutique (Shopkeeper)", type: "shopkeeper" },
-    { id: "store_farmer_01", name: "🌾 Kisan Organics (Farmer)", type: "farmer" },
-    { id: "store_service_01", name: "🛠️ FixPro Care (Service Provider)", type: "service_provider" },
-    { id: "store_expired_01", name: "⏳ Vintage Attic (Expired Plan)", type: "shopkeeper" },
-    { id: "store_capped_01", name: "🚫 Daily Kirana (Quota Reached)", type: "shopkeeper" },
-  ];
+  // Resolve vendor store from session if not specified in URL route params
+  useEffect(() => {
+    if (!storeId) {
+      apiFetch("/api/vendor/auth/me")
+        .then((res) => {
+          if (!res.ok) throw new Error("Unauthenticated vendor");
+          return res.json();
+        })
+        .then((data) => {
+          if (data.vendor?.storeId) {
+            setStoreId(data.vendor.storeId);
+          } else {
+            setFeedback({
+              type: "error",
+              message: "No store linked to this vendor account.",
+            });
+            setLoading(false);
+          }
+        })
+        .catch(() => {
+          window.location.href = "/vendor/login";
+        });
+    }
+  }, [storeId]);
 
   useEffect(() => {
     async function fetchVendorData() {
@@ -299,26 +313,6 @@ export default function VendorDashboard({
             <span>{feedback.message}</span>
           </div>
         )}
-
-        {/* Demo Store Switcher (Helpful for testing different entity types) */}
-        <div className="bg-white p-3.5 rounded-xl border border-stone-200 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
-          <span className="font-semibold text-stone-700">Select Vendor Profile to Manage:</span>
-          <div className="flex items-center gap-2">
-            {demoStores.map((demo) => (
-              <button
-                key={demo.id}
-                onClick={() => setStoreId(demo.id)}
-                className={`px-3 py-1.5 rounded-lg font-medium transition ${
-                  storeId === demo.id
-                    ? "bg-stone-900 text-white shadow-sm"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-                }`}
-              >
-                {demo.name}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Tabs */}
         <div className="flex border-b border-stone-200 mb-6 gap-6">
@@ -879,7 +873,6 @@ export default function VendorDashboard({
         {activeTab === "subscription" && (
           <SubscriptionManager
             storeId={storeId}
-            defaultShowAdmin={defaultShowAdmin}
             onSubscriptionUpdated={() => {
               apiFetch(`/api/vendor/store/${storeId}`)
                 .then((r) => r.json())
