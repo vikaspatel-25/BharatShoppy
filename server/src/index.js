@@ -1,48 +1,19 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import express from "express";
-import cookieParser from "cookie-parser";
-import router from "./routes/routes.index.js";
-import cors from "cors";
+import app from "./app.js";
 import connectDB from "./db/connection.js";
-import { assertSigningSecret } from "./lib/tokenHelper.js";
 
-// Ensure required signing secret is present
-assertSigningSecret();
-
-const app = express();
-app.set("trust proxy", 1);
-
-const isOriginAllowed = (origin) => {
-  if (!origin) return true;
-  // Allow localhost & lvh.me with any subdomain or port
-  if (/^https?:\/\/([a-z0-9-]+\.)*localhost(:\d+)?$/i.test(origin)) return true;
-  if (/^https?:\/\/([a-z0-9-]+\.)*lvh\.me(:\d+)?$/i.test(origin)) return true;
-  // Allow bharatshopy with any subdomain
-  if (/^https?:\/\/([a-z0-9-]+\.)*bharatshopy\.com(:\d+)?$/i.test(origin)) return true;
-  // Allow Vercel preview/production deployments
-  if (/\.vercel\.app$/i.test(origin)) return true;
-
-  return true;
-};
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (isOriginAllowed(origin)) {
-        return callback(null, true);
-      }
-      return callback(null, true);
-    },
-    credentials: true,
-  })
-);
-
-app.use(express.json());
-app.use(cookieParser());
-
+// Ensure database connection
 await connectDB();
-app.use("/api", router);
+
+const PORT = process.env.PORT || 7002;
+
+// Listen when started directly (non-serverless local environments)
+if (process.env.NODE_ENV !== "production" && process.env.VERCEL !== "1") {
+  app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+  });
+}
 
 export default app;

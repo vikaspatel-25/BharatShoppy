@@ -41,18 +41,19 @@ import {
   requireVendor,
   requireStoreOwner,
 } from "../middleware/authMiddleware.js";
+import { searchRateLimiter } from "../middleware/rateLimitMiddleware.js";
 
 const router = express.Router();
 
 // Public Discovery & Marketplace Routes
-router.get("/searchLocations", searchLocations);
+router.get("/searchLocations", searchRateLimiter, searchLocations);
 router.get("/products", getProducts);
 router.get("/products/:productId", getProductPage);
 router.get("/stores", getStores);
 router.get("/store/:storeId", getStorePage);
 router.get("/shop/:storeId", getStorePage);
-router.get("/stores/:storeId/products/search", searchStoreProducts);
-router.get("/search", globalSearch);
+router.get("/stores/:storeId/products/search", searchRateLimiter, searchStoreProducts);
+router.get("/search", searchRateLimiter, globalSearch);
 
 // Multi-Tenant Routing Engine
 router.get("/tenant/resolve", resolveTenant);
