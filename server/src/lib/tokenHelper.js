@@ -22,7 +22,7 @@ export function getAuthSecret(env = process.env) {
 }
 
 /**
- * Hash a plain text string using SHA-256 (used for verification codes).
+ * Hash a plain text string using SHA-256 (used for verification codes and OTPs).
  */
 export function hashString(value) {
   if (typeof value !== "string") {

@@ -61,5 +61,24 @@ describe("Server Route Stack Tests", () => {
     const adminLogoutRoute = registeredRoutes.find((r) => r.path === "/admin/auth/logout");
     assert.ok(adminLogoutRoute, "Should register admin logout route");
     assert.ok(adminLogoutRoute.methods.includes("post"), "Should handle POST method");
+
+    // Check vendor authentication routes
+    const vendorRequestOtpRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/auth/request-otp"
+    );
+    assert.ok(vendorRequestOtpRoute, "Should register vendor request-otp route");
+    assert.ok(vendorRequestOtpRoute.methods.includes("post"), "Should handle POST method");
+
+    const vendorVerifyOtpRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/auth/verify-otp"
+    );
+    assert.ok(vendorVerifyOtpRoute, "Should register vendor verify-otp route");
+    assert.ok(vendorVerifyOtpRoute.methods.includes("post"), "Should handle POST method");
+
+    const vendorLogoutRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/auth/logout"
+    );
+    assert.ok(vendorLogoutRoute, "Should register vendor logout route");
+    assert.ok(vendorLogoutRoute.methods.includes("post"), "Should handle POST method");
   });
 });
