@@ -2,6 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import cookieParser from "cookie-parser";
+import { assertSigningSecret } from "./lib/tokenHelper.js";
+
+assertSigningSecret();
 import router from "./routes/routes.index.js";
 import cors from "cors";
 import connectDB from "./db/connection.js";
@@ -34,6 +38,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 
 await connectDB();
 app.use("/api", router);

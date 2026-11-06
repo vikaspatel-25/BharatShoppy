@@ -25,6 +25,12 @@ import {
   adminDirectDiscontinue,
 } from "../controllers/subscriptionController.js";
 
+import {
+  requestOtp,
+  verifyOtp,
+  vendorLogout,
+} from "../controllers/vendorAuthController.js";
+
 const router = express.Router();
 
 // Public Discovery & Marketplace Routes
@@ -50,6 +56,11 @@ router.get("/admin/subscription-requests", getAdminPaymentRequests);
 router.post("/admin/subscription-requests/:requestId/verify", verifyPaymentRequest);
 router.post("/admin/store/:storeId/renew", adminDirectRenew);
 router.post("/admin/store/:storeId/discontinue", adminDirectDiscontinue);
+
+// Vendor Authentication Desk
+router.post("/vendor/auth/request-otp", requestOtp);
+router.post("/vendor/auth/verify-otp", verifyOtp);
+router.post("/vendor/auth/logout", vendorLogout);
 
 // Isolated Vendor Catalog & Profile Management
 router.get("/vendor/store/:storeId", getVendorDashboardData);

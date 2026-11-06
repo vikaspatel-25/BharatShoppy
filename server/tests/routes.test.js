@@ -48,5 +48,23 @@ describe("Server Route Stack Tests", () => {
     );
     assert.ok(subRequestRoute, "Should register subscription request route");
     assert.ok(subRequestRoute.methods.includes("post"), "Should handle POST method");
+
+    const vendorRequestOtpRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/auth/request-otp"
+    );
+    assert.ok(vendorRequestOtpRoute, "Should register vendor request-otp route");
+    assert.ok(vendorRequestOtpRoute.methods.includes("post"), "Should handle POST method");
+
+    const vendorVerifyOtpRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/auth/verify-otp"
+    );
+    assert.ok(vendorVerifyOtpRoute, "Should register vendor verify-otp route");
+    assert.ok(vendorVerifyOtpRoute.methods.includes("post"), "Should handle POST method");
+
+    const vendorLogoutRoute = registeredRoutes.find(
+      (r) => r.path === "/vendor/auth/logout"
+    );
+    assert.ok(vendorLogoutRoute, "Should register vendor logout route");
+    assert.ok(vendorLogoutRoute.methods.includes("post"), "Should handle POST method");
   });
 });
