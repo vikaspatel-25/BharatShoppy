@@ -9,6 +9,7 @@ import {
   Calendar,
   Package,
 } from "lucide-react";
+import { apiFetch } from "@/lib/apiClient";
 
 export default function SubscriptionManager({
   storeId,
@@ -36,8 +37,8 @@ export default function SubscriptionManager({
       setError(null);
 
       const [plansRes, infoRes] = await Promise.all([
-        fetch("/api/subscription/plans"),
-        fetch(`/api/vendor/store/${storeId}/subscription`),
+        apiFetch("/api/subscription/plans"),
+        apiFetch(`/api/vendor/store/${storeId}/subscription`),
       ]);
 
       if (!plansRes.ok || !infoRes.ok) {
@@ -59,7 +60,7 @@ export default function SubscriptionManager({
 
   const fetchAdminRequests = async () => {
     try {
-      const res = await fetch("/api/admin/subscription-requests");
+      const res = await apiFetch("/api/admin/subscription-requests");
       if (res.ok) {
         const data = await res.json();
         setAdminRequests(data.requests || []);
@@ -92,7 +93,7 @@ export default function SubscriptionManager({
 
     try {
       setSubmittingRequest(true);
-      const res = await fetch(`/api/vendor/store/${storeId}/subscription-request`, {
+      const res = await apiFetch(`/api/vendor/store/${storeId}/subscription-request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -124,7 +125,7 @@ export default function SubscriptionManager({
   // Admin Controls (Direct 1-Click Actions for testing)
   const handleAdminVerify = async (requestId, action) => {
     try {
-      const res = await fetch(`/api/admin/subscription-requests/${requestId}/verify`, {
+      const res = await apiFetch(`/api/admin/subscription-requests/${requestId}/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
@@ -145,7 +146,7 @@ export default function SubscriptionManager({
 
   const handleAdminDirectRenew = async (planId = "yearly_standard") => {
     try {
-      const res = await fetch(`/api/admin/store/${storeId}/renew`, {
+      const res = await apiFetch(`/api/admin/store/${storeId}/renew`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ planId, durationDays: 365 }),
@@ -165,7 +166,7 @@ export default function SubscriptionManager({
 
   const handleAdminDirectDiscontinue = async () => {
     try {
-      const res = await fetch(`/api/admin/store/${storeId}/discontinue`, {
+      const res = await apiFetch(`/api/admin/store/${storeId}/discontinue`, {
         method: "POST",
       });
 

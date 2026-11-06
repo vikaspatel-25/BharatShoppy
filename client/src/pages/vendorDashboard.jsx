@@ -19,6 +19,7 @@ import ProductUploadModal from "@/components/vendor/productUploadModal";
 import SubscriptionManager from "@/components/vendor/subscriptionManager";
 import { ENTITY_TYPES, getEntityConfig } from "@/lib/entityTypes";
 import { getProductFallbackImage, handleImgError } from "@/lib/imageFallback";
+import { apiFetch } from "@/lib/apiClient";
 
 export default function VendorDashboard({
   defaultTab = "catalog",
@@ -66,7 +67,7 @@ export default function VendorDashboard({
       try {
         setLoading(true);
         setFeedback(null);
-        const res = await fetch(`/api/vendor/store/${storeId}`);
+        const res = await apiFetch(`/api/vendor/store/${storeId}`);
         if (!res.ok) {
           throw new Error("Failed to load vendor data");
         }
@@ -120,7 +121,7 @@ export default function VendorDashboard({
         metadata: profileForm.metadata,
       };
 
-      const res = await fetch(`/api/vendor/store/${storeId}`, {
+      const res = await apiFetch(`/api/vendor/store/${storeId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -142,7 +143,7 @@ export default function VendorDashboard({
     try {
       setSaving(true);
       if (editingProduct) {
-        const res = await fetch(
+        const res = await apiFetch(
           `/api/vendor/store/${storeId}/products/${editingProduct._id}`,
           {
             method: "PUT",
@@ -163,7 +164,7 @@ export default function VendorDashboard({
           message: `"${data.product.productName}" updated successfully!`,
         });
       } else {
-        const res = await fetch(`/api/vendor/store/${storeId}/products`, {
+        const res = await apiFetch(`/api/vendor/store/${storeId}/products`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(productData),
@@ -192,7 +193,7 @@ export default function VendorDashboard({
   const handleToggleProductStatus = async (product) => {
     try {
       const newActive = product.isActive === false ? true : false;
-      const res = await fetch(`/api/vendor/store/${storeId}/products/${product._id}`, {
+      const res = await apiFetch(`/api/vendor/store/${storeId}/products/${product._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isActive: newActive }),
@@ -880,7 +881,7 @@ export default function VendorDashboard({
             storeId={storeId}
             defaultShowAdmin={defaultShowAdmin}
             onSubscriptionUpdated={() => {
-              fetch(`/api/vendor/store/${storeId}`)
+              apiFetch(`/api/vendor/store/${storeId}`)
                 .then((r) => r.json())
                 .then((d) => setStore(d.store))
                 .catch(console.error);

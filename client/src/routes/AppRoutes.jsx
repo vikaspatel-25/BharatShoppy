@@ -5,6 +5,8 @@ import Product from "../pages/product.jsx";
 import Store from "../pages/store.jsx";
 import Search from "../pages/search.jsx";
 import VendorDashboard from "../pages/vendorDashboard.jsx";
+import VendorLogin from "../pages/VendorLogin.jsx";
+import AdminLogin from "../pages/AdminLogin.jsx";
 import Header from "../components/layout/header/header.jsx";
 import { getTenantSubdomain } from "../lib/domainUtils.js";
 
@@ -30,6 +32,8 @@ function AppRoutes() {
         <Route path="/product/:productId" element={<Product isolated={true} />} />
         <Route path="/manage" element={<VendorDashboard />} />
         <Route path="/vendor" element={<VendorDashboard />} />
+        <Route path="/vendor/login" element={<VendorLogin />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"
           element={
@@ -59,8 +63,10 @@ function AppRoutes() {
         <Route path="/shop/:storeId" element={<Store isolated={true} />} />
         {/* Vendor Management Dashboard & Product Upload */}
         <Route path="/vendor" element={<VendorDashboard />} />
+        <Route path="/vendor/login" element={<VendorLogin />} />
         <Route path="/vendor/:storeId" element={<VendorDashboard />} />
         {/* Admin Operations & Subscription Desk */}
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"
           element={
