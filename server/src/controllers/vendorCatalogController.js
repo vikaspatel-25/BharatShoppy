@@ -221,24 +221,68 @@ export async function addVendorProduct(req, res) {
 }
 
 /**
+ * Resolves store by ID, slug, or subdomain from request context or database.
+ */
+async function resolveStore(storeId, req) {
+  if (req?.store) return req.store;
+  if (!storeId) return null;
+
+  const storesCollection = mongoose.connection.db.collection("stores");
+  const normalizedId = storeId.trim().toLowerCase();
+  return await storesCollection.findOne({
+    $or: [
+      { _id: storeId },
+      { slug: normalizedId },
+      { subdomain: normalizedId },
+    ],
+  });
+}
+
+/**
  * Updates an existing catalog item.
  */
 export async function updateVendorProduct(req, res) {
   try {
     const { storeId, productId } = req.params;
-    const updates = req.body;
+    const updates = req.body || {};
+
+    const store = await resolveStore(storeId, req);
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
 
     const productsCollection = mongoose.connection.db.collection("products");
-    const existing = await productsCollection.findOne({ _id: productId });
+    const existing = await productsCollection.findOne({
+      _id: productId,
+      storeId: store._id,
+    });
 
     if (!existing) {
       return res.status(404).json({ message: "Product not found" });
     }
 
+    // Explicit allowlist of editable product fields to prevent tampering
+    const ALLOWED_UPDATE_FIELDS = [
+      "productName",
+      "category",
+      "shortDescription",
+      "description",
+      "images",
+      "attributes",
+      "tags",
+      "isActive",
+      "inStock",
+    ];
+
     const updateFields = {
-      ...updates,
       updatedAt: new Date().toISOString(),
     };
+
+    for (const field of ALLOWED_UPDATE_FIELDS) {
+      if (updates[field] !== undefined) {
+        updateFields[field] = updates[field];
+      }
+    }
 
     if (updates.price !== undefined) {
       if (typeof updates.price === "object" && updates.price !== null) {
@@ -259,11 +303,14 @@ export async function updateVendorProduct(req, res) {
     }
 
     await productsCollection.updateOne(
-      { _id: productId },
+      { _id: productId, storeId: store._id },
       { $set: updateFields }
     );
 
-    const updated = await productsCollection.findOne({ _id: productId });
+    const updated = await productsCollection.findOne({
+      _id: productId,
+      storeId: store._id,
+    });
     return res.json({
       message: "Product updated successfully",
       product: updated,
@@ -280,10 +327,16 @@ export async function updateVendorProduct(req, res) {
 export async function deleteVendorProduct(req, res) {
   try {
     const { storeId, productId } = req.params;
+
+    const store = await resolveStore(storeId, req);
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
     const productsCollection = mongoose.connection.db.collection("products");
 
     const result = await productsCollection.updateOne(
-      { _id: productId },
+      { _id: productId, storeId: store._id },
       { $set: { isActive: false, updatedAt: new Date().toISOString() } }
     );
 
