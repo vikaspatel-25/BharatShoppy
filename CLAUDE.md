@@ -70,7 +70,7 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 | E2 | P2 | Move email to a transactional provider | E1 | BLOCKED | Needs an owner account, SPF and DKIM. Do before real launch |
 | H1 | P1 | Scope product writes to the store | C1 | CHANGES REQUESTED | See `R1` |
 | H4 | P1 | Hide soft-deleted products in feeds | T0 | IN REVIEW | Batch 2 |
-| H5 | P1 | Enforce visibility on direct pages | T0 | TODO | |
+| H5 | P1 | Enforce visibility on direct pages | T0 | IN REVIEW | Batch 2 |
 | H6 | P1 | Fix subscription approval logic | C1 | IN REVIEW | Batch 2 |
 | H3 | P1 | Fix tenant detection on platform hosts | T0 | TODO | |
 | H2 | P1 | Move images to Cloudinary | R1 | IN REVIEW | Batch 2 |

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
+import { isStoreSubscriptionActive } from "../services/catalogVisibility.js";
 
 async function getProductPage(req, res) {
-
   const products = mongoose.connection.db.collection("products");
   const stores = mongoose.connection.db.collection("stores");
 
@@ -14,7 +14,7 @@ async function getProductPage(req, res) {
     (product) => product._id === productId
   );
 
-  if (!product) {
+  if (!product || product.isActive === false) {
     return res.status(404).json({
       message: "Product not found",
     });
@@ -24,9 +24,9 @@ async function getProductPage(req, res) {
     (store) => store._id === product.storeId
   );
 
-  if (!store) {
+  if (!store || !isStoreSubscriptionActive(store)) {
     return res.status(404).json({
-      message: "Store for this product not found",
+      message: "Product not found",
     });
   }
 

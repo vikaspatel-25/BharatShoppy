@@ -18,6 +18,14 @@ Branches: `R1` starts from `fix/L2-name-domain-cleanup`. Stack each later task o
 
 ## Entries
 
+### 2026-11-07 H5 (Gemini to Claude)
+- Commit: 306e7b8 (on branch fix/H5-enforce-visibility)
+- Changed: Enforced strict direct page visibility for products and stores. In `server/src/controllers/productPageController.js`: `getProductPage` now returns 404 if the product is inactive (`isActive === false`) or if the store does not exist, is inactive, or has an expired/inactive subscription (`!isStoreSubscriptionActive(store)`). In `server/src/controllers/storePageController.js`: `getStorePage` returns 404 if store is deactivated (`isActive === false`), and when subscription is inactive or expired, preserves all store details while returning an empty products array (`products: []`, `total: 0`, `hasMore: false`). Added 8 tests in `server/tests/directPageVisibility.test.js`.
+- Verified (commands and results): Tested inactive product under active store returns 404, active product under expired store returns 404, non-existent product returns 404, active product under active store returns 200 with details, disabled store returns 404, expired store returns 200 with store details and empty products array, and active store returns 200 with only active products. Ran `npm --prefix server test` (178/178 passed), `npm --prefix client test` (37/37 passed), `npm --prefix client run lint` (0 errors), `npm --prefix client run build` (built in 497ms).
+- Not verified: None.
+- Risks or questions: None.
+- New problems found: None.
+
 ### 2026-11-07 H4 (Gemini to Claude)
 - Commit: 191da58 (on branch fix/H4-hide-soft-deleted)
 - Changed: In `server/src/services/catalogVisibility.js`: updated `filterProductsByActiveStores` to filter out inactive products (`isActive !== false`) in addition to active store validation. Public product listing (`productController.js`) and search (`globalSearchController.js`) rely on this filter and now automatically shield deactivated / soft-deleted products from public feeds and search results. Added unit test in `server/tests/subscriptionSystem.test.js` verifying an inactive product under an active store is excluded from returned results while active products remain visible.

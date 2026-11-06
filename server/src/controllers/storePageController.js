@@ -50,11 +50,13 @@ async function getStorePage(req, res) {
   const page = Math.max(Number(req.query.page) || 1, 1);
   const limit = 10;
 
-  // Match products by the actual canonical store._id
-  const storeProducts = productsData.filter(
-    (product) =>
-      product.storeId === store._id && product.isActive !== false
-  );
+  // Match products by the actual canonical store._id only if store subscription is active
+  const storeProducts = isSubscriptionActive
+    ? productsData.filter(
+        (product) =>
+          product.storeId === store._id && product.isActive !== false
+      )
+    : [];
 
   const productStart = (page - 1) * limit;
   const productEnd = productStart + limit;
