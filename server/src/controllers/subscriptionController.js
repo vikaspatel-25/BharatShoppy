@@ -379,7 +379,8 @@ export async function verifyPaymentRequest(req, res) {
           });
         }
       } else {
-        if (inMemoryRequests.get(requestId)?.status !== "pending") {
+        const reqRecord = inMemoryRequests.find((r) => r._id === requestId || r.id === requestId);
+        if (reqRecord?.status !== "pending") {
           return res.status(409).json({
             message: "Subscription request was already processed or is no longer pending.",
           });
@@ -469,7 +470,8 @@ export async function verifyPaymentRequest(req, res) {
           });
         }
       } else {
-        if (inMemoryRequests.get(requestId)?.status !== "pending") {
+        const reqRecord = inMemoryRequests.find((r) => r._id === requestId || r.id === requestId);
+        if (reqRecord?.status !== "pending") {
           return res.status(409).json({
             message: "Subscription request was already processed or is no longer pending.",
           });

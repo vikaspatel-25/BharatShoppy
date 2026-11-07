@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { hashString } from "../lib/tokenHelper.js";
 import { checkRateLimit } from "../lib/rateLimitHelper.js";
 import { isReservedSubdomain } from "../lib/domainHelper.js";
+import mockStores from "../data/mockData/stores.js";
 import {
   sendApplicationVerificationCode,
   sendNewApplicationAlert,
@@ -14,7 +15,7 @@ import { findVendorByEmail, updateVendor, setInMemoryVendor } from "./vendorAuth
 
 // In-memory fallbacks for unit testing without MongoDB
 let inMemoryApplications = new Map();
-let inMemoryApplicationCodes = new Map();
+export let inMemoryApplicationCodes = new Map();
 
 export function setInMemoryApplication(appData) {
   const id = appData._id || "app_" + crypto.randomUUID();
@@ -300,15 +301,25 @@ export async function submitApplication(req, res) {
 
     // 5. Uniqueness checks for slug & subdomain (checked BEFORE consuming verification code)
     const storesCol = getStoresCollection();
+    let existingStore = null;
     if (storesCol) {
-      const existingStore = await storesCol.findOne({
+      existingStore = await storesCol.findOne({
         $or: [{ slug }, { subdomain }],
       });
-      if (existingStore) {
-        return res.status(409).json({
-          message: `The slug or subdomain '${slug}' is already taken by an existing store.`,
-        });
-      }
+    } else {
+      existingStore =
+        mockStores.find(
+          (s) =>
+            s.slug === slug ||
+            s.subdomain === subdomain ||
+            s._id === `store_${slug}` ||
+            s._id === slug
+        ) || null;
+    }
+    if (existingStore) {
+      return res.status(409).json({
+        message: `The slug or subdomain '${slug}' is already taken by an existing store.`,
+      });
     }
 
     const appCol = getApplicationsCollection();
