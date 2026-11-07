@@ -21,6 +21,15 @@ export function resetInMemoryVendors() {
   inMemoryVendors.clear();
 }
 
+export function getInMemoryVendors() {
+  return Array.from(inMemoryVendors.values());
+}
+
+export function deleteInMemoryVendor(email) {
+  if (!email) return;
+  inMemoryVendors.delete(String(email).toLowerCase().trim());
+}
+
 function getVendorCollection() {
   if (mongoose.connection?.db) {
     return mongoose.connection.db.collection("vendors");

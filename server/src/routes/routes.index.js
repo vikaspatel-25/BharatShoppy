@@ -49,6 +49,12 @@ import {
 } from "../controllers/vendorApplicationController.js";
 
 import {
+  removeVendor,
+  cancelVendorRemoval,
+  cleanupRemovedVendors,
+} from "../controllers/adminVendorRemovalController.js";
+
+import {
   requireAdmin,
   requireVendor,
   requireStoreOwner,
@@ -97,6 +103,14 @@ router.get("/admin/vendor-applications", requireAdmin, listApplications);
 router.post("/admin/vendor-applications/:id/approve", requireAdmin, approveApplication);
 router.post("/admin/vendor-applications/:id/reject", requireAdmin, rejectApplication);
 router.post("/admin/vendor-applications/:id/resend-email", requireAdmin, resendApplicationEmail);
+
+// Admin Vendor Removal & 7-Day Hold Control
+router.post("/admin/vendors/:vendorId/remove", requireAdmin, removeVendor);
+router.post("/admin/vendors/:vendorId/cancel-removal", requireAdmin, cancelVendorRemoval);
+
+// Secured Cron: Cleanup removed vendors after 7-day hold
+router.get("/cron/cleanup-removed-vendors", cleanupRemovedVendors);
+router.post("/cron/cleanup-removed-vendors", cleanupRemovedVendors);
 
 // Vendor Authentication Desk
 router.post("/vendor/auth/request-code", requestCode);
