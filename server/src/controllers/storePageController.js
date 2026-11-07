@@ -28,13 +28,24 @@ async function getStorePage(req, res) {
       const storesCollection = db.collection("stores");
       productsCollection = db.collection("products");
 
-      store = await storesCollection.findOne({
-        $or: [
-          { _id: storeId },
-          { slug: { $regex: new RegExp(`^${escapedId}$`, "i") } },
-          { subdomain: { $regex: new RegExp(`^${escapedId}$`, "i") } },
-        ],
-      });
+      if (typeof storesCollection.findOne === "function") {
+        store = await storesCollection.findOne({
+          $or: [
+            { _id: storeId },
+            { slug: { $regex: new RegExp(`^${escapedId}$`, "i") } },
+            { subdomain: { $regex: new RegExp(`^${escapedId}$`, "i") } },
+          ],
+        });
+      } else {
+        const allStores = await storesCollection.find({}).toArray();
+        store = allStores.find(
+          (s) =>
+            s._id === storeId ||
+            s._id?.toLowerCase() === normalizedId ||
+            s.slug?.toLowerCase() === normalizedId ||
+            s.subdomain?.toLowerCase() === normalizedId
+        ) || null;
+      }
     } else {
       store = mockStores.find(
         (s) =>
@@ -80,12 +91,21 @@ async function getStorePage(req, res) {
           storeId: store._id,
           isActive: { $ne: false },
         };
-        total = await productsCollection.countDocuments(productQuery);
-        paginatedProducts = await productsCollection
-          .find(productQuery)
-          .skip(startingIndex)
-          .limit(limit)
-          .toArray();
+        if (typeof productsCollection.countDocuments === "function") {
+          total = await productsCollection.countDocuments(productQuery);
+          paginatedProducts = await productsCollection
+            .find(productQuery)
+            .skip(startingIndex)
+            .limit(limit)
+            .toArray();
+        } else {
+          const allProds = await productsCollection.find(productQuery).toArray();
+          const filtered = allProds.filter(
+            (product) => product.storeId === store._id && product.isActive !== false
+          );
+          total = filtered.length;
+          paginatedProducts = filtered.slice(startingIndex, startingIndex + limit);
+        }
       } else {
         const storeProducts = mockProducts.filter(
           (product) => product.storeId === store._id && product.isActive !== false

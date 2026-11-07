@@ -44,8 +44,8 @@ export async function resolveTenant(req, res) {
     const store = await storesCollection.findOne({
       $or: [
         { _id: identifier },
-        { subdomain: idRegex },
-        { slug: idRegex },
+        { subdomain: { $regex: idRegex } },
+        { slug: { $regex: idRegex } },
       ],
       isActive: { $ne: false },
     });

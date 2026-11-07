@@ -19,19 +19,29 @@ async function getProductPage(req, res) {
       const products = db.collection("products");
       const stores = db.collection("stores");
 
-      product = await products.findOne({
-        _id: productId,
-        isActive: { $ne: false },
-      });
+      if (typeof products.findOne === "function") {
+        product = await products.findOne({
+          _id: productId,
+          isActive: { $ne: false },
+        });
+      } else {
+        const all = await products.find({}).toArray();
+        product = all.find((p) => p._id === productId && p.isActive !== false) || null;
+      }
 
       if (!product) {
         return res.status(404).json({ message: "Product not found" });
       }
 
-      store = await stores.findOne({
-        _id: product.storeId,
-        isActive: { $ne: false },
-      });
+      if (typeof stores.findOne === "function") {
+        store = await stores.findOne({
+          _id: product.storeId,
+          isActive: { $ne: false },
+        });
+      } else {
+        const allStores = await stores.find({}).toArray();
+        store = allStores.find((s) => s._id === product.storeId && s.isActive !== false) || null;
+      }
     } else {
       product = mockProducts.find(
         (p) => p._id === productId && p.isActive !== false
