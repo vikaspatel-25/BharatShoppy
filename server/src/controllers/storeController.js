@@ -1,50 +1,78 @@
 import mongoose from "mongoose";
 import { filterActiveStores } from "../services/catalogVisibility.js";
+import mockStores from "../data/mockData/stores.js";
+
+function escapeRegex(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 async function getStores(req, res) {
-  const page = Number(req.query.page) || 1;
-  const city = req.query.city;
-  const category = req.query.category;
-  const limit = 10;
+  try {
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const city = req.query.city?.trim();
+    const category = req.query.category?.trim();
+    const limit = 10;
+    const startingIndex = (page - 1) * limit;
 
-  const startingIndex = (page - 1) * limit;
-  const lastIndex = startingIndex + limit;
+    const db = mongoose.connection?.db;
 
-  const stores = mongoose.connection.db.collection("stores");
-  const storesData = await stores.find({}).toArray();
-  let filteredStores = storesData;
+    if (db) {
+      const storesCol = db.collection("stores");
+      const storeQuery = { isActive: { $ne: false } };
 
-  if (city) {
-    filteredStores = filteredStores.filter(
-      (store) =>
-        store.city?.toLowerCase() === city.toLowerCase()
-    );
+      if (city) {
+        storeQuery.city = { $regex: new RegExp(`^${escapeRegex(city)}$`, "i") };
+      }
+      if (category) {
+        storeQuery.storeCategory = { $regex: new RegExp(`^${escapeRegex(category)}$`, "i") };
+      }
+
+      const candidateStores = await storesCol.find(storeQuery).toArray();
+      const activeStores = filterActiveStores(candidateStores);
+
+      const paginatedStores = activeStores.slice(startingIndex, startingIndex + limit);
+
+      return res.json({
+        stores: paginatedStores,
+        pagination: {
+          page,
+          limit,
+          total: activeStores.length,
+          hasMore: startingIndex + paginatedStores.length < activeStores.length,
+        },
+      });
+    }
+
+    // In-memory fallback
+    let filteredStores = filterActiveStores(mockStores);
+
+    if (city) {
+      filteredStores = filteredStores.filter(
+        (store) => store.city?.toLowerCase() === city.toLowerCase()
+      );
+    }
+
+    if (category) {
+      filteredStores = filteredStores.filter(
+        (store) => store.storeCategory?.toLowerCase() === category.toLowerCase()
+      );
+    }
+
+    const paginatedStores = filteredStores.slice(startingIndex, startingIndex + limit);
+
+    return res.json({
+      stores: paginatedStores,
+      pagination: {
+        page,
+        limit,
+        total: filteredStores.length,
+        hasMore: startingIndex + paginatedStores.length < filteredStores.length,
+      },
+    });
+  } catch (err) {
+    console.error("getStores error:", err);
+    return res.status(500).json({ message: "Failed to load stores" });
   }
-
-  if (category) {
-    filteredStores = filteredStores.filter(
-      (store) =>
-        store.storeCategory?.toLowerCase() ===
-        category.toLowerCase()
-    );
-  }
-
-  filteredStores = filterActiveStores(filteredStores);
-
-  const paginatedStores = filteredStores.slice(
-    startingIndex,
-    lastIndex
-  );
-
-  res.json({
-    stores: paginatedStores,
-    pagination: {
-      page,
-      limit,
-      total: filteredStores.length,
-      hasMore: lastIndex < filteredStores.length,
-    },
-  });
 }
 
 export default getStores;

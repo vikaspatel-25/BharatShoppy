@@ -37,14 +37,17 @@ export async function resolveTenant(req, res) {
       });
     }
 
-    const storesData = await storesCollection.find({}).toArray();
+    const escapedId = identifier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const idRegex = new RegExp(`^${escapedId}$`, "i");
 
-    // Match by subdomain, slug, or _id (case-insensitive)
-    const store = storesData.find((s) => {
-      const matchSubdomain = s.subdomain?.toLowerCase() === identifier;
-      const matchSlug = s.slug?.toLowerCase() === identifier;
-      const matchId = s._id?.toLowerCase() === identifier;
-      return (matchSubdomain || matchSlug || matchId) && s.isActive !== false;
+    // Match by subdomain, slug, or _id using targeted case-insensitive index query
+    const store = await storesCollection.findOne({
+      $or: [
+        { _id: identifier },
+        { subdomain: idRegex },
+        { slug: idRegex },
+      ],
+      isActive: { $ne: false },
     });
 
     if (!store) {

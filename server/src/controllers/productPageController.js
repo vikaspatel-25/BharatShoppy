@@ -1,56 +1,77 @@
 import mongoose from "mongoose";
 import { isStoreSubscriptionActive } from "../services/catalogVisibility.js";
+import mockProducts from "../data/mockData/products.js";
+import mockStores from "../data/mockData/stores.js";
 
 async function getProductPage(req, res) {
-  const products = mongoose.connection.db.collection("products");
-  const stores = mongoose.connection.db.collection("stores");
+  try {
+    const { productId } = req.params;
 
-  const productsData = await products.find({}).toArray();
-  const storesData = await stores.find({}).toArray();
+    if (!productId || typeof productId !== "string" || !productId.trim()) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
-  const { productId } = req.params;
+    const db = mongoose.connection?.db;
+    let product = null;
+    let store = null;
 
-  const product = productsData.find(
-    (product) => product._id === productId
-  );
+    if (db) {
+      const products = db.collection("products");
+      const stores = db.collection("stores");
 
-  if (!product || product.isActive === false) {
-    return res.status(404).json({
-      message: "Product not found",
-    });
-  }
+      product = await products.findOne({
+        _id: productId,
+        isActive: { $ne: false },
+      });
 
-  const store = storesData.find(
-    (store) => store._id === product.storeId
-  );
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
 
-  if (!store || !isStoreSubscriptionActive(store)) {
-    return res.status(404).json({
-      message: "Product not found",
-    });
-  }
+      store = await stores.findOne({
+        _id: product.storeId,
+        isActive: { $ne: false },
+      });
+    } else {
+      product = mockProducts.find(
+        (p) => p._id === productId && p.isActive !== false
+      );
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      store = mockStores.find(
+        (s) => s._id === product.storeId && s.isActive !== false
+      );
+    }
 
-  res.json({
-    product: {
-      ...product,
+    if (!store || !isStoreSubscriptionActive(store)) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
-      store: {
-        _id: store._id,
-        storeName: store.storeName,
-        slug: store.slug,
-        description: store.description,
-        logo: store.logo,
-        images: store.images,
-        storeCategory: store.storeCategory,
-        city: store.city,
-        state: store.state,
-        location: store.location,
-        address: store.address,
-        contact: store.contact,
-        businessHours: store.businessHours,
+    return res.json({
+      product: {
+        ...product,
+        store: {
+          _id: store._id,
+          storeName: store.storeName,
+          slug: store.slug,
+          description: store.description,
+          logo: store.logo,
+          images: store.images,
+          storeCategory: store.storeCategory,
+          city: store.city,
+          state: store.state,
+          location: store.location,
+          address: store.address,
+          contact: store.contact,
+          businessHours: store.businessHours,
+        },
       },
-    },
-  });
+    });
+  } catch (err) {
+    console.error("getProductPage error:", err);
+    return res.status(500).json({ message: "Failed to load product page" });
+  }
 }
 
 export { getProductPage };

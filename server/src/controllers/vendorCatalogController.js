@@ -353,20 +353,28 @@ export async function addVendorProduct(req, res) {
   }
 }
 
+function escapeRegex(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 /**
- * Resolves store by ID, slug, or subdomain from request context or database.
+ * Resolves store by ID, slug, or subdomain from request context or database with case-insensitive lookup.
  */
 async function resolveStore(storeId, req) {
   if (req?.store) return req.store;
   if (!storeId) return null;
 
-  const storesCollection = mongoose.connection.db.collection("stores");
+  const storesCollection = mongoose.connection?.db?.collection("stores");
+  if (!storesCollection) {
+    return null;
+  }
   const normalizedId = storeId.trim().toLowerCase();
+  const escapedId = escapeRegex(normalizedId);
   return await storesCollection.findOne({
     $or: [
       { _id: storeId },
-      { slug: normalizedId },
-      { subdomain: normalizedId },
+      { slug: { $regex: new RegExp(`^${escapedId}$`, "i") } },
+      { subdomain: { $regex: new RegExp(`^${escapedId}$`, "i") } },
     ],
   });
 }
