@@ -1030,6 +1030,10 @@ function Store({ isolated = false, tenantSubdomain = null }) {
                     <img
                       src={img}
                       alt={`Thumbnail ${idx + 1}`}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "/assets/images/placeholders/storePlaceholder.jpeg";
+                      }}
                       className="h-full w-full object-cover"
                     />
                   </button>
