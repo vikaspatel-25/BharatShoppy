@@ -235,7 +235,7 @@ export function validateProductMedia({ images = [], imageAssets = [], storeId, e
       if (!asset.url.startsWith(expectedPrefix)) {
         return {
           valid: false,
-          message: `Image URL '${asset.url}' does not originate from cloud '${cloudName}'.`,
+          message: `Unauthorized or foreign URL: Image URL '${asset.url}' does not originate from cloud '${cloudName}'.`,
         };
       }
     } else if (isProduction) {
@@ -247,7 +247,7 @@ export function validateProductMedia({ images = [], imageAssets = [], storeId, e
       if (!asset.url.startsWith("https://res.cloudinary.com/")) {
         return {
           valid: false,
-          message: `Image URL '${asset.url}' does not originate from Cloudinary.`,
+          message: `Unauthorized or foreign URL: Image URL '${asset.url}' does not originate from Cloudinary.`,
         };
       }
     }
@@ -282,7 +282,7 @@ export function validateProductMedia({ images = [], imageAssets = [], storeId, e
       if (!img.startsWith(expectedPrefix)) {
         return {
           valid: false,
-          message: `Image URL '${img}' does not originate from cloud '${cloudName}'.`,
+          message: `Unauthorized or foreign URL: Image URL '${img}' does not originate from cloud '${cloudName}'.`,
         };
       }
     } else if (isProduction) {
