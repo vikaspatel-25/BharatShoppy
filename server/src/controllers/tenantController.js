@@ -73,8 +73,7 @@ export async function resolveTenant(req, res) {
   } catch (error) {
     console.error("resolveTenant error:", error);
     return res.status(500).json({
-      message: "Internal server error resolving tenant",
-      error: error.message,
+      message: "Internal server error resolving tenant.",
     });
   }
 }

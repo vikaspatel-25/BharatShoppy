@@ -49,7 +49,7 @@ export async function getVendorDashboardData(req, res) {
     });
   } catch (error) {
     console.error("getVendorDashboardData error:", error);
-    return res.status(500).json({ message: "Internal server error", error: error.message });
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
@@ -171,7 +171,7 @@ export async function updateVendorProfile(req, res) {
     });
   } catch (error) {
     console.error("updateVendorProfile error:", error);
-    return res.status(500).json({ message: "Failed to update profile", error: error.message });
+    return res.status(500).json({ message: "Failed to update profile" });
   }
 }
 
@@ -349,7 +349,7 @@ export async function addVendorProduct(req, res) {
     });
   } catch (error) {
     console.error("addVendorProduct error:", error);
-    return res.status(500).json({ message: "Failed to add product", error: error.message });
+    return res.status(500).json({ message: "Failed to add product" });
   }
 }
 
@@ -604,7 +604,7 @@ export async function updateVendorProduct(req, res) {
     });
   } catch (error) {
     console.error("updateVendorProduct error:", error);
-    return res.status(500).json({ message: "Failed to update product", error: error.message });
+    return res.status(500).json({ message: "Failed to update product" });
   }
 }
 
@@ -634,6 +634,6 @@ export async function deleteVendorProduct(req, res) {
     return res.json({ message: "Product deactivated successfully" });
   } catch (error) {
     console.error("deleteVendorProduct error:", error);
-    return res.status(500).json({ message: "Failed to delete product", error: error.message });
+    return res.status(500).json({ message: "Failed to delete product" });
   }
 }

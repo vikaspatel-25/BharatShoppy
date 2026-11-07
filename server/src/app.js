@@ -107,4 +107,26 @@ app.use("/api", (req, res, next) => {
 // Application routes
 app.use("/api", router);
 
+/**
+ * Global error-handling middleware.
+ * Logs internal error details on the server and returns a clean, generic message to clients.
+ */
+export function errorHandler(err, req, res, next) {
+  console.error("Internal Server Error:", err);
+  const status =
+    typeof err?.status === "number"
+      ? err.status
+      : typeof err?.statusCode === "number"
+      ? err.statusCode
+      : 500;
+  return res.status(status).json({
+    message:
+      status === 500
+        ? "An internal server error occurred. Please try again later."
+        : err?.message || "An error occurred.",
+  });
+}
+
+app.use(errorHandler);
+
 export default app;

@@ -25,6 +25,6 @@ export async function signMediaUpload(req, res) {
       });
     }
     console.error("signMediaUpload error:", error);
-    return res.status(500).json({ message: "Failed to generate media upload signature", error: error.message });
+    return res.status(500).json({ message: "Failed to generate media upload signature." });
   }
 }

@@ -58,7 +58,7 @@ export async function getSubscriptionPlans(req, res) {
     return res.json({ plans: formattedPlans });
   } catch (error) {
     console.error("getSubscriptionPlans error:", error);
-    return res.status(500).json({ message: "Failed to load plans", error: error.message });
+    return res.status(500).json({ message: "Failed to load plans." });
   }
 }
 
@@ -148,7 +148,7 @@ export async function getStoreSubscriptionInfo(req, res) {
     });
   } catch (error) {
     console.error("getStoreSubscriptionInfo error:", error);
-    return res.status(500).json({ message: "Failed to load subscription info", error: error.message });
+    return res.status(500).json({ message: "Failed to load subscription info." });
   }
 }
 
@@ -242,7 +242,7 @@ export async function submitSubscriptionRequest(req, res) {
     });
   } catch (error) {
     console.error("submitSubscriptionRequest error:", error);
-    return res.status(500).json({ message: "Failed to submit subscription request", error: error.message });
+    return res.status(500).json({ message: "Failed to submit subscription request." });
   }
 }
 
@@ -281,7 +281,7 @@ export async function getAdminPaymentRequests(req, res) {
     return res.json({ requests: formattedRequests });
   } catch (error) {
     console.error("getAdminPaymentRequests error:", error);
-    return res.status(500).json({ message: "Failed to fetch requests", error: error.message });
+    return res.status(500).json({ message: "Failed to fetch requests." });
   }
 }
 
@@ -493,7 +493,7 @@ export async function verifyPaymentRequest(req, res) {
     }
   } catch (error) {
     console.error("verifyPaymentRequest error:", error);
-    return res.status(500).json({ message: "Verification failed", error: error.message });
+    return res.status(500).json({ message: "Verification failed." });
   }
 }
 
@@ -601,7 +601,7 @@ export async function adminDirectRenew(req, res) {
     });
   } catch (error) {
     console.error("adminDirectRenew error:", error);
-    return res.status(500).json({ message: "Renewal failed", error: error.message });
+    return res.status(500).json({ message: "Renewal failed." });
   }
 }
 
@@ -661,7 +661,7 @@ export async function adminDirectDiscontinue(req, res) {
     });
   } catch (error) {
     console.error("adminDirectDiscontinue error:", error);
-    return res.status(500).json({ message: "Discontinuation failed", error: error.message });
+    return res.status(500).json({ message: "Discontinuation failed." });
   }
 }
 
@@ -702,7 +702,7 @@ export async function sendAdminRenewalReminder(req, res) {
     });
   } catch (error) {
     console.error("sendAdminRenewalReminder error:", error);
-    return res.status(500).json({ message: "Failed to send renewal reminder", error: error.message });
+    return res.status(500).json({ message: "Failed to send renewal reminder." });
   }
 }
 
@@ -739,6 +739,6 @@ export async function resendSubscriptionEmail(req, res) {
     });
   } catch (error) {
     console.error("resendSubscriptionEmail error:", error);
-    return res.status(500).json({ message: "Failed to resend subscription email", error: error.message });
+    return res.status(500).json({ message: "Failed to resend subscription email." });
   }
 }
