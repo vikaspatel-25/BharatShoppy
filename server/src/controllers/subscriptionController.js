@@ -385,13 +385,6 @@ export async function verifyPaymentRequest(req, res) {
           });
         }
         Object.assign(request, updateData);
-      } else {
-        if (inMemoryRequests.get(requestId)?.status !== "pending") {
-          return res.status(409).json({
-            message: "Subscription request was already processed or is no longer pending.",
-          });
-        }
-        Object.assign(request, updateData);
       }
 
       // 2. Only after successfully claiming the request, activate/extend the store subscription

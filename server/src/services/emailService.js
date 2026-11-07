@@ -400,11 +400,3 @@ export async function sendRenewalReminderEmail(to, { storeName, planName, daysRe
 
   return await sendEmail({ to, subject, text, html });
 }
-
-  if (!getTransporter() && process.env.NODE_ENV !== "production") {
-    console.log(`[DEV EMAIL] Renewal reminder email sent to ${to} for store: ${storeName}`);
-    return { success: true, simulated: true };
-  }
-
-  return await sendEmail({ to, subject, text, html });
-}
