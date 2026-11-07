@@ -3,7 +3,9 @@ import assert from "node:assert";
 import mongoose from "mongoose";
 import { assertSeedAllowed, dummyStores } from "../scripts/seedDummyProfiles.js";
 import connectDB, { shouldAutoSeed } from "../src/db/connection.js";
-import { checkDbConnection } from "../src/app.js";
+
+process.env.AUTH_SECRET = process.env.AUTH_SECRET || "test-secret-key-that-is-at-least-32-chars-long";
+const { checkDbConnection } = await import("../src/app.js");
 
 describe("Database Seeding Guard Tests", () => {
   it("allows importing seedDummyProfiles.js without side-effects or running seed", () => {
@@ -128,12 +130,25 @@ describe("Database Seeding Guard Tests", () => {
       let calledNext = false;
       const req = {};
       const res = {};
+      const originalReadyState = mongoose.connection.readyState;
 
-      checkDbConnection(req, res, () => {
-        calledNext = true;
-      });
+      try {
+        Object.defineProperty(mongoose.connection, "readyState", {
+          value: 1,
+          configurable: true,
+        });
 
-      assert.strictEqual(calledNext, true, "Must call next() when database connection is open");
+        checkDbConnection(req, res, () => {
+          calledNext = true;
+        });
+
+        assert.strictEqual(calledNext, true, "Must call next() when database connection is open");
+      } finally {
+        Object.defineProperty(mongoose.connection, "readyState", {
+          value: originalReadyState,
+          configurable: true,
+        });
+      }
     });
   });
 });
