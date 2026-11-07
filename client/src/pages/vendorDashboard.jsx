@@ -248,6 +248,7 @@ export default function VendorDashboard({
               to="/"
               className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition"
               title="Back to Marketplace"
+              aria-label="Back to Marketplace"
             >
               <ArrowLeft className="w-5 h-5" />
             </Link>
@@ -470,6 +471,7 @@ export default function VendorDashboard({
                             }}
                             className="p-2 rounded-xl bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs flex items-center justify-center transition"
                             title="Edit Item"
+                            aria-label={`Edit ${item.productName || "item"}`}
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
@@ -478,6 +480,7 @@ export default function VendorDashboard({
                             onClick={() => handleToggleProductStatus(item)}
                             className="p-2 rounded-xl border border-stone-200 text-stone-500 hover:text-stone-900 text-xs flex items-center justify-center transition"
                             title="Toggle Status"
+                            aria-label={`Toggle status for ${item.productName || "item"}`}
                           >
                             <RefreshCw className="w-3.5 h-3.5" />
                           </button>
@@ -561,19 +564,23 @@ export default function VendorDashboard({
                               </td>
                               <td className="py-3 px-4 text-right">
                                 <button
+                                  type="button"
                                   onClick={() => {
                                     setEditingProduct(item);
                                     setUploadModalOpen(true);
                                   }}
                                   className="p-1 rounded text-stone-400 hover:text-stone-800 transition mr-1"
                                   title="Edit Item"
+                                  aria-label={`Edit ${item.productName || "item"}`}
                                 >
                                   <Edit2 className="w-4 h-4" />
                                 </button>
                                 <button
+                                  type="button"
                                   onClick={() => handleToggleProductStatus(item)}
                                   className="p-1 rounded text-stone-400 hover:text-stone-700 transition"
                                   title="Toggle Status"
+                                  aria-label={`Toggle status for ${item.productName || "item"}`}
                                 >
                                   <RefreshCw className="w-4 h-4" />
                                 </button>
@@ -602,14 +609,22 @@ export default function VendorDashboard({
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div
+                className="grid grid-cols-1 md:grid-cols-3 gap-3"
+                role="radiogroup"
+                aria-label="Entity Classification"
+              >
                 {Object.values(ENTITY_TYPES).map((entity) => {
                   const isSelected = profileForm.entityType === entity.id;
                   return (
-                    <div
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      aria-label={`${entity.label} - ${entity.badgeLabel}`}
                       key={entity.id}
                       onClick={() => setProfileForm({ ...profileForm, entityType: entity.id })}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition ${
+                      className={`text-left p-4 rounded-xl border-2 cursor-pointer transition ${
                         isSelected
                           ? "border-orange-600 bg-orange-50/50"
                           : "border-stone-200 hover:border-stone-300 bg-white"
@@ -627,7 +642,7 @@ export default function VendorDashboard({
                       <p className="text-xs text-stone-500 mt-1 leading-relaxed">
                         {entity.description}
                       </p>
-                    </div>
+                    </button>
                   );
                 })}
               </div>

@@ -125,6 +125,17 @@ export default function ProductUploadModal({
     setValidationError("");
   }, [initialData, entityType, entityConfig.defaultUnit, isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   // Handle mobile camera and file uploads to Cloudinary
@@ -339,6 +350,9 @@ export default function ProductUploadModal({
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="product-upload-title"
         className="relative w-full h-full sm:h-auto sm:max-h-[92vh] sm:max-w-2xl bg-white sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
@@ -349,7 +363,7 @@ export default function ProductUploadModal({
               <Package className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-stone-900 leading-tight">
+              <h2 id="product-upload-title" className="text-base font-bold text-stone-900 leading-tight">
                 {initialData ? "Edit Catalog Item" : "Upload New Item / Service"}
               </h2>
               <span
@@ -511,6 +525,7 @@ export default function ProductUploadModal({
                           onClick={() => handleSetCoverImage(idx)}
                           className="p-1 bg-white rounded-md text-stone-800 text-[10px] font-bold"
                           title="Set as cover photo"
+                          aria-label={`Set image ${idx + 1} as cover photo`}
                         >
                           Cover
                         </button>
@@ -520,6 +535,7 @@ export default function ProductUploadModal({
                         onClick={() => handleRemoveImage(idx)}
                         className="p-1 bg-red-600 rounded-md text-white"
                         title="Remove"
+                        aria-label={`Remove image ${idx + 1}`}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>

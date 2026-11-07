@@ -59,6 +59,17 @@ export default function SubscriptionManager({
     }
   }, [storeId]);
 
+  useEffect(() => {
+    if (!selectedPlanForRequest) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setSelectedPlanForRequest(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedPlanForRequest]);
+
   const handleOpenRequestModal = (plan) => {
     setSelectedPlanForRequest(plan);
     setVendorNote("");
@@ -239,12 +250,19 @@ export default function SubscriptionManager({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          role="radiogroup"
+          aria-label="Available Subscription Plans"
+        >
           {plans.map((plan) => {
             const isCurrent = sub?.plan === plan.planId;
             return (
               <div
                 key={plan.planId}
+                role="radio"
+                aria-checked={isCurrent}
+                aria-label={`${plan.name} - ₹${plan.discountedPrice}/yr`}
                 className={`relative bg-white rounded-2xl p-5 border-2 transition flex flex-col justify-between ${
                   isCurrent
                     ? "border-orange-600 shadow-md ring-2 ring-orange-500/20"
@@ -303,7 +321,9 @@ export default function SubscriptionManager({
 
                 <div className="pt-5 mt-4 border-t border-stone-100">
                   <button
+                    type="button"
                     onClick={() => handleOpenRequestModal(plan)}
+                    aria-label={`${isCurrent ? "Renew" : "Choose and activate"} ${plan.name} plan`}
                     className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
                       isCurrent
                         ? "bg-stone-100 text-stone-800 hover:bg-stone-200"
@@ -363,16 +383,21 @@ export default function SubscriptionManager({
           onClick={() => setSelectedPlanForRequest(null)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="activation-modal-title"
             className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 border border-stone-200"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-3 border-b border-stone-100 mb-4">
-              <h3 className="font-bold text-stone-900 text-base">
+              <h3 id="activation-modal-title" className="font-bold text-stone-900 text-base">
                 Activate {selectedPlanForRequest.name}
               </h3>
               <button
+                type="button"
                 onClick={() => setSelectedPlanForRequest(null)}
-                className="text-stone-400 hover:text-stone-700"
+                className="text-stone-400 hover:text-stone-700 p-1 rounded-lg"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>

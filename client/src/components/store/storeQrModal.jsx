@@ -48,6 +48,17 @@ export default function StoreQrModal({ store, isOpen, onClose }) {
     };
   }, [isOpen, storeUrl]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !store) return null;
 
   const handleCopy = () => {
@@ -77,6 +88,9 @@ export default function StoreQrModal({ store, isOpen, onClose }) {
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="qr-modal-title"
         className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
@@ -87,7 +101,7 @@ export default function StoreQrModal({ store, isOpen, onClose }) {
               <QrCode className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-semibold text-stone-900 text-base leading-tight">
+              <h3 id="qr-modal-title" className="font-semibold text-stone-900 text-base leading-tight">
                 Storefront QR & Direct Link
               </h3>
               <p className="text-xs text-stone-500 mt-0.5">
