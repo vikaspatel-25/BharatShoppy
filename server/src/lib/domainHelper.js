@@ -2,13 +2,13 @@
  * Extracts a tenant subdomain from a host/domain string.
  * Supports:
  * - Production: tenant.bharatshopy.com -> "tenant"
- * - Staging/Vercel: tenant.bharat-shoppy-client.vercel.app -> "tenant"
  * - Local dev: tenant.localhost -> "tenant"
  * - Local dev wildcard: tenant.lvh.me -> "tenant"
  * 
  * Ignored as root/reserved:
  * - "www", "app", "api", "admin", "mail", "cdn", "staging"
  * - Direct IP addresses and bare localhost
+ * - Platform hosts (e.g. *.vercel.app) are treated as marketplace
  */
 
 export const RESERVED_SUBDOMAINS = new Set([
@@ -61,16 +61,15 @@ export function extractSubdomain(host) {
     return null;
   }
 
-  const parts = hostname.split(".");
-  // Normal domains need at least 3 parts for a subdomain: tenant.domain.tld
-  if (parts.length < 3) {
+  // Handle production bharatshopy.com subdomains: e.g. "tenant.bharatshopy.com"
+  if (hostname.endsWith(".bharatshopy.com")) {
+    const parts = hostname.split(".");
+    if (parts.length >= 3 && !reserved.has(parts[0])) {
+      return parts[0];
+    }
     return null;
   }
 
-  const candidate = parts[0];
-  if (reserved.has(candidate)) {
-    return null;
-  }
-
-  return candidate;
+  // All other platform hosts (including *.vercel.app) are marketplace hosts
+  return null;
 }

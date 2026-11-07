@@ -37,4 +37,16 @@ describe("Subdomain Extraction & Domain Helper Tests", () => {
     assert.equal(extractSubdomain(""), null);
     assert.equal(extractSubdomain(null), null);
   });
+
+  it("H3: correctly isolates known tenant base domains vs platform hosts", () => {
+    // Tenant on base domain
+    assert.equal(extractSubdomain("vastra.bharatshopy.com"), "vastra");
+    // Reserved / bare domains (none)
+    assert.equal(extractSubdomain("www.bharatshopy.com"), null);
+    assert.equal(extractSubdomain("bharatshopy.com"), null);
+    // Platform hosts such as Vercel (none - treated as marketplace)
+    assert.equal(extractSubdomain("bharat-shoppy-client.vercel.app"), null);
+    assert.equal(extractSubdomain("tenant.vercel.app"), null);
+    assert.equal(extractSubdomain("otherplatform.com"), null);
+  });
 });

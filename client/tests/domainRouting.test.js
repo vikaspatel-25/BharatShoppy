@@ -47,6 +47,18 @@ describe("Multi-Tenant Domain & Subdomain Routing Tests", () => {
     const url = getTenantStoreUrl(store);
     assert.ok(url.includes("vastra-heritage"), "Store URL should contain tenant subdomain");
   });
+
+  it("H3: correctly isolates known tenant base domains vs platform hosts", () => {
+    // Tenant on base domain
+    assert.equal(getTenantSubdomain("vastra.bharatshopy.com"), "vastra");
+    // Reserved / bare domains (none)
+    assert.equal(getTenantSubdomain("www.bharatshopy.com"), null);
+    assert.equal(getTenantSubdomain("bharatshopy.com"), null);
+    // Platform hosts such as Vercel (none - treated as marketplace)
+    assert.equal(getTenantSubdomain("bharat-shoppy-client.vercel.app"), null);
+    assert.equal(getTenantSubdomain("tenant.vercel.app"), null);
+    assert.equal(getTenantSubdomain("otherplatform.com"), null);
+  });
 });
 
 describe("Entity Types & Metadata Config Tests", () => {

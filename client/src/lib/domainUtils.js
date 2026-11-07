@@ -72,15 +72,16 @@ export function getTenantSubdomain(hostnameOverride) {
     return null;
   }
 
-  const parts = cleanHost.split(".");
-  // Normal domains need at least 3 parts for a subdomain: tenant.domain.tld
-  if (parts.length >= 3) {
-    const candidate = parts[0];
-    if (!RESERVED_SUBDOMAINS.has(candidate)) {
-      return candidate;
+  // Handle production bharatshopy.com subdomains: "shop.bharatshopy.com"
+  if (cleanHost.endsWith(".bharatshopy.com")) {
+    const parts = cleanHost.split(".");
+    if (parts.length >= 3 && !RESERVED_SUBDOMAINS.has(parts[0])) {
+      return parts[0];
     }
+    return null;
   }
 
+  // All other platform hosts (including *.vercel.app) are marketplace hosts
   return null;
 }
 
