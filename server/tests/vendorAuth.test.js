@@ -150,6 +150,24 @@ describe("Vendor Email Code Authentication (A2 & R1) Unit Tests", () => {
         async findOne(query) {
           return insertedDocs.find((d) => d._id === query._id) || null;
         },
+        async findOneAndUpdate(filter, update, options) {
+          let doc = insertedDocs.find((d) => d._id === filter._id);
+          if (!doc && options?.upsert) {
+            doc = { _id: filter._id, ...update.$set, count: 0 };
+            insertedDocs.push(doc);
+          }
+          if (doc) {
+            if (update.$inc) {
+              for (const [k, v] of Object.entries(update.$inc)) {
+                doc[k] = (doc[k] || 0) + v;
+              }
+            }
+            if (update.$set) {
+              Object.assign(doc, update.$set);
+            }
+          }
+          return doc;
+        },
         async updateOne(filter, update, options) {
           let doc = insertedDocs.find((d) => d._id === filter._id);
           if (!doc && options?.upsert) {

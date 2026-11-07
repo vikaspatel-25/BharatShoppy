@@ -315,10 +315,12 @@ describe("Admin Authentication & Email Service Unit Tests (A1 & R1)", () => {
       const code = sentMails[0].text.match(/\b\d{6}\b/)[0];
 
       // Manually simulate expiration
+      const decodedTemp = verifyToken(tempToken);
       setInMemoryAdmin({
         _id: "admin_test_1",
         email: ADMIN_EMAIL,
         passwordHash,
+        loginNonce: decodedTemp.loginNonce,
         verificationCodeHash: hashString(code),
         codeExpiresAt: Date.now() - 1000,
       });
