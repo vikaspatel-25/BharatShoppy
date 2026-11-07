@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { deleteStoreMediaFolder } from "../services/cloudinaryService.js";
-import { findVendorByEmail, updateVendor } from "./vendorAuthController.js";
+import { findVendorByEmail, updateVendor, getInMemoryVendors } from "./vendorAuthController.js";
 import mockStores from "../data/mockData/stores.js";
 
 // In-memory fallback stores for testing when MongoDB is not connected
@@ -52,7 +52,16 @@ async function findVendor(identifier) {
     });
     if (v) return v;
   }
-  return await findVendorByEmail(identifier);
+  const byEmail = await findVendorByEmail(identifier);
+  if (byEmail) return byEmail;
+  const all = getInMemoryVendors();
+  return (
+    all.find(
+      (v) =>
+        v._id === identifier ||
+        v.email === String(identifier).toLowerCase().trim()
+    ) || null
+  );
 }
 
 /**
