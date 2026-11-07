@@ -47,12 +47,13 @@ Decided 2026-11-06. Do not report these as bugs.
 - **Vendor removal:** a 7-day hold with listings hidden, then permanent deletion of the profile, listings and media.
 - **Email:** `nodemailer` over Gmail SMTP for now, with all sending in one file, `server/src/services/emailService.js`. Every send is awaited. Moving to a transactional provider before real launch is tracked as `E2`.
 - **Images:** photos are stored in Cloudinary. MongoDB stores product details and photo links.
+- **Plan and store claims:** the site must not promise anything that isn't built. Analytics, priority ranking and 24/7 support are removed from plans until they exist. Nothing is called verified, because no verification process exists.
 - **Demo data:** all stores sharing one phone number, and the made-up demo store details, are acceptable only as demo data. See `M6` for what must happen before real launch.
 
 ## Open questions for the owner
 - `Q2`: The owner must create a Gmail app password and set `GMAIL_USER`, `GMAIL_APP_PASSWORD` and `ADMIN_EMAIL`. Real login in production needs them.
-- `Q3`: Should paid plans keep promising analytics, priority ranking and 24/7 support? Blocks `M6`.
 - `Q4`: The owner must create a Cloudinary account and set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET`. Real uploads in production need them.
+- `Q5`: The owner must set `CRON_SECRET` in Vercel for the server project. Permanent deletion of removed vendors after the 7-day hold needs it.
 
 ## Status
 Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOCKED`.
@@ -61,38 +62,77 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 |---|---|---|---|---|---|
 | T0 | P0 | Commit uncommitted work as a baseline | none | DONE | Batch 1 |
 | C3 | P0 | Guard seeding and auto-seeding | T0 | DONE | Batch 1 |
-| A1 | P0 | Admin authentication | T0 | CHANGES REQUESTED | See `R1` |
-| A2 | P0 | Vendor authentication (now email, not phone) | T0 | CHANGES REQUESTED | See `R1` |
-| C1 | P0 | Protect vendor and admin routes | A1, A2 | CHANGES REQUESTED | See `R1` |
-| C2 | P0 | Remove public admin and demo UI | C1 | CHANGES REQUESTED | See `R1` |
-| R1 | P0 | Batch 1 review fixes and email login | L2 | IN REVIEW | Batch 2 |
-| E1 | P1 | Email notifications and failure handling | R1, A3, H6 | IN REVIEW | Batch 2 |
+| A1 | P0 | Admin authentication | T0 | DONE | Reviewed |
+| A2 | P0 | Vendor authentication (now email, not phone) | T0 | DONE | Reviewed |
+| C1 | P0 | Protect vendor and admin routes | A1, A2 | DONE | Reviewed |
+| C2 | P0 | Remove public admin and demo UI | C1 | DONE | Reviewed |
+| R4 | P1 | Final review fixes | R3 | DONE | Reviewed |
+| R3 | P1 | Batch 3 and 4 review fixes | R2, A4 | DONE | Reviewed |
+| R2 | P0 | Batch 2 review fixes | R1 | DONE | Reviewed |
+| R1 | P0 | Batch 1 review fixes and email login | L2 | DONE | Reviewed |
+| E1 | P1 | Email notifications and failure handling | R1, A3, H6 | DONE | Reviewed |
 | E2 | P2 | Move email to a transactional provider | E1 | BLOCKED | Needs an owner account, SPF and DKIM. Do before real launch |
-| H1 | P1 | Scope product writes to the store | C1 | CHANGES REQUESTED | See `R1` |
-| H4 | P1 | Hide soft-deleted products in feeds | T0 | IN REVIEW | Batch 2 |
-| H5 | P1 | Enforce visibility on direct pages | T0 | IN REVIEW | Batch 2 |
-| H6 | P1 | Fix subscription approval logic | C1 | IN REVIEW | Batch 2 |
-| H3 | P1 | Fix tenant detection on platform hosts | T0 | TODO | |
-| H2 | P1 | Move images to Cloudinary | R1 | IN REVIEW | Batch 2 |
-| H7 | P1 | Update vulnerable dependencies | T0 | TODO | |
-| H8 | P1 | Add rate limits, headers, CORS, health check | C1 | IN REVIEW | Batch 2 |
-| A3 | P1 | Vendor application and approval flow | A1, A2 | IN REVIEW | Batch 2 |
-| A4 | P2 | Vendor removal with 7-day hold | A3 | TODO | Needs a scheduled job design |
-| M1 | P2 | Validate write input | C1 | TODO | |
-| M2 | P2 | Correct quota behaviour | H1 | TODO | |
-| M3 | P2 | Query only the data needed | H4, H5 | TODO | |
-| M4 | P2 | Make startup and location seeding reliable | C3 | TODO | |
-| M5 | P2 | Stop returning internal error text | T0 | TODO | |
-| M6 | P2 | Remove misleading demo and plan claims | Q3 | BLOCKED | Waiting on `Q3` |
+| H1 | P1 | Scope product writes to the store | C1 | DONE | Reviewed |
+| H4 | P1 | Hide soft-deleted products in feeds | T0 | DONE | Reviewed |
+| H5 | P1 | Enforce visibility on direct pages | T0 | DONE | Reviewed |
+| H6 | P1 | Fix subscription approval logic | C1 | DONE | Reviewed |
+| H3 | P1 | Fix tenant detection on platform hosts | T0 | DONE | Reviewed |
+| H2 | P1 | Move images to Cloudinary | R1 | DONE | Reviewed |
+| H7 | P1 | Update vulnerable dependencies | T0 | DONE | Reviewed |
+| H8 | P1 | Add rate limits, headers, CORS, health check | C1 | DONE | Reviewed |
+| A3 | P1 | Vendor application and approval flow | A1, A2 | DONE | Reviewed |
+| A4 | P2 | Vendor removal with 7-day hold | A3 | DONE | Reviewed with `R3` |
+| M1 | P2 | Validate write input | C1 | DONE | Reviewed |
+| M2 | P2 | Correct quota behaviour | H1 | DONE | Reviewed |
+| M3 | P2 | Query only the data needed | H4, H5 | DONE | Reviewed |
+| M4 | P2 | Make startup and location seeding reliable | C3 | DONE | Reviewed |
+| M5 | P2 | Stop returning internal error text | T0 | DONE | Reviewed |
+| M6 | P2 | Remove misleading demo and plan claims | T0 | DONE | Reviewed |
 | M7 | P2 | Add legal pages | owner text | BLOCKED | Needs reviewed legal text from the owner |
-| M8 | P3 | Fix missing product images | T0 | TODO | |
-| L1 | P3 | Accessibility fixes | C2 | TODO | |
+| M8 | P3 | Fix missing product images | T0 | DONE | Reviewed |
+| L1 | P3 | Accessibility fixes | C2 | DONE | Reviewed |
 | L2 | P1 | Name and domain cleanup | H1 | DONE | Batch 1, owner decision |
-| L3 | P3 | Restrict the `?tenant=` override to development | H3 | TODO | |
+| L3 | P3 | Restrict the `?tenant=` override to development | H3 | DONE | Reviewed |
 
 Line numbers refer to the uncommitted working tree at audit time. If they have moved, find the code by name.
 
 ## Task prompts
+
+### R4: Final review fixes
+**Problem:** The review of the remaining Batch 3 and 4 tasks found the defects below.
+**Fix:**
+1. Approving a subscription request (`subscriptionController.js:393-406`) and `adminDirectRenew` (`:540-554`) set the store to `isActive: true` even when the store is pending removal (`removalStatus: "pending_deletion"`). A removed vendor's store then becomes public again during the 7-day hold. Return 409 for a store pending removal, and check before claiming the request.
+2. Make `adminDirectRenew` (`:525-554`) atomic, as `R2` item 6 required. It reads the expiry and then writes, so two renewals at the same time lose days. Make the update conditional on the expiry that was read, and retry or return 409 if it changed.
+3. In `approveApplication` (`vendorApplicationController.js:615-630`), revert the application to `pending` on any store insert failure, not only duplicate keys. Otherwise an application stays `approved` with no store.
+**Verify:** Tests cover: renewing or approving a subscription for a store pending removal returns 409 and leaves it hidden; a changed expiry during direct renewal doesn't lose days; a non-duplicate insert error leaves the application `pending`. Server tests, client tests, lint and build pass.
+
+### R3: Batch 3 and 4 review fixes
+**Problem:** The review of Batches 3 and 4 found the defects below.
+**Fix:**
+1. Add the missing Batch 3 results entry to `HANDOFF.md`, using the real test, lint and build results from the end of Batch 3. If you no longer have them, say so instead of reconstructing them.
+2. Make the upload size check fail closed (`cloudinaryService.js:337-339` and `:350-352`). Currently a Cloudinary API error, a missing `bytes` value or a missing configuration lets the photo save without a size check. In production, reject the save with a clear error when the size can't be confirmed. Record in `HANDOFF.md` that the 5 MB limit is enforced by checking through the API before saving.
+3. In `removeVendor` (`adminVendorRemovalController.js:140-148`), mark only currently active products as hidden by the removal. Currently every product is marked, so `cancelVendorRemoval` (`:236-244`) brings back items the vendor had already deleted. Store the store's previous `isActive` value too, and restore that value on cancel instead of always setting `true` (`:217-219`).
+4. In `executePermanentDeletion` (`:363-396`), if the media deletion fails or returns no result, keep that vendor's records and log it so the next run retries. Currently the store and vendor are deleted anyway, so the photos remain in Cloudinary with no record pointing to them.
+5. Add a daily cron for `/api/cron/cleanup-removed-vendors` to `server/vercel.json`, because nothing calls it now, so permanent deletion never runs. Vercel cron sends `Authorization: Bearer <CRON_SECRET>`. Add `CRON_SECRET` to `server/.env.example` and `docs/operations.md`. Don't deploy, and don't set the secret.
+**Verify:** Tests cover: a failed size lookup in production rejecting the save; removing and then cancelling keeps previously deleted items inactive and restores the store's previous state; a failed media deletion keeps the vendor's records for retry. `server/vercel.json` is valid JSON with the cron entry. Server tests, client tests, lint and build pass.
+
+### R2: Batch 2 review fixes
+**Problem:** The Batch 2 review found the defects below. Item 1 is a login bypass.
+**Fix:**
+1. Remove `codeHash` from the admin `tempToken` (`adminAuthController.js:133`). The token goes to the browser and its payload is readable, so anyone with the password can recover the 6-digit code offline: a local test did this in 74 ms. Bind the token with a new random value generated per login and stored on the admin record, and clear it when the code is used.
+2. Make `validateProductMedia` (`cloudinaryService.js:166-173`) check every entry in `images`, as `H2` required. Accept a URL only if it is already on the product, or is under `https://res.cloudinary.com/<cloud name>/` and has a matching `imageAssets` entry whose `publicId` is in that store's folder. In production, fail closed if the cloud name is missing (`:199`). Reject non-string and null entries with 400: a null asset currently causes a 500 at `:178`.
+3. Enforce the upload limits in the signature (`cloudinaryService.js:65-68`). `allowedFormats` and `maxFileSize` are only returned to the browser, so a vendor can upload other formats and sizes. Sign `allowed_formats` for JPEG, PNG and WebP, send the same value from the form, and use a mechanism Cloudinary actually enforces for the 5 MB limit. If Cloudinary can't enforce size on a signed request, verify the uploaded size through its API before saving, and record which approach you used.
+4. Await Cloudinary deletion (`vendorCatalogController.js:365-371`), as Vercel can stop background work. Log failures without failing the save.
+5. In `approveApplication` (`vendorApplicationController.js:504-547`), generate a random store `_id` and use `insertOne`. Currently the slug `0103` produces `store_0103`, and the upsert overwrites that existing store and links the applicant to it and its products. Add unique indexes for `stores.slug`, `stores.subdomain` and one pending application per email through a documented script, and handle duplicate-key errors with 409.
+6. Claim the record first. In `approveApplication`, `rejectApplication` and `verifyPaymentRequest` (`subscriptionController.js:359-408`), atomically move the record from `pending` before creating a store or changing a subscription. Currently the store changes first, so a simultaneous reject or second approve returns 409 after the store has already been activated or extended. Do the same for `adminDirectRenew` if it reads and then writes the expiry.
+7. Fix re-application in `submitApplication` (`:361-372`, `:414-419`). `$set` includes a new `_id`, which MongoDB rejects on an existing vendor, so a rejected vendor gets a 500 with an orphaned pending application. Allow rejected vendors to re-apply and keep their `_id`. Block `removed` vendors, who currently pass the check.
+8. Check slug and subdomain availability before consuming the verification code (`:302` runs before `:311`).
+9. In `submitApplication` (`:425-432`), catch email failures. The application is saved, so return 201 with a warning. Currently it returns 500 and a retry says the application is already pending.
+10. Escape user-supplied values placed in email HTML, including store name, applicant name, city and rejection reason (`emailService.js:178-181` and similar). Strip line breaks from subjects.
+11. Make `checkRateLimit` (`rateLimitHelper.js:33-89`) and code attempt counts atomic, because read-then-write lets parallel requests exceed the limit. Add a TTL index for `auth_limits`, which otherwise grows forever. In `verifyCode` (`vendorAuthController.js:160`), count only failed checks against an active code, so strangers can't lock a vendor out by sending wrong codes.
+12. Link to `/vendor/apply` on the marketplace host from `VendorLogin.jsx`, since tenant routes send that path to the storefront.
+13. Require `ADMIN_EMAIL` in production instead of falling back to `admin@bharatshopy.com` (`emailService.js`), and remove `error: error.message` from `resendApplicationEmail`.
+**Verify:** Tests cover each item, including: `tempToken` payload contains no code-derived value; a foreign `images` URL and a null asset return 400; the signature includes `allowed_formats`; deletion is awaited; slug `0103` can't touch `store_0103`; reject then approve leaves the store unchanged; a rejected vendor can re-apply and a removed vendor can't; a taken slug doesn't consume the code; email failure on apply returns 201 with a warning; HTML in a store name is escaped; parallel attempts can't exceed the limit. Mark as not verified anything that needs real MongoDB or Cloudinary. Write real commit IDs in `HANDOFF.md`, and don't write "Not verified: None" unless real services were used.
 
 ### R1: Batch 1 review fixes and email login
 **Problem:** The owner replaced phone OTP with email codes over SMTP. The Batch 1 review also found the defects listed under Fix. This supersedes the phone parts of `A2`.
@@ -233,9 +273,9 @@ Line numbers refer to the uncommitted working tree at audit time. If they have m
 **Verify:** A test forces an error and confirms the message isn't returned. Search finds no `error: error.message` in responses.
 
 ### M6: Remove misleading demo and plan claims
-**Problem:** `seedDummyProfiles.js:52,101,150` contains made-up FSSAI, license and GSTIN numbers. Plans promise analytics and priority ranking with no code behind them (`subscriptionPlans.js:39,61,65`).
-**Fix:** Blocked on `Q3`. Claude will complete this prompt when assigning it.
-**Verify:** To be specified on assignment.
+**Problem:** `seedDummyProfiles.js:52,101,150` contains made-up FSSAI, license and GSTIN numbers. Plans promise analytics, priority ranking and 24/7 support with no code behind them (`subscriptionPlans.js`). The UI calls every store verified (`client/src/pages/store.jsx`: "Verified Store on BharatShopy" and "verified merchant") and plans offer verified badges, but no verification process exists.
+**Fix:** Remove from plan data and all UI text: analytics, priority or top ranking, 24/7 or priority support, and verified badges. Keep only features the code delivers, such as item and photo limits. Remove the badge and "verified" wording from store pages and emails. Remove the made-up FSSAI, license and GSTIN numbers from the seed script and mock data, and don't show those fields when empty. Search the client, server and emails for other claims the code doesn't deliver, such as guarantees, and list them in `HANDOFF.md` rather than inventing replacements. Don't change plan prices or limits.
+**Verify:** A test shows no plan feature contains the removed claims. A case-insensitive search of `client/src` and `server/src` for `analytics`, `priority`, `24/7`, `verified`, `fssai` and `gstin` returns only code unrelated to these claims, listed in `HANDOFF.md`. Server tests, client tests, lint and build pass.
 
 ### M7: Add legal pages
 **Problem:** The client has no privacy, terms, refund or grievance content.

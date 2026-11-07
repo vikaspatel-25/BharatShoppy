@@ -10,7 +10,7 @@ Start every session by saying: `Protocol loaded: <phase> / <first assigned task>
 3. Follow the branching rule in `CLAUDE.md`.
 4. Set the task to `IN PROGRESS` in the `CLAUDE.md` Status table before any other edit.
 5. Change only what the task needs. Record other problems under "New problems found" in `HANDOFF.md`, and don't fix them.
-6. Run the tests and any required build listed in `CLAUDE.md` and the task prompt.
+6. Write the tests each task prompt requires, but don't run tests, lint or builds between tasks. After the last task in the batch, run server tests, client tests, client lint and client build once, plus any other check a task's Verify section requires. Fix any failures, using a separate commit with the responsible task ID in its message, then run all of them again. Record the final results in one batch entry in `HANDOFF.md`. In each task entry, write "Verified: at batch end".
 7. Make one local commit per task, with the task ID in the message. Never push unless the owner asks.
 8. Set the task to `IN REVIEW` and add a `HANDOFF.md` entry, newest first, below the current assignment.
 9. Continue through the batch without stopping between tasks. If a task is blocked, mark it `BLOCKED`, continue with tasks that don't depend on it, and list all questions at the end.
