@@ -79,6 +79,23 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+/**
+ * Returns 503 Service Unavailable on database-dependent API routes when disconnected.
+ */
+export function checkDbConnection(req, res, next) {
+  const isConnected = mongoose.connection?.readyState === 1 || Boolean(mongoose.connection?.db);
+  if (!isConnected) {
+    return res.status(503).json({
+      message: "Database service unavailable. Please try again later.",
+      status: 503,
+    });
+  }
+  return next();
+}
+
+// Database connectivity check for API routes
+app.use("/api", checkDbConnection);
+
 // Mutating API operations rate limiting (POST, PUT, DELETE, PATCH)
 app.use("/api", (req, res, next) => {
   if (["POST", "PUT", "DELETE", "PATCH"].includes(req.method)) {

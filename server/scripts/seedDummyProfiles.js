@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import locations from "../src/data/mockData/locations.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -739,6 +740,12 @@ export async function runSeed(options = {}) {
         await productsCol.updateOne({ _id: p._id }, { $set: p }, { upsert: true });
       }
       console.log(`✓ Upserted ${dummyProducts.length} dummy items to MongoDB 'products' collection.`);
+
+      const locationsCol = db.collection("locations");
+      for (const loc of locations) {
+        await locationsCol.updateOne({ id: loc.id }, { $set: loc }, { upsert: true });
+      }
+      console.log(`✓ Upserted ${locations.length} locations to MongoDB 'locations' collection.`);
 
       await mongoose.disconnect();
       console.log("✓ MongoDB disconnected cleanly.");
