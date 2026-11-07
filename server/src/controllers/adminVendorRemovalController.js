@@ -20,6 +20,14 @@ export function resetInMemoryRemovalData() {
   inMemoryProductsForRemoval.clear();
 }
 
+export function getInMemoryStoreForRemoval(storeId) {
+  return inMemoryStoresForRemoval.get(storeId) || null;
+}
+
+export function getInMemoryProductForRemoval(productId) {
+  return inMemoryProductsForRemoval.get(productId) || null;
+}
+
 function getVendorsCollection() {
   return mongoose.connection?.db ? mongoose.connection.db.collection("vendors") : null;
 }
@@ -114,12 +122,19 @@ export async function removeVendor(req, res) {
     const storeId = vendor.storeId;
     if (storeId) {
       const storesCol = getStoresCollection();
+      let previousIsActive = true;
+
       if (storesCol) {
+        const storeDoc = await storesCol.findOne({ _id: storeId });
+        if (storeDoc && typeof storeDoc.isActive === "boolean") {
+          previousIsActive = storeDoc.isActive;
+        }
         await storesCol.updateOne(
           { _id: storeId },
           {
             $set: {
               isActive: false,
+              previousIsActive,
               removalStatus: "pending_deletion",
               deleteAfter,
             },
@@ -128,17 +143,19 @@ export async function removeVendor(req, res) {
       } else {
         const store = inMemoryStoresForRemoval.get(storeId) || mockStores.find((s) => s._id === storeId);
         if (store) {
+          previousIsActive = typeof store.isActive === "boolean" ? store.isActive : true;
+          store.previousIsActive = previousIsActive;
           store.isActive = false;
           store.removalStatus = "pending_deletion";
           store.deleteAfter = deleteAfter;
         }
       }
 
-      // Immediately hide all listings belonging to this store
+      // Immediately hide only currently active listings belonging to this store
       const productsCol = getProductsCollection();
       if (productsCol) {
         await productsCol.updateMany(
-          { storeId },
+          { storeId, isActive: { $ne: false } },
           {
             $set: {
               isActive: false,
@@ -148,7 +165,7 @@ export async function removeVendor(req, res) {
         );
       } else {
         for (const p of inMemoryProductsForRemoval.values()) {
-          if (p.storeId === storeId) {
+          if (p.storeId === storeId && p.isActive !== false) {
             p.isActive = false;
             p.hiddenByVendorRemoval = true;
           }
@@ -210,23 +227,34 @@ export async function cancelVendorRemoval(req, res) {
     const storeId = vendor.storeId;
     if (storeId) {
       const storesCol = getStoresCollection();
+      let restoredStoreIsActive = true;
+
       if (storesCol) {
+        const storeDoc = await storesCol.findOne({ _id: storeId });
+        if (storeDoc && typeof storeDoc.previousIsActive === "boolean") {
+          restoredStoreIsActive = storeDoc.previousIsActive;
+        }
         await storesCol.updateOne(
           { _id: storeId },
           {
             $set: {
-              isActive: true,
+              isActive: restoredStoreIsActive,
               removalStatus: null,
               deleteAfter: null,
+            },
+            $unset: {
+              previousIsActive: "",
             },
           }
         );
       } else {
         const store = inMemoryStoresForRemoval.get(storeId) || mockStores.find((s) => s._id === storeId);
         if (store) {
-          store.isActive = true;
+          restoredStoreIsActive = typeof store.previousIsActive === "boolean" ? store.previousIsActive : true;
+          store.isActive = restoredStoreIsActive;
           store.removalStatus = null;
           store.deleteAfter = null;
+          delete store.previousIsActive;
         }
       }
 
@@ -363,9 +391,18 @@ export async function executePermanentDeletion(asOfIsoString) {
     if (storeId) {
       try {
         const mediaRes = await deleteStoreMediaFolder(storeId);
-        mediaDeleted = Boolean(mediaRes);
+        if (!mediaRes) {
+          console.warn(
+            `[VENDOR REMOVAL CRON] Media deletion failed or returned no result for storeId=${storeId}; keeping vendor records for retry.`
+          );
+          continue;
+        }
+        mediaDeleted = true;
       } catch (err) {
-        console.warn(`Media deletion skipped or failed for storeId=${storeId}`);
+        console.warn(
+          `[VENDOR REMOVAL CRON] Media deletion error for storeId=${storeId}: ${err.message}; keeping vendor records for retry.`
+        );
+        continue;
       }
     }
 

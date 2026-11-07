@@ -26,3 +26,14 @@
    - Maintain strict IP Access Lists in Atlas Network Security.
    - Do not set `0.0.0.0/0` in production; whitelist only deployed platform IP ranges (e.g. Vercel integration or dedicated VPC peering).
    - Ensure the database user has least-privilege permissions scoped only to the `bharatshopy` database.
+
+## Automated Vendor Removal Cleanup (Vercel Cron)
+
+The vendor removal protocol enforces a mandatory 7-day hold window before permanently deleting a vendor profile, store details, listings, and Cloudinary media assets.
+
+- **Endpoint:** `/api/cron/cleanup-removed-vendors`
+- **Schedule:** Daily at midnight UTC (`0 0 * * *`), configured in `server/vercel.json`.
+- **Authentication:** Vercel Cron automatically passes `Authorization: Bearer <CRON_SECRET>` upon invocation.
+- **Required Secret:** The owner must generate a high-entropy secret string and configure `CRON_SECRET` in the Vercel Project Environment Variables before deployment.
+- **Fail-Safe Execution:** If media deletion from Cloudinary fails or returns no result, the vendor and store records are preserved in the database to be safely retried during the subsequent cron execution.
+

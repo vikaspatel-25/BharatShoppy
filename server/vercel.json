@@ -1,5 +1,11 @@
 {
   "version": 2,
+  "crons": [
+    {
+      "path": "/api/cron/cleanup-removed-vendors",
+      "schedule": "0 0 * * *"
+    }
+  ],
   "builds": [
     {
       "src": "src/index.js",

@@ -314,34 +314,66 @@ export function validateProductMedia({ images = [], imageAssets = [], storeId, e
 
 /**
  * Verifies that newly uploaded assets do not exceed 5MB by querying the Cloudinary resource API.
+ * Fails closed in production if Cloudinary is unconfigured, if the API call fails, or if bytes is missing.
  */
 export async function verifyUploadedMediaSizes(imageAssets = [], maxBytes = 5 * 1024 * 1024) {
   if (!Array.isArray(imageAssets) || imageAssets.length === 0) {
     return { valid: true };
   }
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   for (const asset of imageAssets) {
     if (!asset?.publicId) continue;
 
     if (testCloudinaryClient?.resource) {
-      const res = await testCloudinaryClient.resource(asset.publicId);
-      if (res && res.bytes && res.bytes > maxBytes) {
-        return {
-          valid: false,
-          message: `Image '${asset.publicId}' exceeds maximum allowed size of 5 MB (${res.bytes} bytes).`,
-        };
+      try {
+        const res = await testCloudinaryClient.resource(asset.publicId);
+        if (typeof res?.bytes !== "number") {
+          if (isProduction) {
+            return {
+              valid: false,
+              message: `Unable to verify upload size for '${asset.publicId}': missing size metadata.`,
+            };
+          }
+        } else if (res.bytes > maxBytes) {
+          return {
+            valid: false,
+            message: `Image '${asset.publicId}' exceeds maximum allowed size of 5 MB (${res.bytes} bytes).`,
+          };
+        }
+      } catch (err) {
+        if (isProduction) {
+          return {
+            valid: false,
+            message: `Unable to verify upload size for '${asset.publicId}': ${err.message || "Cloudinary API error"}.`,
+          };
+        }
       }
       continue;
     }
 
     if (!isCloudinaryConfigured()) {
+      if (isProduction) {
+        return {
+          valid: false,
+          message: `Cloudinary is not configured in production; cannot verify image size for '${asset.publicId}'.`,
+        };
+      }
       continue;
     }
 
     configureCloudinary();
     try {
       const resource = await cloudinary.api.resource(asset.publicId);
-      if (resource && resource.bytes && resource.bytes > maxBytes) {
+      if (typeof resource?.bytes !== "number") {
+        if (isProduction) {
+          return {
+            valid: false,
+            message: `Unable to verify upload size for '${asset.publicId}': missing size metadata from Cloudinary.`,
+          };
+        }
+      } else if (resource.bytes > maxBytes) {
         return {
           valid: false,
           message: `Image '${asset.publicId}' exceeds maximum allowed size of 5 MB (${resource.bytes} bytes).`,
@@ -349,6 +381,12 @@ export async function verifyUploadedMediaSizes(imageAssets = [], maxBytes = 5 * 
       }
     } catch (err) {
       console.warn(`Could not verify Cloudinary size for ${asset.publicId}:`, err);
+      if (isProduction) {
+        return {
+          valid: false,
+          message: `Unable to verify upload size for '${asset.publicId}' through Cloudinary API.`,
+        };
+      }
     }
   }
 
