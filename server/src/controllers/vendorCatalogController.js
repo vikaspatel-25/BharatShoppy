@@ -59,6 +59,11 @@ export async function getVendorDashboardData(req, res) {
 export async function updateVendorProfile(req, res) {
   try {
     const { storeId } = req.params;
+    const body = req.body;
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return res.status(400).json({ message: "Invalid request body." });
+    }
+
     const {
       storeName,
       description,
@@ -67,27 +72,93 @@ export async function updateVendorProfile(req, res) {
       entityType,
       metadata,
       address,
-    } = req.body;
+    } = body;
 
-    const storesCollection = mongoose.connection.db.collection("stores");
     const store = req.store || (await resolveStore(storeId, req));
-
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
+    }
+
+    // 1. Validate storeName
+    if (storeName !== undefined) {
+      if (typeof storeName !== "string" || !storeName.trim()) {
+        return res.status(400).json({ message: "Store name must be a non-empty string." });
+      }
+    }
+
+    // 2. Validate description
+    if (description !== undefined) {
+      if (typeof description !== "string") {
+        return res.status(400).json({ message: "Description must be a string." });
+      }
+    }
+
+    // 3. Allowlist entityType
+    if (entityType !== undefined) {
+      const ALLOWED_ENTITIES = ["shopkeeper", "farmer", "service_provider"];
+      if (!ALLOWED_ENTITIES.includes(entityType)) {
+        return res.status(400).json({
+          message: `Invalid entityType '${entityType}'. Allowed values: ${ALLOWED_ENTITIES.join(", ")}`,
+        });
+      }
+    }
+
+    // 4. Validate contact and phone format
+    const PHONE_REGEX = /^\+?[0-9]{10,15}$/;
+    if (contact !== undefined) {
+      if (typeof contact !== "object" || contact === null || Array.isArray(contact)) {
+        return res.status(400).json({ message: "Contact details must be an object." });
+      }
+      if (contact.phone !== undefined && contact.phone !== null && contact.phone !== "") {
+        if (typeof contact.phone !== "string" || !PHONE_REGEX.test(contact.phone.replace(/[\s-]/g, ""))) {
+          return res.status(400).json({ message: "Invalid phone number format." });
+        }
+      }
+      if (contact.whatsapp !== undefined && contact.whatsapp !== null && contact.whatsapp !== "") {
+        if (typeof contact.whatsapp !== "string" || !PHONE_REGEX.test(contact.whatsapp.replace(/[\s-]/g, ""))) {
+          return res.status(400).json({ message: "Invalid WhatsApp number format." });
+        }
+      }
+      if (contact.email !== undefined && contact.email !== null && contact.email !== "") {
+        if (typeof contact.email !== "string" || !contact.email.includes("@")) {
+          return res.status(400).json({ message: "Invalid email address in contact." });
+        }
+      }
+    }
+
+    // 5. Validate address
+    if (address !== undefined && address !== null) {
+      if (typeof address !== "object" || Array.isArray(address)) {
+        return res.status(400).json({ message: "Address must be an object." });
+      }
+    }
+
+    // 6. Validate metadata
+    if (metadata !== undefined && metadata !== null) {
+      if (typeof metadata !== "object" || Array.isArray(metadata)) {
+        return res.status(400).json({ message: "Metadata must be an object." });
+      }
     }
 
     const updateFields = {
       updatedAt: new Date().toISOString(),
     };
 
-    if (storeName) updateFields.storeName = storeName;
-    if (description !== undefined) updateFields.description = description;
-    if (contact) updateFields.contact = { ...store.contact, ...contact };
+    if (storeName) updateFields.storeName = storeName.trim();
+    if (description !== undefined) updateFields.description = description.trim();
+    if (contact) {
+      const cleanContact = { ...contact };
+      if (typeof cleanContact.phone === "string") cleanContact.phone = cleanContact.phone.trim();
+      if (typeof cleanContact.whatsapp === "string") cleanContact.whatsapp = cleanContact.whatsapp.trim();
+      if (typeof cleanContact.email === "string") cleanContact.email = cleanContact.email.trim();
+      updateFields.contact = { ...store.contact, ...cleanContact };
+    }
     if (businessHours) updateFields.businessHours = businessHours;
     if (entityType) updateFields.entityType = entityType;
     if (metadata) updateFields.metadata = { ...store.metadata, ...metadata };
     if (address) updateFields.address = { ...store.address, ...address };
 
+    const storesCollection = mongoose.connection.db.collection("stores");
     await storesCollection.updateOne(
       { _id: store._id },
       { $set: updateFields }
@@ -110,6 +181,11 @@ export async function updateVendorProfile(req, res) {
 export async function addVendorProduct(req, res) {
   try {
     const { storeId } = req.params;
+    const body = req.body;
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return res.status(400).json({ message: "Invalid request body." });
+    }
+
     const {
       productName,
       brand,
@@ -126,24 +202,80 @@ export async function addVendorProduct(req, res) {
       tags = [],
       inStock = true,
       isActive = true,
-    } = req.body;
+    } = body;
 
-    if (!productName || price === undefined) {
-      return res.status(400).json({ message: "Product name and price are required" });
+    // 1. Validate productName
+    if (!productName || typeof productName !== "string" || !productName.trim()) {
+      return res.status(400).json({ message: "Product name is required and must be a non-empty string." });
+    }
+
+    // 2. Validate price: must be > 0, max >= min
+    if (price === undefined || price === null) {
+      return res.status(400).json({ message: "Product price is required." });
+    }
+
+    let minPrice = 0;
+    let maxPrice = 0;
+    let priceUnit = unit;
+    let priceCurrency = "INR";
+
+    if (typeof price === "object" && price !== null && !Array.isArray(price)) {
+      minPrice = Number(price.min);
+      maxPrice = price.max !== undefined && price.max !== null ? Number(price.max) : minPrice;
+      priceUnit = price.unit || unit || "piece";
+      priceCurrency = price.currency || "INR";
+    } else if (typeof price === "number" || (typeof price === "string" && !isNaN(Number(price)))) {
+      minPrice = Number(price);
+      maxPrice = mrp !== undefined && mrp !== null && !isNaN(Number(mrp)) ? Number(mrp) : minPrice;
+    } else {
+      return res.status(400).json({ message: "Price must be a valid number or price object." });
+    }
+
+    if (isNaN(minPrice) || isNaN(maxPrice)) {
+      return res.status(400).json({ message: "Price values must be valid numbers." });
+    }
+
+    if (minPrice <= 0) {
+      return res.status(400).json({ message: "Price must be greater than 0." });
+    }
+
+    if (maxPrice < minPrice) {
+      return res.status(400).json({ message: "Maximum price must be at or above minimum price." });
+    }
+
+    // 3. Validate string fields to prevent .trim() crashes on non-strings
+    if (brand !== undefined && brand !== null && typeof brand !== "string") {
+      return res.status(400).json({ message: "Brand must be a string." });
+    }
+    if (category !== undefined && category !== null && typeof category !== "string") {
+      return res.status(400).json({ message: "Category must be a string." });
+    }
+    if (subCategory !== undefined && subCategory !== null && typeof subCategory !== "string") {
+      return res.status(400).json({ message: "SubCategory must be a string." });
+    }
+    if (shortDescription !== undefined && shortDescription !== null && typeof shortDescription !== "string") {
+      return res.status(400).json({ message: "Short description must be a string." });
+    }
+    if (description !== undefined && description !== null && typeof description !== "string") {
+      return res.status(400).json({ message: "Description must be a string." });
+    }
+
+    // 4. Validate images & imageAssets
+    if (!Array.isArray(images)) {
+      return res.status(400).json({ message: "Images must be an array." });
+    }
+    if (!Array.isArray(imageAssets)) {
+      return res.status(400).json({ message: "Image assets must be an array." });
     }
 
     const store = req.store || (await resolveStore(storeId, req));
-
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
     }
 
     // Enforce plan's maxImagesPerProduct limit on server
     const maxImages = store.limits?.maxImagesPerProduct || 5;
-    const incomingImages = Array.isArray(images) ? images : [];
-    const incomingAssets = Array.isArray(imageAssets) ? imageAssets : [];
-
-    if (incomingImages.length > maxImages || incomingAssets.length > maxImages) {
+    if (images.length > maxImages || imageAssets.length > maxImages) {
       return res.status(400).json({
         message: `Images exceed maximum allowed limit of ${maxImages} for your plan.`,
       });
@@ -151,8 +283,8 @@ export async function addVendorProduct(req, res) {
 
     // Validate media format and reject base64 data: URLs
     const mediaCheck = validateProductMedia({
-      images: incomingImages,
-      imageAssets: incomingAssets,
+      images,
+      imageAssets,
       storeId: store._id,
       existingProduct: null,
     });
@@ -161,7 +293,7 @@ export async function addVendorProduct(req, res) {
     }
 
     // Verify uploaded media sizes via Cloudinary API (enforce 5MB limit)
-    const sizeCheck = await verifyUploadedMediaSizes(incomingAssets);
+    const sizeCheck = await verifyUploadedMediaSizes(imageAssets);
     if (!sizeCheck.valid) {
       return res.status(400).json({ message: sizeCheck.message });
     }
@@ -179,38 +311,26 @@ export async function addVendorProduct(req, res) {
       });
     }
 
-    let formattedPrice;
-    if (typeof price === "object" && price !== null) {
-      formattedPrice = {
-        min: Number(price.min) || 0,
-        max: Number(price.max) || Number(price.min) || 0,
-        unit: price.unit || unit || "piece",
-        currency: price.currency || "INR",
-      };
-    } else {
-      const minVal = Number(price) || 0;
-      const maxVal = mrp ? Number(mrp) : minVal;
-      formattedPrice = {
-        min: minVal,
-        max: maxVal,
-        unit: unit || "piece",
-        currency: "INR",
-      };
-    }
+    const formattedPrice = {
+      min: minPrice,
+      max: maxPrice,
+      unit: priceUnit || "piece",
+      currency: priceCurrency,
+    };
 
     const newProduct = {
       _id: `prod_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
       storeId: store._id,
       productName: productName.trim(),
       brand: brand ? brand.trim() : undefined,
-      category,
+      category: category ? category.trim() : "General",
       subCategory: subCategory ? subCategory.trim() : undefined,
       price: formattedPrice,
-      shortDescription: shortDescription.trim(),
-      description: description.trim() || shortDescription.trim(),
-      images: incomingImages.length > 0 ? incomingImages : ["/mock/products/default.webp"],
-      imageAssets: incomingAssets,
-      attributes: typeof attributes === "object" && attributes !== null ? attributes : {},
+      shortDescription: shortDescription ? shortDescription.trim() : "",
+      description: description ? description.trim() : (shortDescription ? shortDescription.trim() : ""),
+      images: images.length > 0 ? images : ["/mock/products/default.webp"],
+      imageAssets,
+      attributes: typeof attributes === "object" && attributes !== null && !Array.isArray(attributes) ? attributes : {},
       tags: Array.isArray(tags) ? tags : [],
       isActive: isActive !== false,
       inStock: inStock !== false,
@@ -269,6 +389,83 @@ export async function updateVendorProduct(req, res) {
 
     if (!existing) {
       return res.status(404).json({ message: "Product not found" });
+    }
+
+    // 1. Validate productName
+    if (updates.productName !== undefined) {
+      if (typeof updates.productName !== "string" || !updates.productName.trim()) {
+        return res.status(400).json({ message: "Product name must be a non-empty string." });
+      }
+    }
+
+    // 2. Validate price
+    if (updates.price !== undefined) {
+      let minPrice = 0;
+      let maxPrice = 0;
+      let priceUnit = existing.price?.unit || "piece";
+      let priceCurrency = existing.price?.currency || "INR";
+
+      if (typeof updates.price === "object" && updates.price !== null && !Array.isArray(updates.price)) {
+        minPrice = Number(updates.price.min);
+        maxPrice = updates.price.max !== undefined && updates.price.max !== null ? Number(updates.price.max) : minPrice;
+        priceUnit = updates.price.unit || priceUnit;
+        priceCurrency = updates.price.currency || priceCurrency;
+      } else if (typeof updates.price === "number" || (typeof updates.price === "string" && !isNaN(Number(updates.price)))) {
+        minPrice = Number(updates.price);
+        maxPrice = updates.mrp !== undefined && updates.mrp !== null && !isNaN(Number(updates.mrp)) ? Number(updates.mrp) : minPrice;
+      } else {
+        return res.status(400).json({ message: "Price must be a valid number or price object." });
+      }
+
+      if (isNaN(minPrice) || isNaN(maxPrice)) {
+        return res.status(400).json({ message: "Price values must be valid numbers." });
+      }
+
+      if (minPrice <= 0) {
+        return res.status(400).json({ message: "Product price must be greater than 0." });
+      }
+
+      if (maxPrice < minPrice) {
+        return res.status(400).json({ message: "Maximum price must be at or above minimum price." });
+      }
+
+      updates.price = {
+        min: minPrice,
+        max: maxPrice,
+        unit: priceUnit,
+        currency: priceCurrency,
+      };
+    }
+
+    // 3. Validate string fields
+    if (updates.brand !== undefined && updates.brand !== null && typeof updates.brand !== "string") {
+      return res.status(400).json({ message: "Brand must be a string." });
+    }
+    if (updates.category !== undefined && updates.category !== null && typeof updates.category !== "string") {
+      return res.status(400).json({ message: "Category must be a string." });
+    }
+    if (updates.subCategory !== undefined && updates.subCategory !== null && typeof updates.subCategory !== "string") {
+      return res.status(400).json({ message: "SubCategory must be a string." });
+    }
+    if (updates.shortDescription !== undefined && updates.shortDescription !== null && typeof updates.shortDescription !== "string") {
+      return res.status(400).json({ message: "Short description must be a string." });
+    }
+    if (updates.description !== undefined && updates.description !== null && typeof updates.description !== "string") {
+      return res.status(400).json({ message: "Description must be a string." });
+    }
+
+    // 4. Validate array/object fields
+    if (updates.images !== undefined && !Array.isArray(updates.images)) {
+      return res.status(400).json({ message: "Images must be an array." });
+    }
+    if (updates.imageAssets !== undefined && !Array.isArray(updates.imageAssets)) {
+      return res.status(400).json({ message: "Image assets must be an array." });
+    }
+    if (updates.tags !== undefined && !Array.isArray(updates.tags)) {
+      return res.status(400).json({ message: "Tags must be an array." });
+    }
+    if (updates.attributes !== undefined && updates.attributes !== null && (typeof updates.attributes !== "object" || Array.isArray(updates.attributes))) {
+      return res.status(400).json({ message: "Attributes must be an object." });
     }
 
     // Enforce plan's maxImagesPerProduct limit on server
@@ -331,21 +528,7 @@ export async function updateVendorProduct(req, res) {
     }
 
     if (updates.price !== undefined) {
-      if (typeof updates.price === "object" && updates.price !== null) {
-        updateFields.price = {
-          min: Number(updates.price.min) || 0,
-          max: Number(updates.price.max) || Number(updates.price.min) || 0,
-          unit: updates.price.unit || existing.price?.unit || "piece",
-          currency: updates.price.currency || "INR",
-        };
-      } else {
-        updateFields.price = {
-          min: Number(updates.price) || 0,
-          max: updates.mrp ? Number(updates.mrp) : Number(updates.price) || 0,
-          unit: updates.unit || existing.price?.unit || "piece",
-          currency: "INR",
-        };
-      }
+      updateFields.price = updates.price;
     }
 
     let removedAssets = [];
