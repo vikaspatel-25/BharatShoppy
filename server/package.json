@@ -10,6 +10,7 @@
     "seed": "node scripts/seedDummyProfiles.js",
     "create-admin": "node scripts/createAdmin.js",
     "create-vendor": "node scripts/createTestVendor.js",
+    "create-indexes": "node scripts/createIndexes.js",
     "test": "node --test tests/**/*.test.js"
   },
   "keywords": [],

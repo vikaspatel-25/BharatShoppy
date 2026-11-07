@@ -343,6 +343,38 @@ describe("Vendor Email Code Authentication (A2 & R1) Unit Tests", () => {
       const storeWithWildcard = await resolveStoreByIdentifier(".*");
       assert.equal(storeWithWildcard, null);
     });
+    it("R2: wrong code without active code does not count against vendor lock limits", async () => {
+      // Vendor has NO active code
+      const req = { body: { email: TEST_EMAIL, code: "123456" }, ip: "127.0.0.1" };
+      const res = createMockRes();
+      await verifyCode(req, res);
+      assert.equal(res.statusCode, 400);
+
+      // Now request a valid code
+      const req2 = { body: { email: TEST_EMAIL }, ip: "127.0.0.1" };
+      const res2 = createMockRes();
+      await requestCode(req2, res2);
+      assert.equal(res2.statusCode, 200);
+
+      // The vendor should still have full attempts available (not locked out)
+      const req3 = { body: { email: TEST_EMAIL, code: "000000" }, ip: "127.0.0.1" };
+      const res3 = createMockRes();
+      await verifyCode(req3, res3);
+      assert.equal(res3.statusCode, 400);
+      assert.equal(res3.body.message, "Invalid verification code");
+    });
+
+    it("R2: parallel attempts to checkRateLimit cannot exceed the limit", async () => {
+      const { checkRateLimit } = await import("../src/lib/rateLimitHelper.js");
+      const key = "parallel_test_key";
+      const results = await Promise.all(
+        Array.from({ length: 10 }).map(() =>
+          checkRateLimit(key, { maxAttempts: 5, windowMs: 60000, cooldownMs: 60000 })
+        )
+      );
+      const allowedCount = results.filter((r) => r.allowed).length;
+      assert.ok(allowedCount <= 5, `Expected at most 5 allowed attempts, got ${allowedCount}`);
+    });
   });
 
   describe("POST /api/vendor/auth/logout", () => {

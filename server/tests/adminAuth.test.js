@@ -261,7 +261,7 @@ describe("Admin Authentication & Email Service Unit Tests (A1 & R1)", () => {
       assert.equal(reuseRes.statusCode, 400);
     });
 
-    it("rejects older tempToken when a new login has occurred (tempToken bound to codeHash)", async () => {
+    it("rejects older tempToken when a new login has occurred (tempToken bound to loginNonce without codeHash)", async () => {
       // First login
       const loginReq1 = { body: { email: ADMIN_EMAIL, password: ADMIN_PASS } };
       const loginRes1 = createMockRes();
@@ -269,7 +269,12 @@ describe("Admin Authentication & Email Service Unit Tests (A1 & R1)", () => {
       const tempToken1 = loginRes1.body.tempToken;
       const code1 = sentMails[0].text.match(/\b\d{6}\b/)[0];
 
-      // Second login creates new code
+      // Verify tempToken payload contains no codeHash or code-derived value
+      const decoded = verifyToken(tempToken1);
+      assert.equal(decoded.codeHash, undefined, "tempToken payload must not contain codeHash");
+      assert.ok(decoded.loginNonce, "tempToken payload must contain random loginNonce");
+
+      // Second login creates new code and new nonce
       const loginReq2 = { body: { email: ADMIN_EMAIL, password: ADMIN_PASS } };
       const loginRes2 = createMockRes();
       await adminLogin(loginReq2, loginRes2);

@@ -356,6 +356,42 @@ export async function verifyPaymentRequest(req, res) {
       const baseTime = Math.max(now.getTime(), currentExpiry);
       const expiresAt = new Date(baseTime + days * 86400000).toISOString();
 
+      const updateData = {
+        status: "approved",
+        verifiedAt: now.toISOString(),
+        adminNotes: adminNotes || `Approved by Administrator (+${days} days activated)`,
+        durationDays: days,
+        activatedExpiresAt: expiresAt,
+      };
+
+      // 1. Claim the request record first: atomically transition from pending
+      if (requestsCollection) {
+        const updateResult = await requestsCollection.updateOne(
+          { _id: requestId, status: "pending" },
+          { $set: updateData }
+        );
+        if (updateResult.matchedCount === 0) {
+          return res.status(409).json({
+            message: "Subscription request was already processed or is no longer pending.",
+          });
+        }
+      } else {
+        if (inMemoryRequests.get(requestId)?.status !== "pending") {
+          return res.status(409).json({
+            message: "Subscription request was already processed or is no longer pending.",
+          });
+        }
+        Object.assign(request, updateData);
+      } else {
+        if (inMemoryRequests.get(requestId)?.status !== "pending") {
+          return res.status(409).json({
+            message: "Subscription request was already processed or is no longer pending.",
+          });
+        }
+        Object.assign(request, updateData);
+      }
+
+      // 2. Only after successfully claiming the request, activate/extend the store subscription
       if (storesCollection) {
         await storesCollection.updateOne(
           { _id: request.storeId },
@@ -385,26 +421,6 @@ export async function verifyPaymentRequest(req, res) {
         store.limits.productMonthlyLimit = selectedPlan.productMonthlyLimit || 50;
         store.limits.maxImagesPerProduct = selectedPlan.maxImagesPerProduct || 8;
         store.isActive = true;
-      }
-
-      const updateData = {
-        status: "approved",
-        verifiedAt: now.toISOString(),
-        adminNotes: adminNotes || `Approved by Administrator (+${days} days activated)`,
-        durationDays: days,
-        activatedExpiresAt: expiresAt,
-      };
-
-      if (requestsCollection) {
-        const updateResult = await requestsCollection.updateOne(
-          { _id: requestId, status: "pending" },
-          { $set: updateData }
-        );
-        if (updateResult.matchedCount === 0) {
-          return res.status(409).json({
-            message: "Subscription request was already processed or is no longer pending.",
-          });
-        }
       }
 
       Object.assign(request, updateData);
@@ -456,6 +472,13 @@ export async function verifyPaymentRequest(req, res) {
             message: "Subscription request was already processed or is no longer pending.",
           });
         }
+      } else {
+        if (inMemoryRequests.get(requestId)?.status !== "pending") {
+          return res.status(409).json({
+            message: "Subscription request was already processed or is no longer pending.",
+          });
+        }
+        Object.assign(request, updateData);
       }
 
       Object.assign(request, updateData);

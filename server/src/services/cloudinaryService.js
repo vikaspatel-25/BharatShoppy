@@ -61,8 +61,10 @@ export function signUploadParams({ storeId }) {
 
   const timestamp = Math.floor(Date.now() / 1000);
   const folder = `bharatshopy/${storeId}`;
+  const allowed_formats = "jpg,jpeg,png,webp";
 
   const paramsToSign = {
+    allowed_formats,
     folder,
     timestamp,
   };
@@ -83,6 +85,7 @@ export function signUploadParams({ storeId }) {
     signature,
     timestamp,
     folder,
+    allowed_formats,
     apiKey: process.env.CLOUDINARY_API_KEY,
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
     allowedFormats: ["jpg", "jpeg", "png", "webp"],
@@ -145,66 +148,207 @@ export async function deleteStoreMediaFolder(storeId) {
 }
 
 /**
- * Validates product image assets.
- * - Rejects data: URLs with error.
+ * Validates product image assets and image URLs.
+ * - Checks every entry in images array.
+ * - Rejects null, non-string, or non-object entries with clear error.
+ * - Rejects data: base64 URLs.
  * - Allows preexisting URLs on the product.
- * - Enforces new images are from https://res.cloudinary.com/<cloudName>/ with publicId in bharatshopy/<storeId>/.
+ * - Enforces new images are under https://res.cloudinary.com/<cloudName>/ and have matching imageAsset scoped to bharatshopy/<storeId>/.
+ * - In production, fails closed if CLOUDINARY_CLOUD_NAME is unconfigured.
  */
 export function validateProductMedia({ images = [], imageAssets = [], storeId, existingProduct = null }) {
+  const isProduction = process.env.NODE_ENV === "production";
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+
+  if (isProduction && !cloudName && !testCloudinaryClient) {
+    return {
+      valid: false,
+      message: "Cloudinary configuration is missing in production environment.",
+    };
+  }
+
+  if (!Array.isArray(images)) {
+    return { valid: false, message: "Field 'images' must be an array." };
+  }
+  if (!Array.isArray(imageAssets)) {
+    return { valid: false, message: "Field 'imageAssets' must be an array." };
+  }
+
   const storeFolderPrefix = `bharatshopy/${storeId}/`;
 
-  // Existing URLs allowed on product
+  // Preexisting URLs allowed on the product
   const existingUrls = new Set(existingProduct?.images || []);
   if (Array.isArray(existingProduct?.imageAssets)) {
     for (const a of existingProduct.imageAssets) {
-      if (a?.url) existingUrls.add(a.url);
+      if (a?.url && typeof a.url === "string") existingUrls.add(a.url);
     }
   }
 
-  // Check images array for base64
-  for (const img of images) {
-    if (typeof img === "string" && img.trim().startsWith("data:")) {
+  // 1. Validate imageAssets entries
+  const assetsByUrl = new Map();
+  for (const asset of imageAssets) {
+    if (!asset || typeof asset !== "object") {
+      return {
+        valid: false,
+        message: "Invalid image asset: asset entry must be a valid object.",
+      };
+    }
+
+    if (typeof asset.url !== "string" || !asset.url.trim()) {
+      return {
+        valid: false,
+        message: "Invalid image asset: url must be a non-empty string.",
+      };
+    }
+
+    if (asset.url.trim().startsWith("data:")) {
       return {
         valid: false,
         message: "Base64 data URLs are not permitted. Please upload photos via Cloudinary.",
       };
     }
+
+    // If URL already on existing product, allow
+    if (existingUrls.has(asset.url)) {
+      assetsByUrl.set(asset.url, asset);
+      continue;
+    }
+
+    // Verify publicId
+    if (typeof asset.publicId !== "string" || !asset.publicId.trim()) {
+      return {
+        valid: false,
+        message: "Invalid image asset: publicId must be a non-empty string.",
+      };
+    }
+
+    if (!asset.publicId.startsWith(storeFolderPrefix)) {
+      return {
+        valid: false,
+        message: `Image publicId '${asset.publicId}' does not belong to store folder '${storeFolderPrefix}'.`,
+      };
+    }
+
+    // Verify cloud origin
+    if (cloudName) {
+      const expectedPrefix = `https://res.cloudinary.com/${cloudName}/`;
+      if (!asset.url.startsWith(expectedPrefix)) {
+        return {
+          valid: false,
+          message: `Image URL '${asset.url}' does not originate from cloud '${cloudName}'.`,
+        };
+      }
+    } else if (isProduction) {
+      return {
+        valid: false,
+        message: "Cloudinary configuration is missing in production environment.",
+      };
+    } else {
+      if (!asset.url.startsWith("https://res.cloudinary.com/")) {
+        return {
+          valid: false,
+          message: `Image URL '${asset.url}' does not originate from Cloudinary.`,
+        };
+      }
+    }
+
+    assetsByUrl.set(asset.url, asset);
   }
 
-  // Check imageAssets
-  if (Array.isArray(imageAssets)) {
-    for (const asset of imageAssets) {
-      if (typeof asset.url === "string" && asset.url.trim().startsWith("data:")) {
+  // 2. Validate every entry in images array
+  for (const img of images) {
+    if (typeof img !== "string" || !img.trim()) {
+      return {
+        valid: false,
+        message: "Invalid image: entry must be a non-empty string URL.",
+      };
+    }
+
+    if (img.trim().startsWith("data:")) {
+      return {
+        valid: false,
+        message: "Base64 data URLs are not permitted. Please upload photos via Cloudinary.",
+      };
+    }
+
+    // Allowed if preexisting on the product
+    if (existingUrls.has(img)) {
+      continue;
+    }
+
+    // Must be under https://res.cloudinary.com/<cloud name>/
+    if (cloudName) {
+      const expectedPrefix = `https://res.cloudinary.com/${cloudName}/`;
+      if (!img.startsWith(expectedPrefix)) {
         return {
           valid: false,
-          message: "Base64 data URLs are not permitted. Please upload photos via Cloudinary.",
+          message: `Image URL '${img}' does not originate from cloud '${cloudName}'.`,
         };
       }
-
-      // If URL already on existing product, allow
-      if (existingUrls.has(asset.url)) {
-        continue;
-      }
-
-      // Verify publicId belongs to this store
-      if (!asset.publicId || !String(asset.publicId).startsWith(storeFolderPrefix)) {
+    } else if (isProduction) {
+      return {
+        valid: false,
+        message: "Cloudinary configuration is missing in production environment.",
+      };
+    } else {
+      if (!img.startsWith("https://res.cloudinary.com/")) {
         return {
           valid: false,
-          message: `Image publicId '${asset.publicId}' does not belong to store folder '${storeFolderPrefix}'.`,
+          message: `Image URL '${img}' does not originate from Cloudinary.`,
         };
       }
+    }
 
-      // If cloudName configured, verify URL host
-      if (cloudName && typeof asset.url === "string") {
-        const expectedPrefix = `https://res.cloudinary.com/${cloudName}/`;
-        if (!asset.url.startsWith(expectedPrefix)) {
-          return {
-            valid: false,
-            message: `Image URL '${asset.url}' does not originate from cloud '${cloudName}'.`,
-          };
-        }
+    // Must have a matching imageAssets entry whose publicId is in that store's folder
+    const matchingAsset = assetsByUrl.get(img);
+    if (!matchingAsset || !matchingAsset.publicId || !matchingAsset.publicId.startsWith(storeFolderPrefix)) {
+      return {
+        valid: false,
+        message: `Image URL '${img}' must have a matching imageAsset whose publicId is in store folder '${storeFolderPrefix}'.`,
+      };
+    }
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Verifies that newly uploaded assets do not exceed 5MB by querying the Cloudinary resource API.
+ */
+export async function verifyUploadedMediaSizes(imageAssets = [], maxBytes = 5 * 1024 * 1024) {
+  if (!Array.isArray(imageAssets) || imageAssets.length === 0) {
+    return { valid: true };
+  }
+
+  for (const asset of imageAssets) {
+    if (!asset?.publicId) continue;
+
+    if (testCloudinaryClient?.resource) {
+      const res = await testCloudinaryClient.resource(asset.publicId);
+      if (res && res.bytes && res.bytes > maxBytes) {
+        return {
+          valid: false,
+          message: `Image '${asset.publicId}' exceeds maximum allowed size of 5 MB (${res.bytes} bytes).`,
+        };
       }
+      continue;
+    }
+
+    if (!isCloudinaryConfigured()) {
+      continue;
+    }
+
+    configureCloudinary();
+    try {
+      const resource = await cloudinary.api.resource(asset.publicId);
+      if (resource && resource.bytes && resource.bytes > maxBytes) {
+        return {
+          valid: false,
+          message: `Image '${asset.publicId}' exceeds maximum allowed size of 5 MB (${resource.bytes} bytes).`,
+        };
+      }
+    } catch (err) {
+      console.warn(`Could not verify Cloudinary size for ${asset.publicId}:`, err);
     }
   }
 

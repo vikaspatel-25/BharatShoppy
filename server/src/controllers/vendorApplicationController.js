@@ -298,14 +298,7 @@ export async function submitApplication(req, res) {
       return res.status(400).json({ message: "Invalid verification code." });
     }
 
-    // Clear code (single-use)
-    if (limitsCol) {
-      await limitsCol.deleteOne({ _id: `apply_code:${email}` });
-    } else {
-      inMemoryApplicationCodes.delete(email);
-    }
-
-    // 5. Uniqueness checks for slug & subdomain
+    // 5. Uniqueness checks for slug & subdomain (checked BEFORE consuming verification code)
     const storesCol = getStoresCollection();
     if (storesCol) {
       const existingStore = await storesCol.findOne({
@@ -356,7 +349,7 @@ export async function submitApplication(req, res) {
       }
     }
 
-    // 6. Check existing vendor record
+    // 6. Check existing vendor record (allow rejected vendor to re-apply, block removed vendor)
     const existingVendor = await findVendorByEmail(email);
     if (existingVendor) {
       if (existingVendor.status === "approved") {
@@ -369,6 +362,18 @@ export async function submitApplication(req, res) {
           message: "An application for this email address is already pending review.",
         });
       }
+      if (existingVendor.status === "removed") {
+        return res.status(403).json({
+          message: "This vendor account has been removed and cannot submit new applications.",
+        });
+      }
+    }
+
+    // Clear verification code now that all validations have succeeded (single-use)
+    if (limitsCol) {
+      await limitsCol.deleteOne({ _id: `apply_code:${email}` });
+    } else {
+      inMemoryApplicationCodes.delete(email);
     }
 
     // 7. Save application as pending
@@ -393,47 +398,76 @@ export async function submitApplication(req, res) {
     };
 
     if (appCol) {
-      await appCol.insertOne(applicationDoc);
+      try {
+        await appCol.insertOne(applicationDoc);
+      } catch (insertErr) {
+        if (insertErr.code === 11000 || insertErr.message?.includes("E11000")) {
+          return res.status(409).json({
+            message: "A pending application for this email, slug, or subdomain already exists.",
+          });
+        }
+        throw insertErr;
+      }
     } else {
       inMemoryApplications.set(applicationId, applicationDoc);
     }
 
-    // 8. Create or update vendor record with status pending and no storeId
+    // 8. Create or update vendor record with status pending and no storeId (preserve existing _id)
     const vendorsCol = getVendorsCollection();
-    const vendorId = "vendor_" + crypto.randomUUID();
-    const vendorRecord = {
-      _id: vendorId,
+    const vendorSet = {
       email,
       name: name.trim(),
       status: "pending",
       storeId: null,
-      createdAt: now,
       updatedAt: now,
     };
 
     if (vendorsCol) {
       await vendorsCol.updateOne(
         { email },
-        { $set: vendorRecord },
+        {
+          $set: vendorSet,
+          $setOnInsert: {
+            _id: "vendor_" + crypto.randomUUID().replace(/-/g, "").substring(0, 16),
+            createdAt: now,
+          },
+        },
         { upsert: true }
       );
     } else {
-      setInMemoryVendor(vendorRecord);
+      if (existingVendor) {
+        setInMemoryVendor({ ...existingVendor, ...vendorSet });
+      } else {
+        setInMemoryVendor({
+          _id: "vendor_" + crypto.randomUUID().replace(/-/g, "").substring(0, 16),
+          createdAt: now,
+          ...vendorSet,
+        });
+      }
     }
 
-    // 9. Send notifications
-    await sendApplicationConfirmation(email, { storeName: storeName.trim(), name: name.trim() });
-    await sendNewApplicationAlert({
-      storeName: storeName.trim(),
-      email,
-      name: name.trim(),
-      city: applicationDoc.address?.city,
-      entityType: applicationDoc.entityType,
-    });
+    // 9. Send notifications with failure handling
+    let emailWarning = null;
+    try {
+      await sendApplicationConfirmation(email, { storeName: storeName.trim(), name: name.trim() });
+      await sendNewApplicationAlert({
+        storeName: storeName.trim(),
+        email,
+        name: name.trim(),
+        city: applicationDoc.address?.city,
+        entityType: applicationDoc.entityType,
+      });
+    } catch (emailErr) {
+      console.warn("Application notification email failed:", emailErr);
+      emailWarning = "Application submitted, but confirmation email could not be delivered.";
+    }
 
     return res.status(201).json({
       success: true,
-      message: "Application submitted successfully and is pending administrator review.",
+      message: emailWarning
+        ? "Application submitted successfully and is pending administrator review (notification email warning)."
+        : "Application submitted successfully and is pending administrator review.",
+      warning: emailWarning,
       applicationId,
     });
   } catch (error) {
@@ -501,7 +535,8 @@ export async function approveApplication(req, res) {
     }
 
     const now = new Date();
-    const storeId = `store_${app.slug}`;
+    // Generate a random unique store _id (never overwrite store_0103 or slug-named store)
+    const storeId = "store_" + crypto.randomUUID().replace(/-/g, "").substring(0, 16);
 
     const newStore = {
       _id: storeId,
@@ -537,17 +572,7 @@ export async function approveApplication(req, res) {
       updatedAt: now.toISOString(),
     };
 
-    // 1. Save store
-    const storesCol = getStoresCollection();
-    if (storesCol) {
-      await storesCol.updateOne(
-        { _id: storeId },
-        { $set: newStore },
-        { upsert: true }
-      );
-    }
-
-    // 2. Update application status atomically
+    // 1. Claim the record first: atomically transition application from pending
     const appUpdate = {
       status: "approved",
       storeId,
@@ -571,6 +596,28 @@ export async function approveApplication(req, res) {
       }
       Object.assign(app, appUpdate);
       inMemoryApplications.set(id, app);
+    }
+
+    // 2. Insert new store with insertOne (fails with 409 if duplicate slug/subdomain)
+    const storesCol = getStoresCollection();
+    if (storesCol) {
+      try {
+        await storesCol.insertOne(newStore);
+      } catch (insertErr) {
+        if (insertErr.code === 11000 || insertErr.message?.includes("E11000")) {
+          // Revert application claim
+          if (appCol) {
+            await appCol.updateOne({ _id: id }, { $set: { status: "pending", storeId: null } });
+          } else {
+            app.status = "pending";
+            app.storeId = null;
+          }
+          return res.status(409).json({
+            message: `A store with slug '${app.slug}' or subdomain '${app.subdomain}' already exists.`,
+          });
+        }
+        throw insertErr;
+      }
     }
 
     // 3. Update vendor record
@@ -761,6 +808,6 @@ export async function resendApplicationEmail(req, res) {
     return res.status(400).json({ message: `Cannot resend email for status '${app.status}'.` });
   } catch (error) {
     console.error("resendApplicationEmail error:", error);
-    return res.status(500).json({ message: "Failed to resend application email", error: error.message });
+    return res.status(500).json({ message: "Failed to resend application email." });
   }
 }

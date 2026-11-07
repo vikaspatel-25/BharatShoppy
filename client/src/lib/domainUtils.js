@@ -139,3 +139,28 @@ export function getTenantStoreUrl(store, isLocalMode = false) {
   // Universal path fallback
   return `${window.location.origin}/shop/${identifier}`;
 }
+
+/**
+ * Builds a URL pointing to the marketplace host for a given path.
+ * When called on a tenant subdomain, resolves to the apex/marketplace host.
+ */
+export function getMarketplaceUrl(path = "/") {
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  if (typeof window === "undefined") {
+    return `https://www.bharatshopy.com${cleanPath}`;
+  }
+  const host = window.location.hostname;
+  const port = window.location.port ? `:${window.location.port}` : "";
+  const protocol = window.location.protocol;
+
+  if (host === "localhost" || host.endsWith(".localhost")) {
+    return `${protocol}//localhost${port}${cleanPath}`;
+  }
+  if (host === "lvh.me" || host.endsWith(".lvh.me")) {
+    return `${protocol}//lvh.me${port}${cleanPath}`;
+  }
+  if (host.includes("bharatshopy.com")) {
+    return `https://www.bharatshopy.com${cleanPath}`;
+  }
+  return `${window.location.origin}${cleanPath}`;
+}

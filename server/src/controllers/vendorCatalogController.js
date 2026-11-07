@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 import { checkProductUploadQuota } from "../services/quotaService.js";
-import { validateProductMedia, deleteCloudinaryMedia } from "../services/cloudinaryService.js";
+import {
+  validateProductMedia,
+  verifyUploadedMediaSizes,
+  deleteCloudinaryMedia,
+} from "../services/cloudinaryService.js";
 
 /**
  * Retrieves the vendor dashboard data for a given store.
@@ -156,6 +160,12 @@ export async function addVendorProduct(req, res) {
       return res.status(400).json({ message: mediaCheck.message });
     }
 
+    // Verify uploaded media sizes via Cloudinary API (enforce 5MB limit)
+    const sizeCheck = await verifyUploadedMediaSizes(incomingAssets);
+    if (!sizeCheck.valid) {
+      return res.status(400).json({ message: sizeCheck.message });
+    }
+
     const productsCollection = mongoose.connection.db.collection("products");
     const currentCount = await productsCollection.countDocuments({ storeId: store._id });
     const quotaCheck = checkProductUploadQuota(store, currentCount);
@@ -285,6 +295,13 @@ export async function updateVendorProduct(req, res) {
       if (!mediaCheck.valid) {
         return res.status(400).json({ message: mediaCheck.message });
       }
+
+      if (Array.isArray(updates.imageAssets)) {
+        const sizeCheck = await verifyUploadedMediaSizes(updates.imageAssets);
+        if (!sizeCheck.valid) {
+          return res.status(400).json({ message: sizeCheck.message });
+        }
+      }
     }
 
     // Explicit allowlist of editable product fields to prevent tampering
@@ -361,13 +378,17 @@ export async function updateVendorProduct(req, res) {
       { $set: updateFields }
     );
 
-    // Asynchronously delete removed photos from Cloudinary without failing save
+    // Await Cloudinary deletion to guarantee completion before serverless runtime terminates
     if (removedAssets.length > 0) {
-      for (const asset of removedAssets) {
-        Promise.resolve(deleteCloudinaryMedia(asset.publicId)).catch((err) => {
-          console.warn("Background deletion of Cloudinary media failed:", err);
-        });
-      }
+      await Promise.allSettled(
+        removedAssets.map(async (asset) => {
+          try {
+            await deleteCloudinaryMedia(asset.publicId);
+          } catch (err) {
+            console.warn(`Failed to delete removed Cloudinary media ${asset.publicId}:`, err);
+          }
+        })
+      );
     }
 
     const updated = await productsCollection.findOne({

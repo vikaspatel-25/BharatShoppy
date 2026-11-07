@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../lib/apiClient.js";
+import { getMarketplaceUrl } from "../lib/domainUtils.js";
 
 export default function VendorLogin() {
   const navigate = useNavigate();
@@ -182,9 +183,9 @@ export default function VendorLogin() {
           <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             <p className="text-xs text-slate-500">
               New to BharatShopy?{" "}
-              <Link to="/vendor/apply" className="font-semibold text-emerald-600 hover:text-emerald-700">
+              <a href={getMarketplaceUrl("/vendor/apply")} className="font-semibold text-emerald-600 hover:text-emerald-700">
                 Apply for a Vendor Account
-              </Link>
+              </a>
             </p>
           </div>
         </div>

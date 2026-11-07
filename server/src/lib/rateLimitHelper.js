@@ -16,6 +16,7 @@ function getLimitsCollection() {
 
 /**
  * Checks and records an attempt or request against a rate limit key.
+ * Uses atomic MongoDB operations to prevent race conditions during concurrent requests.
  * 
  * @param {string} key - Unique rate limit identifier (e.g. `ip:${ip}` or `email:${email}`)
  * @param {object} options
@@ -28,10 +29,11 @@ function getLimitsCollection() {
 export async function checkRateLimit(key, { maxAttempts = 5, windowMs = 60000, cooldownMs = 60000, minIntervalMs = 0 } = {}) {
   const col = getLimitsCollection();
   const now = Date.now();
+  const ttlDuration = Math.max(windowMs, cooldownMs) + 86400000; // 24 hours beyond max lifetime
 
   if (col) {
+    // 1. Check if key is currently in cooldown or violating minIntervalMs
     const doc = await col.findOne({ _id: key });
-
     if (doc) {
       if (doc.cooldownUntil && doc.cooldownUntil > now) {
         return {
@@ -48,51 +50,120 @@ export async function checkRateLimit(key, { maxAttempts = 5, windowMs = 60000, c
           cooldownRemainingMs: minIntervalMs - (now - doc.lastRequestAt),
         };
       }
-
-      // If within window, increment
-      if (doc.windowExpiresAt && doc.windowExpiresAt > now) {
-        const attempts = (doc.attempts || 0) + 1;
-        if (attempts > maxAttempts) {
-          const cooldownUntil = now + cooldownMs;
-          await col.updateOne(
-            { _id: key },
-            { $set: { attempts, cooldownUntil, lastRequestAt: now, updatedAt: new Date() } }
-          );
-          return {
-            allowed: false,
-            remainingAttempts: 0,
-            cooldownRemainingMs: cooldownMs,
-          };
-        }
-
-        await col.updateOne(
-          { _id: key },
-          { $set: { attempts, lastRequestAt: now, updatedAt: new Date() } }
-        );
-        return {
-          allowed: true,
-          remainingAttempts: Math.max(0, maxAttempts - attempts),
-          cooldownRemainingMs: 0,
-        };
-      }
     }
 
-    // New window
-    const newDoc = {
-      _id: key,
-      attempts: 1,
-      windowExpiresAt: now + windowMs,
-      cooldownUntil: 0,
-      lastRequestAt: now,
-      updatedAt: new Date(),
-    };
-    await col.updateOne({ _id: key }, { $set: newDoc }, { upsert: true });
+    // 2. Atomically increment attempts if an active window exists
+    const updateResult = await col.findOneAndUpdate(
+      {
+        _id: key,
+        windowExpiresAt: { $gt: now },
+        $or: [{ cooldownUntil: { $exists: false } }, { cooldownUntil: { $lte: now } }],
+      },
+      {
+        $inc: { attempts: 1 },
+        $set: {
+          lastRequestAt: now,
+          updatedAt: new Date(),
+          expireAt: new Date(now + ttlDuration),
+        },
+      },
+      { returnDocument: "after" }
+    );
 
-    return {
-      allowed: true,
-      remainingAttempts: maxAttempts - 1,
-      cooldownRemainingMs: 0,
-    };
+    const activeDoc = updateResult?.value !== undefined ? updateResult.value : updateResult;
+
+    if (activeDoc) {
+      if (activeDoc.attempts > maxAttempts) {
+        const cooldownUntil = now + cooldownMs;
+        await col.updateOne(
+          { _id: key },
+          {
+            $set: {
+              cooldownUntil,
+              updatedAt: new Date(),
+              expireAt: new Date(cooldownUntil + ttlDuration),
+            },
+          }
+        );
+        return {
+          allowed: false,
+          remainingAttempts: 0,
+          cooldownRemainingMs: cooldownMs,
+        };
+      }
+
+      return {
+        allowed: true,
+        remainingAttempts: Math.max(0, maxAttempts - activeDoc.attempts),
+        cooldownRemainingMs: 0,
+      };
+    }
+
+    // 3. No active window found: initialize a new window
+    try {
+      await col.updateOne(
+        {
+          _id: key,
+          $or: [
+            { windowExpiresAt: { $exists: false } },
+            { windowExpiresAt: { $lte: now } },
+          ],
+        },
+        {
+          $set: {
+            attempts: 1,
+            windowExpiresAt: now + windowMs,
+            cooldownUntil: 0,
+            lastRequestAt: now,
+            updatedAt: new Date(),
+            expireAt: new Date(now + ttlDuration),
+          },
+        },
+        { upsert: true }
+      );
+
+      return {
+        allowed: true,
+        remainingAttempts: maxAttempts - 1,
+        cooldownRemainingMs: 0,
+      };
+    } catch {
+      // Race condition during upsert: another concurrent request initialized window.
+      // Atomically increment on retry.
+      const retryResult = await col.findOneAndUpdate(
+        { _id: key },
+        {
+          $inc: { attempts: 1 },
+          $set: {
+            lastRequestAt: now,
+            updatedAt: new Date(),
+            expireAt: new Date(now + ttlDuration),
+          },
+        },
+        { returnDocument: "after" }
+      );
+      const retryDoc = retryResult?.value !== undefined ? retryResult.value : retryResult;
+      const count = retryDoc?.attempts || 1;
+
+      if (count > maxAttempts) {
+        const cooldownUntil = now + cooldownMs;
+        await col.updateOne(
+          { _id: key },
+          { $set: { cooldownUntil, expireAt: new Date(cooldownUntil + ttlDuration) } }
+        );
+        return {
+          allowed: false,
+          remainingAttempts: 0,
+          cooldownRemainingMs: cooldownMs,
+        };
+      }
+
+      return {
+        allowed: true,
+        remainingAttempts: Math.max(0, maxAttempts - count),
+        cooldownRemainingMs: 0,
+      };
+    }
   }
 
   // Memory fallback
@@ -115,22 +186,19 @@ export async function checkRateLimit(key, { maxAttempts = 5, windowMs = 60000, c
     }
 
     if (existing.windowExpiresAt && existing.windowExpiresAt > now) {
-      const attempts = existing.attempts + 1;
-      if (attempts > maxAttempts) {
+      existing.attempts += 1;
+      existing.lastRequestAt = now;
+      if (existing.attempts > maxAttempts) {
         existing.cooldownUntil = now + cooldownMs;
-        existing.attempts = attempts;
-        existing.lastRequestAt = now;
         return {
           allowed: false,
           remainingAttempts: 0,
           cooldownRemainingMs: cooldownMs,
         };
       }
-      existing.attempts = attempts;
-      existing.lastRequestAt = now;
       return {
         allowed: true,
-        remainingAttempts: Math.max(0, maxAttempts - attempts),
+        remainingAttempts: Math.max(0, maxAttempts - existing.attempts),
         cooldownRemainingMs: 0,
       };
     }
@@ -184,12 +252,20 @@ export async function checkCooldown(key) {
  */
 export async function setCooldown(key, cooldownMs) {
   const col = getLimitsCollection();
-  const cooldownUntil = Date.now() + cooldownMs;
+  const now = Date.now();
+  const cooldownUntil = now + cooldownMs;
+  const ttlDuration = cooldownMs + 86400000;
 
   if (col) {
     await col.updateOne(
       { _id: key },
-      { $set: { cooldownUntil, updatedAt: new Date() } },
+      {
+        $set: {
+          cooldownUntil,
+          updatedAt: new Date(),
+          expireAt: new Date(cooldownUntil + ttlDuration),
+        },
+      },
       { upsert: true }
     );
     return;

@@ -120,17 +120,19 @@ export async function adminLogin(req, res) {
     // Generate 6-digit numeric verification code
     const rawCode = String(crypto.randomInt(100000, 1000000));
     const codeHash = hashString(rawCode);
+    const loginNonce = crypto.randomBytes(32).toString("hex");
     const codeExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
 
     await updateAdmin(admin._id, {
       verificationCodeHash: codeHash,
+      loginNonce,
       codeExpiresAt,
       codeAttempts: 0,
     });
 
-    // Create a short-lived token bound to the current codeHash to reject superseded tokens
+    // Create a short-lived token bound to a random loginNonce (no code-derived value in payload)
     const tempToken = signToken(
-      { adminId: admin._id, email: admin.email, step: "code_verification", codeHash },
+      { adminId: admin._id, email: admin.email, step: "code_verification", loginNonce },
       getAuthSecret(),
       600 // 10 minutes
     );
@@ -184,14 +186,14 @@ export async function adminVerify(req, res) {
     }
 
     const admin = await findAdminById(tokenPayload.adminId);
-    if (!admin || !admin.verificationCodeHash) {
+    if (!admin || !admin.verificationCodeHash || !admin.loginNonce) {
       return res.status(400).json({
         message: "No active verification code found or code already used. Please login again.",
       });
     }
 
-    // Single-use binding check: reject older or superseded tempTokens
-    if (tokenPayload.codeHash !== admin.verificationCodeHash) {
+    // Single-use binding check: reject older or superseded tempTokens using random loginNonce
+    if (tokenPayload.loginNonce !== admin.loginNonce) {
       return res.status(400).json({
         message: "Invalid or superseded pre-auth token. Please login again.",
       });
@@ -201,6 +203,7 @@ export async function adminVerify(req, res) {
     if (!admin.codeExpiresAt || Date.now() > admin.codeExpiresAt) {
       await updateAdmin(admin._id, {
         verificationCodeHash: null,
+        loginNonce: null,
         codeExpiresAt: null,
         codeAttempts: 0,
       });
@@ -212,6 +215,7 @@ export async function adminVerify(req, res) {
     if (attempts > 5) {
       await updateAdmin(admin._id, {
         verificationCodeHash: null,
+        loginNonce: null,
         codeExpiresAt: null,
         codeAttempts: 0,
       });
@@ -231,6 +235,7 @@ export async function adminVerify(req, res) {
     // Code verified: Clear code immediately to ensure single-use
     await updateAdmin(admin._id, {
       verificationCodeHash: null,
+      loginNonce: null,
       codeExpiresAt: null,
       codeAttempts: 0,
     });

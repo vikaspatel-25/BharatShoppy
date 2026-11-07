@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import mongoose from "mongoose";
 import { signToken, hashString, getAuthSecret } from "../lib/tokenHelper.js";
 import { sendVendorLoginCode } from "../services/emailService.js";
-import { checkRateLimit, clearRateLimit } from "../lib/rateLimitHelper.js";
+import { checkRateLimit, checkCooldown, clearRateLimit } from "../lib/rateLimitHelper.js";
 
 // In-memory vendor fallback for unit testing without MongoDB
 let inMemoryVendors = new Map();
@@ -156,18 +156,7 @@ export async function verifyCode(req, res) {
       return res.status(400).json({ message: "Email and code cannot be empty" });
     }
 
-    // Global attempt rate limiting stored in collection per email
-    const attemptCheck = await checkRateLimit(`vendor_verify:${email}`, {
-      maxAttempts: 5,
-      windowMs: 15 * 60 * 1000,
-      cooldownMs: 15 * 60 * 1000,
-    });
-    if (!attemptCheck.allowed) {
-      return res.status(429).json({
-        message: "Too many failed attempts. Verification locked for 15 minutes.",
-      });
-    }
-
+    // 1. Only verify if vendor exists and has an active code
     const vendor = await findVendorByEmail(email);
     if (!vendor || !vendor.codeHash) {
       return res.status(400).json({
@@ -175,7 +164,7 @@ export async function verifyCode(req, res) {
       });
     }
 
-    // Expiry check (5 minutes)
+    // 2. Expiry check (5 minutes)
     if (!vendor.codeExpiresAt || Date.now() > vendor.codeExpiresAt) {
       await updateVendor(email, {
         codeHash: null,
@@ -185,24 +174,37 @@ export async function verifyCode(req, res) {
       return res.status(400).json({ message: "Verification code has expired. Request a new code." });
     }
 
-    // Limit verification attempts per code
-    const attempts = (vendor.codeAttempts || 0) + 1;
-    if (attempts > 5) {
-      await updateVendor(email, {
-        codeHash: null,
-        codeExpiresAt: null,
-        codeAttempts: 0,
-      });
+    // 3. Check if verification is locked out by cooldown
+    const cooldownCheck = await checkCooldown(`vendor_verify:${email}`);
+    if (cooldownCheck.active) {
       return res.status(429).json({
-        message: "Too many failed attempts. Verification code invalidated. Request a new code.",
+        message: "Too many failed attempts. Verification locked for 15 minutes.",
       });
     }
 
-    await updateVendor(email, { codeAttempts: attempts });
-
-    // Compare hash
+    // 4. Compare hash
     const inputHash = hashString(code);
     if (inputHash !== vendor.codeHash) {
+      // Count only failed checks against an active code
+      const attemptCheck = await checkRateLimit(`vendor_verify:${email}`, {
+        maxAttempts: 5,
+        windowMs: 15 * 60 * 1000,
+        cooldownMs: 15 * 60 * 1000,
+      });
+
+      const attempts = (vendor.codeAttempts || 0) + 1;
+      if (attempts >= 5 || !attemptCheck.allowed) {
+        await updateVendor(email, {
+          codeHash: null,
+          codeExpiresAt: null,
+          codeAttempts: 0,
+        });
+        return res.status(429).json({
+          message: "Too many failed attempts. Verification code invalidated. Request a new code.",
+        });
+      }
+
+      await updateVendor(email, { codeAttempts: attempts });
       return res.status(400).json({ message: "Invalid verification code" });
     }
 

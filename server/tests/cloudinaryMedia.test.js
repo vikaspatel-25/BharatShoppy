@@ -308,6 +308,14 @@ describe("Cloudinary Media Service & Image Lifecycle Tests (H2)", () => {
       assert.equal(data.cloudName, "mock_cloud");
       assert.equal(data.apiKey, "mock_api_key");
     });
+
+    it("ensures signUploadParams includes allowed_formats and folder in signed parameters", () => {
+      const signed = signUploadParams({ storeId: "store_A" });
+      assert.equal(signed.folder, "bharatshopy/store_A");
+      assert.equal(signed.allowed_formats, "jpg,jpeg,png,webp");
+      assert.ok(signed.signature);
+      assert.ok(signed.timestamp);
+    });
   });
 
   describe("Validation & Security Rules (validateProductMedia)", () => {
@@ -371,6 +379,32 @@ describe("Cloudinary Media Service & Image Lifecycle Tests (H2)", () => {
         storeId: "store_A",
       });
       assert.equal(check.valid, true);
+    });
+
+    it("rejects non-object or null entries in imageAssets", () => {
+      const checkNull = validateProductMedia({
+        imageAssets: [null],
+        storeId: "store_A",
+      });
+      assert.equal(checkNull.valid, false);
+      assert.match(checkNull.message, /valid object/i);
+
+      const checkString = validateProductMedia({
+        imageAssets: ["invalid_string_asset"],
+        storeId: "store_A",
+      });
+      assert.equal(checkString.valid, false);
+      assert.match(checkString.message, /valid object/i);
+    });
+
+    it("rejects foreign images URL not matching imageAssets or product", () => {
+      const check = validateProductMedia({
+        images: ["https://attacker.com/malicious.jpg"],
+        imageAssets: [],
+        storeId: "store_A",
+      });
+      assert.equal(check.valid, false);
+      assert.match(check.message, /unauthorized or foreign URL/i);
     });
 
     it("allows preexisting URLs on the product during update", () => {
