@@ -258,7 +258,7 @@ describe("Write Input Validation Tests (M1)", () => {
       const res = createMockRes();
       await addVendorProduct(req, res);
       assert.equal(res.statusCode, 400);
-      assert.match(res.body.message, /valid numbers/i);
+      assert.match(res.body.message, /valid number/i);
     });
 
     it("rejects non-string brand/description fields with 400", async () => {
