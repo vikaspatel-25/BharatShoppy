@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { errorHandler } from "../src/app.js";
+
+process.env.AUTH_SECRET = process.env.AUTH_SECRET || "test-secret-key-that-is-at-least-32-chars-long";
+const { errorHandler } = await import("../src/app.js");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
