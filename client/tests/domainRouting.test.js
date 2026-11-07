@@ -101,14 +101,14 @@ describe("Entity Types & Metadata Config Tests", () => {
   it("returns appropriate badge and attributes for service provider entity type", () => {
     const config = getEntityConfig("service_provider");
     assert.equal(config.id, "service_provider");
-    assert.equal(config.badgeLabel, "Verified Specialist");
+    assert.equal(config.badgeLabel, "Specialist");
     assert.equal(config.defaultUnit, "service");
   });
 
   it("returns appropriate badge and attributes for shopkeeper entity type", () => {
     const config = getEntityConfig("shopkeeper");
     assert.equal(config.id, "shopkeeper");
-    assert.equal(config.badgeLabel, "Verified Store");
+    assert.equal(config.badgeLabel, "Local Store");
     assert.equal(config.defaultUnit, "piece");
   });
 
