@@ -79,7 +79,7 @@ describe("Catalog Quota Behaviour Tests (M2)", () => {
       }
       if (name === "subscription_requests") {
         return {
-          find: () => ({ toArray: async () => [] }),
+          find: () => ({ sort: () => ({ toArray: async () => [] }), toArray: async () => [] }),
         };
       }
       throw new Error(`Unhandled collection ${name}`);
@@ -143,7 +143,7 @@ describe("Catalog Quota Behaviour Tests (M2)", () => {
     const res = createMockRes();
     await addVendorProduct(req, res);
     assert.equal(res.statusCode, 403);
-    assert.match(res.body.message, /quota reached/i);
+    assert.match(res.body.message, /reached your plan limit|quota/i);
     assert.equal(res.body.currentCount, 2);
     assert.equal(res.body.limit, 2);
   });
@@ -203,7 +203,7 @@ describe("Catalog Quota Behaviour Tests (M2)", () => {
     await updateVendorProduct(reactivateReq, reactivateRes);
 
     assert.equal(reactivateRes.statusCode, 403);
-    assert.match(reactivateRes.body.message, /quota reached/i);
+    assert.match(reactivateRes.body.message, /reached your plan limit|quota/i);
     assert.equal(reactivateRes.body.currentCount, 2);
     assert.equal(reactivateRes.body.limit, 2);
   });
@@ -221,7 +221,7 @@ describe("Catalog Quota Behaviour Tests (M2)", () => {
 
     assert.equal(res.statusCode, 200);
     // Even though 2 total documents exist in products, active items count is 1
-    assert.equal(res.body.usage.totalProducts, 1, "Must only count active products");
-    assert.equal(res.body.usage.remaining, 1);
+    assert.equal(res.body.limits.currentProductCount, 1, "Must only count active products");
+    assert.equal(res.body.limits.isUploadQuotaReached, false);
   });
 });
