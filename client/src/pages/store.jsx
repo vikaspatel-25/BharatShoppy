@@ -13,7 +13,6 @@ import {
   ExternalLink,
   ShoppingBag,
   Sparkles,
-  BadgeCheck,
   X,
   ChevronRight,
   QrCode,
@@ -526,10 +525,6 @@ function Store({ isolated = false, tenantSubdomain = null }) {
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
                       {store.storeName}
                     </h1>
-                    <BadgeCheck
-                      className="h-5 w-5 text-blue-600 shrink-0"
-                      title="Verified Store on BharatShopy"
-                    />
                   </div>
 
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
@@ -950,7 +945,7 @@ function Store({ isolated = false, tenantSubdomain = null }) {
 
               <p className="text-xs sm:text-sm leading-relaxed text-slate-600">
                 {store.description ||
-                  `${store.storeName} is a verified merchant on BharatShopy, serving shoppers in ${store.city}.`}
+                  `${store.storeName} is a local merchant on BharatShopy, serving shoppers in ${store.city}.`}
               </p>
 
               <div className="space-y-3 pt-2">

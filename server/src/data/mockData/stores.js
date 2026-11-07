@@ -61,7 +61,6 @@ const stores = [
       "harvestSeason": "Kharif & Rabi 2026 Season",
       "organicCertified": true,
       "mandiPriceBenchmark": "Nashik APMC Grade-A Benchmark",
-      "fssaiLicense": "FSSAI-11524036000123",
       "farmSize": "18 Acres Farm Holding",
       "produceGuarantee": "100% Natural, Pesticide Free"
     },
@@ -138,7 +137,6 @@ const stores = [
     },
     "metadata": {
       "experienceYears": 12,
-      "licenseNumber": "KAR-EE-2018-9042",
       "serviceAreas": "Koramangala, Indiranagar, HSR Layout, BTM, Bellandur",
       "warrantyPolicy": "90-Day Comprehensive Warranty on parts & labor",
       "emergencyService": true
@@ -215,7 +213,6 @@ const stores = [
       }
     },
     "metadata": {
-      "gstin": "08AABCV1234F1Z8",
       "returnPolicy": "7 Days Hassle-Free Exchange on unworn garments",
       "deliveryNotes": "Complimentary doorstep trial & custom alteration in Jaipur",
       "customTailoringAvailable": true
@@ -292,7 +289,6 @@ const stores = [
       }
     },
     "metadata": {
-      "gstin": "07AAACR4567B1Z2",
       "returnPolicy": "Antique appraisal certificate included with all orders",
       "deliveryNotes": "Specialized fragile freight shipping with transit insurance"
     },
@@ -368,7 +364,6 @@ const stores = [
       }
     },
     "metadata": {
-      "gstin": "23AABCK8899P1Z9",
       "deliveryNotes": "Free doorstep delivery on orders above ₹300 within 2km"
     },
     "subscription": {

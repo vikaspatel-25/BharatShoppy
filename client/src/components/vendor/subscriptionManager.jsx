@@ -235,7 +235,7 @@ export default function SubscriptionManager({
             Available BharatShopy Growth Plans
           </h3>
           <p className="text-xs text-stone-500">
-            Select a plan to request immediate renewal, unlock higher catalog limits, and verified store badges.
+            Select a plan to request immediate renewal or unlock higher catalog limits.
           </p>
         </div>
 

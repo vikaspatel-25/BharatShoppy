@@ -36,8 +36,6 @@ export const defaultPlans = [
     maxImagesPerProduct: 8,
     features: [
       "50 catalog products / services",
-      "Priority discovery & category ranking",
-      "Verified Entity Trust Badge",
       "High-resolution printable Counter QR Code",
       "Up to 8 photos per item",
       "Entity-specific metadata (Farm season / Specialist)",
@@ -58,12 +56,10 @@ export const defaultPlans = [
     maxImagesPerProduct: 12,
     features: [
       "200 catalog products / services",
-      "Top-tier marketplace search placement",
+      "Up to 12 photos per item",
       "Custom Subdomain Branding (*.bharatshopy.com)",
       "Unlimited WhatsApp Enquiry Cart",
       "Bulk produce / B2B order enquiry mode",
-      "Comprehensive storefront analytics",
-      "24/7 Priority Concierge Support",
     ],
     isActive: true,
     sortOrder: 3,

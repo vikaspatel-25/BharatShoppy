@@ -9,7 +9,7 @@ export const ENTITY_TYPES = {
   shopkeeper: {
     id: "shopkeeper",
     label: "Boutique / Store",
-    badgeLabel: "Verified Store",
+    badgeLabel: "Local Store",
     iconName: "Store",
     badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
     description: "Retail boutique or neighborhood shop selling products directly to customers.",
@@ -31,7 +31,7 @@ export const ENTITY_TYPES = {
   service_provider: {
     id: "service_provider",
     label: "Independent Specialist",
-    badgeLabel: "Verified Specialist",
+    badgeLabel: "Specialist",
     iconName: "Wrench",
     badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
     description: "Independent artisan, tailor, electrician, or technician providing services & bookings.",
