@@ -59,6 +59,35 @@ describe("Multi-Tenant Domain & Subdomain Routing Tests", () => {
     assert.equal(getTenantSubdomain("tenant.vercel.app"), null);
     assert.equal(getTenantSubdomain("otherplatform.com"), null);
   });
+
+  it("L3: restricts ?tenant= query parameter override to development hosts", () => {
+    // Development hosts honor ?tenant=
+    assert.equal(
+      getTenantSubdomain("localhost:5173", "?tenant=dev-store"),
+      "dev-store"
+    );
+    assert.equal(
+      getTenantSubdomain("lvh.me", "?tenant=dev-store-2"),
+      "dev-store-2"
+    );
+
+    // Production hosts ignore ?tenant= override
+    assert.equal(
+      getTenantSubdomain("bharatshopy.com", "?tenant=malicious-override"),
+      null,
+      "Apex production host must ignore ?tenant= override"
+    );
+    assert.equal(
+      getTenantSubdomain("vastra.bharatshopy.com", "?tenant=malicious-override"),
+      "vastra",
+      "Production tenant host must ignore ?tenant= override and use actual subdomain"
+    );
+    assert.equal(
+      getTenantSubdomain("bharat-shoppy-client.vercel.app", "?tenant=fake-tenant"),
+      null,
+      "Platform host must ignore ?tenant= override"
+    );
+  });
 });
 
 describe("Entity Types & Metadata Config Tests", () => {

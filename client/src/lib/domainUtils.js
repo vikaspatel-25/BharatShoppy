@@ -25,18 +25,9 @@ const RESERVED_SUBDOMAINS = new Set([
  * - Query parameter fallback for easy testing on standard localhost:5173:
  *   "localhost:5173/?tenant=vastra-heritage" -> "vastra-heritage"
  */
-export function getTenantSubdomain(hostnameOverride) {
+export function getTenantSubdomain(hostnameOverride, searchOverride) {
   if (!hostnameOverride && typeof window === "undefined") {
     return null;
-  }
-
-  // Check URL query override (?tenant=slug) for local dev testing
-  if (typeof window !== "undefined" && window.location?.search) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryTenant = urlParams.get("tenant");
-    if (queryTenant && queryTenant.trim()) {
-      return queryTenant.trim().toLowerCase();
-    }
   }
 
   const host = (
@@ -48,6 +39,35 @@ export function getTenantSubdomain(hostnameOverride) {
     .toLowerCase();
 
   const cleanHost = host.split(":")[0];
+
+  // Check URL query override (?tenant=slug) strictly for local dev testing:
+  // Allowed only when in dev build (import.meta.env?.DEV) or on local development hosts (localhost / lvh.me / 127.0.0.1)
+  const isDevBuild =
+    typeof import.meta !== "undefined" &&
+    typeof import.meta.env !== "undefined" &&
+    Boolean(import.meta.env.DEV);
+  const isLocalHost =
+    cleanHost === "localhost" ||
+    cleanHost.endsWith(".localhost") ||
+    cleanHost === "lvh.me" ||
+    cleanHost.endsWith(".lvh.me") ||
+    cleanHost === "127.0.0.1";
+
+  if (isDevBuild || isLocalHost) {
+    const search =
+      searchOverride !== undefined
+        ? searchOverride
+        : typeof window !== "undefined"
+          ? window.location?.search
+          : null;
+    if (search) {
+      const urlParams = new URLSearchParams(search);
+      const queryTenant = urlParams.get("tenant");
+      if (queryTenant && queryTenant.trim()) {
+        return queryTenant.trim().toLowerCase();
+      }
+    }
+  }
 
   // Ignore bare IP addresses
   if (/^(\d{1,3}\.){3}\d{1,3}$/.test(cleanHost)) {
