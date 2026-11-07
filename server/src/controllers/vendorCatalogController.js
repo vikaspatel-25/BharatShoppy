@@ -299,7 +299,10 @@ export async function addVendorProduct(req, res) {
     }
 
     const productsCollection = mongoose.connection.db.collection("products");
-    const currentCount = await productsCollection.countDocuments({ storeId: store._id });
+    const currentCount = await productsCollection.countDocuments({
+      storeId: store._id,
+      isActive: { $ne: false },
+    });
     const quotaCheck = checkProductUploadQuota(store, currentCount);
 
     if (!quotaCheck.allowed) {
@@ -498,6 +501,23 @@ export async function updateVendorProduct(req, res) {
         if (!sizeCheck.valid) {
           return res.status(400).json({ message: sizeCheck.message });
         }
+      }
+    }
+
+    // Check quota if reactivating a deactivated product
+    if (existing.isActive === false && updates.isActive === true) {
+      const currentActiveCount = await productsCollection.countDocuments({
+        storeId: store._id,
+        isActive: { $ne: false },
+      });
+      const quotaCheck = checkProductUploadQuota(store, currentActiveCount);
+      if (!quotaCheck.allowed) {
+        return res.status(403).json({
+          message: quotaCheck.message,
+          reason: quotaCheck.reason,
+          currentCount: quotaCheck.currentCount,
+          limit: quotaCheck.limit,
+        });
       }
     }
 

@@ -198,7 +198,7 @@ export default function SubscriptionManager({
         <div className="pt-5 space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="font-bold text-stone-800">
-              Monthly Product Upload Quota
+              Total Active Catalog Items Quota
             </span>
             <span className="font-semibold text-stone-600">
               {usage?.totalProducts || 0} / {usage?.limit || 50} Items ({usage?.percentageUsed || 0}%)

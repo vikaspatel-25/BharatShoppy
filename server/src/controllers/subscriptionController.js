@@ -105,11 +105,14 @@ export async function getStoreSubscriptionInfo(req, res) {
     // Effective live status
     const effectiveStatus = isExpired ? "expired" : subscription.status || "active";
 
-    // Count products
+    // Count active products only
     const productsCollection = mongoose.connection?.db?.collection("products");
     let totalProducts = 0;
     if (productsCollection) {
-      totalProducts = await productsCollection.countDocuments({ storeId: store._id });
+      totalProducts = await productsCollection.countDocuments({
+        storeId: store._id,
+        isActive: { $ne: false },
+      });
     }
 
     // Fetch store's subscription requests

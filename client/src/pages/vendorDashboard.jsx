@@ -224,7 +224,7 @@ export default function VendorDashboard({
   const entityConfig = getEntityConfig(profileForm.entityType);
 
   const productLimit = store?.limits?.productMonthlyLimit || 50;
-  const currentProductCount = products.length;
+  const currentProductCount = products.filter((p) => p.isActive !== false).length;
   const remainingQuota = Math.max(0, productLimit - currentProductCount);
   const isSubscriptionActive = store?.subscription
     ? store.subscription.status === "active" || store.subscription.status === "trial"
