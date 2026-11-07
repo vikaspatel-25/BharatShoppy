@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { defaultPlans, calculateDiscount } from "../data/mockData/subscriptionPlans.js";
 import { resolveStoreByIdentifier } from "../middleware/authMiddleware.js";
 import { findVendorByStoreId } from "./vendorAuthController.js";
+import { getInMemoryStoreForRemoval } from "./adminVendorRemovalController.js";
 import {
   sendSubscriptionActivationEmail,
   sendSubscriptionDiscontinuationEmail,
@@ -348,6 +349,15 @@ export async function verifyPaymentRequest(req, res) {
       if (!store) {
         store = await resolveStoreByIdentifier(request.storeId);
       }
+      if (!store && typeof getInMemoryStoreForRemoval === "function") {
+        store = getInMemoryStoreForRemoval(request.storeId);
+      }
+
+      if (store?.removalStatus === "pending_deletion") {
+        return res.status(409).json({
+          message: "Cannot approve subscription request: store is pending removal.",
+        });
+      }
 
       if (store?.subscription?.expiresAt) {
         const parsedExpiry = new Date(store.subscription.expiresAt).getTime();
@@ -518,28 +528,77 @@ export async function adminDirectRenew(req, res) {
 
     const storesCollection = mongoose.connection?.db?.collection("stores");
     let store = req.store || (await resolveStoreByIdentifier(storeId));
+    if (!store && typeof getInMemoryStoreForRemoval === "function") {
+      store = getInMemoryStoreForRemoval(storeId);
+    }
 
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
     }
 
-    // 3. Early renewal: extend from the later of now and current expiry
-    const now = new Date();
-    let currentExpiry = 0;
-    if (store.subscription?.expiresAt) {
-      const parsedExpiry = new Date(store.subscription.expiresAt).getTime();
-      if (!isNaN(parsedExpiry)) {
-        currentExpiry = parsedExpiry;
-      }
+    if (store.removalStatus === "pending_deletion") {
+      return res.status(409).json({
+        message: "Cannot renew subscription: store is pending removal.",
+      });
     }
 
-    const baseTime = Math.max(now.getTime(), currentExpiry);
-    const expiresAt = new Date(baseTime + days * 86400000).toISOString();
+    // 3. Early renewal: extend from the later of now and current expiry (atomic retry loop)
+    let attempts = 0;
+    const maxAttempts = 3;
+    let updated = false;
+    let finalExpiresAt = null;
 
-    if (storesCollection) {
-      await storesCollection.updateOne(
-        { _id: store._id },
-        {
+    while (attempts < maxAttempts && !updated) {
+      attempts++;
+      const now = new Date();
+
+      if (attempts > 1) {
+        if (storesCollection) {
+          store = await storesCollection.findOne({ _id: store._id });
+        } else if (typeof getInMemoryStoreForRemoval === "function") {
+          store = getInMemoryStoreForRemoval(store._id) || store;
+        } else {
+          store = (await resolveStoreByIdentifier(storeId)) || store;
+        }
+
+        if (!store) {
+          return res.status(404).json({ message: "Store not found" });
+        }
+
+        if (store.removalStatus === "pending_deletion") {
+          return res.status(409).json({
+            message: "Cannot renew subscription: store is pending removal.",
+          });
+        }
+      }
+
+      const readExpiresAt = store.subscription?.expiresAt || null;
+      let currentExpiry = 0;
+      if (readExpiresAt) {
+        const parsedExpiry = new Date(readExpiresAt).getTime();
+        if (!isNaN(parsedExpiry)) {
+          currentExpiry = parsedExpiry;
+        }
+      }
+
+      const baseTime = Math.max(now.getTime(), currentExpiry);
+      const expiresAt = new Date(baseTime + days * 86400000).toISOString();
+      finalExpiresAt = expiresAt;
+
+      if (storesCollection) {
+        const query = {
+          _id: store._id,
+          ...(readExpiresAt
+            ? { "subscription.expiresAt": readExpiresAt }
+            : {
+                $or: [
+                  { "subscription.expiresAt": null },
+                  { "subscription.expiresAt": { $exists: false } },
+                ],
+              }),
+        };
+
+        const updateResult = await storesCollection.updateOne(query, {
           $set: {
             "subscription.plan": selectedPlan.planId,
             "subscription.status": "active",
@@ -551,14 +610,33 @@ export async function adminDirectRenew(req, res) {
             isActive: true,
             updatedAt: now.toISOString(),
           },
+        });
+
+        if (updateResult.matchedCount > 0) {
+          updated = true;
         }
-      );
+      } else {
+        if (store._simulatedConcurrentChange && attempts === 1) {
+          store.subscription = store.subscription || {};
+          store.subscription.expiresAt = store._simulatedConcurrentChange;
+          delete store._simulatedConcurrentChange;
+          continue;
+        }
+        updated = true;
+      }
     }
 
+    if (!updated) {
+      return res.status(409).json({
+        message: "Failed to renew subscription atomically due to concurrent update. Please retry.",
+      });
+    }
+
+    const expiresAt = finalExpiresAt;
     store.subscription = store.subscription || {};
     store.subscription.plan = selectedPlan.planId;
     store.subscription.status = "active";
-    store.subscription.startDate = now.toISOString();
+    store.subscription.startDate = new Date().toISOString();
     store.subscription.expiresAt = expiresAt;
     store.limits = store.limits || {};
     store.limits.productMonthlyLimit = selectedPlan.productMonthlyLimit || 50;

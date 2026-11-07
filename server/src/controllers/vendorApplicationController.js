@@ -609,25 +609,32 @@ export async function approveApplication(req, res) {
       inMemoryApplications.set(id, app);
     }
 
-    // 2. Insert new store with insertOne (fails with 409 if duplicate slug/subdomain)
+    // 2. Insert new store with insertOne (fails with 409 if duplicate slug/subdomain, or reverts to pending and returns 500 on other errors)
     const storesCol = getStoresCollection();
     if (storesCol) {
       try {
         await storesCol.insertOne(newStore);
       } catch (insertErr) {
+        // Revert application claim on ANY store insert failure
+        if (appCol) {
+          await appCol.updateOne({ _id: id }, { $set: { status: "pending", storeId: null } });
+        } else {
+          app.status = "pending";
+          app.storeId = null;
+          inMemoryApplications.set(id, app);
+        }
+        app.status = "pending";
+        app.storeId = null;
+
         if (insertErr.code === 11000 || insertErr.message?.includes("E11000")) {
-          // Revert application claim
-          if (appCol) {
-            await appCol.updateOne({ _id: id }, { $set: { status: "pending", storeId: null } });
-          } else {
-            app.status = "pending";
-            app.storeId = null;
-          }
           return res.status(409).json({
             message: `A store with slug '${app.slug}' or subdomain '${app.subdomain}' already exists.`,
           });
         }
-        throw insertErr;
+        console.error("Failed to insert store during application approval:", insertErr);
+        return res.status(500).json({
+          message: "Failed to create store for approved application. Application reverted to pending.",
+        });
       }
     }
 
