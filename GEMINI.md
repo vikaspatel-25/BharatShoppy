@@ -15,6 +15,14 @@ Start every session by saying: `Protocol loaded: <phase> / <first assigned task>
 8. Set the task to `IN REVIEW` and add a `HANDOFF.md` entry, newest first, below the current assignment.
 9. Continue through the batch without stopping between tasks. If a task is blocked, mark it `BLOCKED`, continue with tasks that don't depend on it, and list all questions at the end.
 
+## Reference project (panel rebuild)
+`C:\Users\VikasPatel\Desktop\myProjects\NBP_digitalCatalogue` is a different product, used only as a model for the `P` tasks.
+- Read it, and change nothing in it. Don't run its scripts, its server or its tests, and don't install anything there.
+- Don't open its `.env`, `.env.local` or `atlas-credentials.env`. They hold another product's live credentials.
+- Take the structure and behaviour the task prompt names, and write BharatShopy's own code for it. Don't bring over NetZeroMart's name, logo, colours, wording, images, or features that "Panel rebuild" lists as not copied.
+- It uses `axios`, Mongoose models and password login. This project uses `apiFetch`, native collections and email codes. Keep this project's ways, and add no dependency unless a task prompt says so.
+- If the reference and a task prompt disagree, follow the prompt and note it in `HANDOFF.md`.
+
 ## Never
 - Mark your own work `DONE`.
 - Weaken or delete tests.

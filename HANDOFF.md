@@ -2,10 +2,34 @@
 
 The only communication channel between Claude Code and Gemini. Newest entries go first, below the current assignment.
 
-## Current assignment: none
-No task is assigned. Make no changes until a new batch appears here. Next steps belong to the owner: preview deployment and production setup.
+## Current assignment: Batch 8 (panel foundations)
+Phase `PANELS`. Read "Panel rebuild" in `CLAUDE.md` first, then the task prompts.
+
+**Implementer changed on 2026-11-12:** the owner told Claude Code to implement `P1` to `P9` itself. Gemini: make no changes for these tasks unless the owner reassigns them.
+
+| Order | Task | Branch | Starts from |
+|---|---|---|---|
+| 1 | `P1` Panel design system and shared UI | `fix/P1-panel-design-system` | `fixes/base` |
+| 2 | `P2` Panel data APIs and one plan-status rule | `fix/P2-panel-data-apis` | `fix/P1-panel-design-system` |
+| 3 | `P3` Admin audit log and notifications | `fix/P3-audit-log-notifications` | `fix/P2-panel-data-apis` |
+| 4 | `P4` Listing moderation | `fix/P4-listing-moderation` | `fix/P3-audit-log-notifications` |
+
+- `fixes/base` and `main` are the same commit (`4c8f4fb`). Commit the protocol file edits on `fix/P1-panel-design-system` before the `P1` commit, with "Protocol" in the message.
+- The branches form a chain, so each task has the earlier ones. Don't merge into `fixes/base`. Claude reviews first.
+- This batch changes no existing screen. `P1` adds files and one CSS import. `P2` to `P4` are server work, plus the `moderation` field reaching the vendor API.
+- The reference project is read-only. Follow the rule about it in `GEMINI.md`.
+- Run tests, lint and build once at the end of the batch, as `GEMINI.md` rule 6 says, and write one batch entry with the results.
+- Planned next, not assigned yet: Batch 9 (`P5`, `P6`, `P7`, `P9`: the shell and all pages) and Batch 10 (`P8`: plans in the database).
 
 ## Entries
+
+### 2026-11-12 Panel rebuild plan (Claude to Gemini)
+- Result: the owner asked for both panels to be rebuilt on the structure of the NetZeroMart project. Phase set to `PANELS`. Tasks `P1` to `P9` added to `CLAUDE.md`, and Batch 8 assigned.
+- Checked in the reference project: `frontend/src/App.jsx`, `layouts/PanelLayout.jsx`, `components/ui.jsx`, `ListingManager.jsx`, `formParts.jsx`, `vendorParts.jsx`, `PlanPicker.jsx`, `NotificationBell.jsx`, the dashboard, applications, subscription and onboarding pages in full, the other pages in outline, `design-system/theme.css`, the route table, both auth middlewares, the user, plan, request, audit, notification and settings models, the quota, visibility, audit and notification services, the vendor directory controller, and `design-audit/FINDINGS.md`.
+- Checked here: `AppRoutes.jsx`, `AdminDashboard.jsx`, `vendorDashboard.jsx`, `apiClient.js`, `App.css`, the server route table, `subscriptionController.js` in part, `catalogVisibility.js`, the plan data, the tenant helpers, and the session cookie settings.
+- Found here while planning, each covered by a task: plan status computed three different ways, and an invented active subscription for stores without one (`P2`); plans read from the database in one function and from memory in the rest (`P8`); the marketplace header rendered above both panels, and `/admin/:storeId` left over (`P5`); `signMediaUpload` has no plan or quota check (`P6` reports on it).
+- Not checked: the reference project wasn't run and no screen was opened in a browser, in either project. Its `.env` files and `atlas-credentials.env` weren't opened. `productUploadModal.jsx`, `store.jsx` and the three sign-in pages here weren't read in full.
+- Open for the owner: `Q6` (colours), `Q7` (vendor self-deletion), `Q8` (saved enquiry inbox).
 
 ### 2026-11-07 Batch 7 review (Claude to Gemini)
 - Result: the merge is accepted. `fixes/base` is at `7ee2765` and contains every reviewed task. `main` (`be02ced`) can fast-forward to it, 48 commits.

@@ -1,6 +1,6 @@
 # BharatShoppy: Project Protocol
 
-Current phase: FIXES
+Current phase: PANELS
 
 ## Project summary
 A local marketplace where shopkeepers, farmers and service providers list items. Customers browse and send enquiries over WhatsApp. Each store can also have its own subdomain storefront.
@@ -9,6 +9,7 @@ A local marketplace where shopkeepers, farmers and service providers list items.
 - `server/`: Express 5, MongoDB through the native collections on `mongoose.connection.db`. Deployed on Vercel as `bharat-shoppy-server.vercel.app`.
 - `client/vercel.json` rewrites `/api/*` to the server, so the browser sees the API as same-origin.
 - CI: `.github/workflows/ci.yml`.
+- Reference project for the panel rebuild: `C:\Users\VikasPatel\Desktop\myProjects\NBP_digitalCatalogue` (NetZeroMart), read-only. See "Panel rebuild".
 
 | Purpose | Command |
 |---|---|
@@ -23,6 +24,7 @@ A local marketplace where shopkeepers, farmers and service providers list items.
 - **Gemini (implementer):** makes all code changes, following `GEMINI.md`.
 - **Owner:** makes product decisions, merges to `main`, pushes, and approves anything touching production.
 - `HANDOFF.md` is the only communication channel between the two tools.
+- **Exception for the panel rebuild:** on 2026-11-12 the owner told Claude Code to implement tasks `P1` to `P9` itself, without stopping between tasks. For those tasks Claude Code is the implementer and follows the branching rule and the `HANDOFF.md` entry format. Nobody has reviewed that work, so its tasks stop at `IN REVIEW` until the owner or another reviewer checks them.
 
 ## Branching rule
 - One branch per task, named `fix/<ID>-short-name`, with one local commit per task.
@@ -50,16 +52,83 @@ Decided 2026-11-06. Do not report these as bugs.
 - **Plan and store claims:** the site must not promise anything that isn't built. Analytics, priority ranking and 24/7 support are removed from plans until they exist. Nothing is called verified, because no verification process exists.
 - **Demo data:** all stores sharing one phone number, and the made-up demo store details, are acceptable only as demo data. See `M6` for what must happen before real launch.
 
+## Panel rebuild
+Requested by the owner on 2026-11-12: study the admin panel and vendor portal of NetZeroMart (the reference project, called NBP below) and rebuild both BharatShopy panels the same way, adapted to this product. The current panels (`client/src/pages/AdminDashboard.jsx`, `client/src/pages/vendorDashboard.jsx`, `client/src/components/vendor/subscriptionManager.jsx`) are replaced, not restyled.
+
+### How NBP is built
+- **One shell for both panels:** `frontend/src/layouts/PanelLayout.jsx` takes a navigation config (groups of links with icons and count badges) and renders a fixed sidebar, a header that names the current page, a "View site" link and a sign-out button. On phones the sidebar becomes a drawer. `frontend/src/App.jsx` wraps each page in an admin or vendor layout, loads every page with `lazy`, and sets the browser tab title from the same navigation config.
+- **One design system:** `design-system/theme.css` holds colour tokens and a small set of component classes (`card`, `btn`, `input`, `badge`, `notice`). `frontend/src/components/ui.jsx` holds the shared parts every page uses: `PageHeader`, `StatCard`, `EmptyState`, `LoadingState`, `Modal`, `Notice`, `StatusBadge`, `UsageBar`, `SearchInput`, `Field`, `FormSection`, `AuthLayout`. Pages contain almost no one-off styling.
+- **One page per job, each with its own URL:** the admin has a dashboard, applications, vendor directory, plan requests, plans and limits, listing moderation and an audit log. The vendor has a dashboard, add and edit product pages, plan and usage, and company profile.
+- **Tenant model:** NBP has no subdomains. Its tenant is the vendor account. Every listing carries the vendor's ID, every vendor request is scoped by the session, and the plan's limits are copied onto the vendor record when an admin activates the plan. Public visibility is computed from the vendor's status and plan expiry (`src/services/catalogVisibility.js`). BharatShopy already has the stronger model (a store per vendor with a slug and a subdomain, `requireStoreOwner`, `req.store`), so the tenant model is kept and only the parts below are added to it.
+- **Admin workflow support on the server:** a vendor directory API that returns every vendor with a computed plan status and totals, a removal-impact count shown before a vendor is removed, an audit log of every admin action (`src/services/auditLogService.js`), admin notifications with a bell (`src/services/notificationService.js`), listing hide and restore with a reason (`src/controllers/moderation.js`), and plans stored in the database with an editor.
+
+### What maps to what
+| NBP | BharatShopy |
+|---|---|
+| `PanelLayout`, `ui.jsx`, `theme.css`, toast and error boundary | Same, in `client/src` (`P1`, `P5`) |
+| Admin dashboard with counts and links | `/admin` (`P7`) |
+| Applications (cards, approve, reject dialog) | `/admin/applications`, using the existing application routes (`P7`) |
+| Vendor directory (status tabs, detail dialog, set or renew plan, end plan, reminder, remove with hold) | `/admin/vendors`. Replaces the "Direct Store Override" form, where the admin types a store ID (`P2`, `P7`) |
+| Plan requests (status tabs, activate, decline) | `/admin/plan-requests` (`P7`) |
+| Listing moderation (hide with a reason, restore) | `/admin/listings` (`P4`, `P7`) |
+| Audit log and notification bell | `/admin/audit-log` and the panel header (`P3`, `P7`) |
+| Plans and limits editor | `/admin/plans` (`P8`) |
+| Vendor dashboard (banners, counts, usage, links) | `/vendor` (`P6`) |
+| Add, edit and remove product pages | `/vendor/items`, `/vendor/items/new`, `/vendor/items/:productId` (`P6`) |
+| Company profile | `/vendor/store` (`P6`) |
+| Plan and usage | `/vendor/plan` (`P6`) |
+| Onboarding page | A getting-started checklist on the vendor dashboard (`P6`) |
+| Sign-in and registration pages on `AuthLayout` | `VendorLogin`, `AdminLogin`, `VendorApply` (`P9`) |
+
+Not copied, because the product decisions above rule them out or the feature doesn't exist here: articles, the stored buyer inquiry inbox (enquiries go to WhatsApp and aren't saved), passwords and password change for vendors (login is by email code), registration documents and the partner declaration, admin add and edit of products, permanent product deletion, monthly quota resets, and vendor self-service account deletion (`Q7`).
+
+### Panel decisions
+Set by Claude on 2026-11-12 as defaults so work can start. The owner can change any of them.
+
+- **Look:** NBP's layout, spacing and component set, with BharatShopy's own colours: orange as the brand colour (as the current vendor panel uses), blue for links and focus rings, `stone` neutrals, and the Geist font already installed. No NetZeroMart colours, logo, name or text. Both panels use the same light theme, so the dark admin theme goes (`Q6`).
+- **Hosts:** the admin panel is served only on the marketplace host. The vendor portal is served at `/vendor/*` on the marketplace host and on the vendor's own subdomain. Session cookies stay host-only, as now.
+- **Panel chrome:** the marketplace header isn't shown on panel or sign-in pages.
+- **Plan status:** every screen and API computes it from the expiry date with one shared helper. A stored status alone is never shown.
+- **Dates:** one format everywhere, such as "8 Nov 2026", in Indian time.
+- **Listing moderation:** an admin can hide a listing with a reason and restore it. The vendor sees the reason and can't unhide it. This is separate from the vendor's own active and inactive switch. Admins still can't add or edit products.
+- **Plans:** stored in the database and edited by the admin. A change applies to a store at its next activation or renewal, and current subscribers keep their limits until then. Plan text still can't promise anything that isn't built (`M6`).
+- **Audit log:** every admin action that changes data is recorded, without codes, tokens, passwords or secrets.
+- **Dialogs:** no `window.prompt`, `window.confirm` or `alert` anywhere in the panels.
+
+### Lessons from NBP's own browser test
+`design-audit/FINDINGS.md` in the reference project lists what broke there. These are requirements here:
+1. A page must import every React hook it uses. NBP shipped a page that crashed on load without one. Port its test, `test/frontendHookImports.test.js`.
+2. Error text passed to a toast or notice must be a string. An object from an upload error crashed a whole NBP page and lost the form.
+3. After a save or an error, scroll the panel's `<main>` to the top. The panel scrolls inside `<main>`, so `window.scrollTo` alone does nothing.
+4. Show a lasting notice on the page after a save, not only a toast that disappears.
+5. Refresh the sidebar count badges on every page change, or they go stale after the admin clears a queue.
+6. Show the plan's name, never its ID.
+7. Keep long names readable: two lines with the full text in a `title`, never a single cut-off line with no way to read it.
+8. Check the quota and plan status before any photo upload starts, so a refused save doesn't leave unused photos in Cloudinary.
+9. Generate a plan's quota lines from its numbers. NBP's free-text feature list said 50 where the limit was 5.
+
 ## Open questions for the owner
 - `Q2`: The owner must create a Gmail app password and set `GMAIL_USER`, `GMAIL_APP_PASSWORD` and `ADMIN_EMAIL`. Real login in production needs them.
 - `Q4`: The owner must create a Cloudinary account and set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET`. Real uploads in production need them.
 - `Q5`: The owner must set `CRON_SECRET` in Vercel for the server project. Permanent deletion of removed vendors after the 7-day hold needs it.
+- `Q6`: Panel colours. The default is BharatShopy orange with a light theme for both panels. Say so if you want NetZeroMart's green and blue, or another palette.
+- `Q7`: NBP lets a vendor request deletion of their own account. It isn't built here, because vendor removal was decided as an admin action. Say so if vendors should be able to request it.
+- `Q8`: NBP saves every buyer inquiry and shows an inbox in both panels. Here enquiries go straight to WhatsApp and nothing is saved, so there's no inbox. Building one means saving customer details, which needs your decision and the legal pages (`M7`).
 
 ## Status
 Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOCKED`.
 
 | ID | Priority | Task | Depends on | Status | Notes |
 |---|---|---|---|---|---|
+| P1 | P1 | Panel design system and shared UI | none | TODO | Batch 8 |
+| P2 | P1 | Panel data APIs and one plan-status rule | none | TODO | Batch 8 |
+| P3 | P1 | Admin audit log and notifications | P2 | TODO | Batch 8 |
+| P4 | P1 | Listing moderation: hide and restore | P3 | TODO | Batch 8 |
+| P5 | P1 | Panel shell, routes and session guards | P1, P2 | TODO | Batch 9 |
+| P6 | P1 | Vendor portal pages | P5, P4 | TODO | Batch 9 |
+| P7 | P1 | Admin panel pages | P5, P3, P4 | TODO | Batch 9 |
+| P9 | P3 | Sign-in and application pages on the shared layout | P5 | TODO | Batch 9 |
+| P8 | P2 | Plans in the database and the plan editor | P7 | TODO | Batch 10 |
 | T0 | P0 | Commit uncommitted work as a baseline | none | DONE | Batch 1 |
 | C3 | P0 | Guard seeding and auto-seeding | T0 | DONE | Batch 1 |
 | A1 | P0 | Admin authentication | T0 | DONE | Reviewed |
@@ -97,6 +166,111 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 Line numbers refer to the uncommitted working tree at audit time. If they have moved, find the code by name.
 
 ## Task prompts
+
+Tasks `P1` to `P9` are the panel rebuild. Read "Panel rebuild" above first. Paths that start with `frontend/`, `design-system/` or `src/` are in the reference project. Read them for structure and behaviour, then write BharatShopy's own version: don't copy NetZeroMart's name, logo, colours, wording or features that the "Not copied" list rules out.
+
+### P1: Panel design system and shared UI
+**Problem:** The two panels share nothing. `AdminDashboard.jsx` is a dark slate theme, `vendorDashboard.jsx` is light with orange, and each repeats its own buttons, inputs, alerts and tables inline with 11px and 12px text. There are no shared form, dialog, empty-state or loading parts, no toast, and no error boundary, so a render error blanks the whole app.
+**Fix:**
+1. Add `client/src/styles/panelTheme.css`, modelled on `design-system/theme.css`, and import it from `client/src/App.css`. Define a `brand` scale from Tailwind's orange values and keep the blue `ocean` scale for links and focus rings. Keep the card radius and the two shadows. Add the component classes `card`, `card-body`, `btn` with its `sm`, `lg`, `primary`, `secondary`, `ghost` and `danger` variants, `link`, `field-label`, `field-hint`, `field-error`, `input`, `input-invalid`, `checkbox`, `badge` with its variants, and `notice` with its four tones. Use the Geist font already installed, and don't load a font from a network. Don't copy the `body`, heading or selection rules from the base layer, because they would restyle the public pages.
+2. A search on 2026-11-12 found no existing use of these class names in `client/src`. Search again before adding them, and stop and report if any public markup uses one.
+3. Add `client/src/components/panel/ui.jsx` with `Field`, `inputClass`, `FormSection`, `Notice`, `Modal`, `PageHeader`, `StatCard`, `EmptyState`, `LoadingState`, `UsageBar`, `StatusBadge`, `SearchInput`, `BrandMark` and `AuthLayout`, modelled on `frontend/src/components/ui.jsx`. Changes from the reference: `Modal` closes on Escape, moves focus into the dialog when it opens and returns it on close; `UsageBar` says how many are left without "this month", because the quota never resets; `BrandMark` shows the text `BharatShopy` and uses no NetZeroMart asset.
+4. Add `client/src/context/ToastContext.jsx` and `client/src/components/ErrorBoundary.jsx`, modelled on the reference files. A toast must render a non-string message safely.
+5. Add `client/src/lib/formatDate.js` with `formatDisplayDate` ("8 Nov 2026", Indian time) and `getTodayIstDateString`, and `client/src/lib/scrollPanel.js` with `scrollToTop`, which also scrolls the panel's `<main>`.
+6. Add `client/tests/hookImports.test.js`, ported from `test/frontendHookImports.test.js`, covering `client/src/pages`, `client/src/components`, `client/src/layouts` and `client/src/context`.
+7. Don't change any existing page in this task.
+**Verify:** Tests cover `formatDisplayDate` (a date near midnight UTC shows the Indian date, and an invalid value returns an empty string) and the hook-import check. Client tests, lint and build pass. The built CSS contains the new classes. List the browser checks you didn't run.
+
+### P2: Panel data APIs and one plan-status rule
+**Problem:** The admin has no list of stores or vendors. To renew, end or remind, the admin types a store ID into a form (`AdminDashboard.jsx:599-686`). There's no count of anything for a dashboard, and no way for the client to ask whether an admin session exists. Plan status is worked out in three places that disagree: `catalogVisibility.js:13-40`, `getStoreSubscriptionInfo` (`subscriptionController.js:69-156`), and the client (`vendorDashboard.jsx:229-231`). `getStoreSubscriptionInfo` invents an active `yearly_standard` plan ending a year from now for any store with no subscription record (`:82-87`), and falls back to the ₹1,200 plan for an unknown plan ID (`:133`).
+**Fix:**
+1. Add `server/src/services/subscriptionStatus.js` with one function that takes a store and the current time and returns `computedStatus` (`active`, `expired`, `none` or `removal_hold`), `remainingDays`, `isExpiringSoon` (active with 30 days or fewer left) and `expiresAt`. Use it in `catalogVisibility.js`, `getStoreSubscriptionInfo` and the new routes below. Keep the existing public visibility rules exactly, including the one for stores with no subscription record, and add a test that pins them.
+2. In `getStoreSubscriptionInfo`, stop inventing a subscription. For a store with no record, return what the helper computes and no made-up dates. For an unknown plan ID, return the ID with no plan details instead of another plan's.
+3. Add `GET /api/admin/auth/me`, behind `requireAdmin`, returning the admin's email and nothing secret.
+4. Add `GET /api/admin/vendors`, behind `requireAdmin`. Each row joins a store with its vendor: `vendorId`, `storeId`, store name, slug, subdomain, entity type, city, vendor email, contact phone, plan ID and plan name, the helper's fields, the removal state with days left in the hold, and the count of active items. Support `search` (store name, slug, email), `status` (the computed status, plus `expiring`), `skip` and `limit` with a maximum. Also return totals per status for the tabs, computed over all stores, not only the page returned. Use projections and counts as `M3` required, not whole collections per row.
+5. Add `GET /api/admin/vendors/:vendorId/removal-impact`, returning the store name and the counts of items and photos that removal would delete.
+6. Add `GET /api/admin/overview`, returning: applications waiting, plan requests waiting, stores per computed status, and active items.
+7. In `getAdminPaymentRequests` (`subscriptionController.js:253-287`), also return the vendor's email and the totals per status.
+8. Add the new routes to the table-driven test in `server/tests/protectedRoutes.test.js`.
+**Verify:** Tests cover: the helper for active, expiring, expired, no record and removal hold, using injected time; a store whose stored status is `active` but whose expiry has passed is listed as expired; the directory search, status filter, page limit and totals; the removal-impact counts; no invented subscription for a store without one; every new route returning 401 without a cookie and rejecting a vendor cookie. Existing tests pass unchanged, apart from any that asserted the invented subscription: list those in `HANDOFF.md` with the reason.
+
+### P3: Admin audit log and notifications
+**Problem:** Nothing records who approved, rejected, renewed, ended or removed what. The admin learns of a new application or plan request only from email, which `E1` allows to fail without losing the record.
+**Fix:**
+1. Add `server/src/services/auditLogService.js` with `logAdminAction({ req, action, targetType, targetId, targetName, details })`, modelled on `src/services/auditLogService.js`. It writes to an `admin_audit_log` collection: the admin's ID and email, the action, the target, a details object, the client IP read the way the rate limiter reads it, and the time. Drop any details key containing `password`, `token`, `secret`, `code`, `otp`, `cookie` or `hash`, and cut strings longer than 500 characters. A logging failure must never fail the request: catch it and log it on the server. Await the write, as Vercel can stop background work.
+2. Call it after each successful admin change: approve and reject application, approve and reject plan request, direct renew, discontinue, send renewal reminder, remove vendor and cancel removal. `P4` and `P8` add their own calls.
+3. Add `GET /api/admin/audit-log`, behind `requireAdmin`, newest first, with `page`, a capped `limit`, and filters for `action`, `targetType` and a text search on the target name.
+4. Add `server/src/services/notificationService.js` and an `admin_notifications` collection, modelled on `src/services/notificationService.js`. Create a notification when a vendor application is submitted, when a plan request is submitted, and when a vendor changes the store name. Each has a type, title, message, and a link to the admin page that handles it. Failure to create one must not fail the request.
+5. Add `GET /api/admin/notifications` (latest 20 by default, plus the unread count) and `POST /api/admin/notifications/mark-read` (one ID or all), behind `requireAdmin`. Validate the ID.
+6. Add both collections' indexes to `server/scripts/createIndexes.js`: by time, and for notifications by read state. Document them in `docs/operations.md`.
+**Verify:** Tests cover: each listed admin action writing one entry with the right action and target; a failed action writing none; a details key named `code` being dropped; a logging failure not failing the request; the log route's paging and filters; notifications created by the three events; mark one and mark all; every new route returning 401 without a cookie and rejecting a vendor cookie. Mark as not verified anything that needs real MongoDB.
+
+### P4: Listing moderation: hide and restore
+**Problem:** The admin can't see listings at all, and the only way to take down a bad listing is to remove the whole vendor.
+**Fix:**
+1. Add `GET /api/admin/listings`, behind `requireAdmin`: items across all stores with the item name, first photo, price, store name and slug, the vendor's active flag, and the moderation state. Support `search` (item or store name), `storeId`, `state` (`visible`, `hidden`), `skip` and a capped `limit`, and return the total.
+2. Add `POST /api/admin/listings/:productId/hide`, with a required `reason` of 5 to 500 characters, and `POST /api/admin/listings/:productId/restore`. Store the state on the product as `moderation: { status: "hidden", reason, hiddenAt }`, separate from `isActive`. Restore clears it. Hiding a hidden item or restoring a visible one returns 409.
+3. Exclude hidden items everywhere the public can see items: `filterProductsByActiveStores`, the product page (404), the store page, store product search and global search. Put the rule in one place in `catalogVisibility.js`.
+4. Return `moderation` to the vendor in `getVendorDashboardData`. Remove `moderation` from anything a vendor can write: it must not be in the `H1` allowlist, and a vendor's update or reactivation must not clear it.
+5. A hidden item keeps counting toward the quota while the vendor leaves it active. Don't change the quota rule.
+6. Email the vendor the item name and the reason through `emailService.js`, escaped as `R2` item 10 requires, and awaited. If the email fails, keep the change and return a warning. Log both actions with `logAdminAction`.
+7. Admins still can't add, edit or delete products.
+**Verify:** Tests cover: a hidden item missing from the feed, global search, store search and the store page, and returning 404 on its product page; restore bringing it back; a vendor update with `moderation` in the body leaving it hidden; a missing or short reason returning 400; hiding twice returning 409; a failed email keeping the change with a warning; HTML in the reason escaped in the email; the list route's filters; every route returning 401 without a cookie and rejecting a vendor cookie; an audit entry for each action.
+
+### P5: Panel shell, routes and session guards
+**Problem:** Each panel is one page with tabs held in component state (`vendorDashboard.jsx:33`, `AdminDashboard.jsx:20`), so no screen has its own URL, the back button leaves the panel, and a refresh always returns to the first tab. `AppRoutes.jsx:47-69` renders the marketplace header above `/vendor` and `/admin`. Every page is imported up front (`AppRoutes.jsx:3-11`), so shoppers download both panels. `/admin/:storeId` is a leftover route.
+**Fix:**
+1. Add `client/src/layouts/PanelLayout.jsx`, modelled on `frontend/src/layouts/PanelLayout.jsx`: navigation groups with icons and count badges, `aria-current` on the active link, a drawer on small screens that closes after navigating, a header that names the current page, and a slot for header extras. Use the `overflow-clip` container and the `relative` `<main>` the reference uses, for the reasons in its comments. Sign-out calls the existing logout route with `apiFetch` and then goes to the sign-in page. For the vendor, the header links to the vendor's own storefront. For the admin, it links to the marketplace.
+2. Vendor routes, on the marketplace host and on tenant subdomains: `/vendor` (dashboard), `/vendor/items`, `/vendor/items/new`, `/vendor/items/:productId`, `/vendor/store`, `/vendor/plan`. Redirect `/manage` to `/vendor`. Admin routes, on the marketplace host only: `/admin`, `/admin/applications`, `/admin/vendors`, `/admin/plan-requests`, `/admin/listings`, `/admin/audit-log`. Remove `/admin/:storeId`. On a tenant subdomain, `/admin` paths keep falling through to the storefront.
+3. Add a vendor session provider that calls `/api/vendor/auth/me` once, exposes the vendor and `storeId` to every vendor page, shows `LoadingState` while it waits, and sends a signed-out visitor to `/vendor/login`. Add the same for the admin with `/api/admin/auth/me` and `/admin/login`.
+4. Don't render the marketplace header on panel routes or on the sign-in and application pages.
+5. Load every panel page and the public pages with `lazy` inside a `Suspense` with `LoadingState`. Wrap the app in `ErrorBoundary` and `ToastProvider`.
+6. Set the browser tab title on each route from the navigation config, in the form "Items · Vendor portal | BharatShopy".
+7. In this task the new routes may render placeholder pages that show only a `PageHeader`. `P6` and `P7` fill them. Keep the old `/vendor` and `/admin` pages working at their paths until then, so the app is never without a panel.
+**Verify:** Tests cover the route table in the style of `client/tests/domainRouting.test.js`: tenant hosts serve vendor routes and no admin route; the marketplace serves both. Client tests, lint and build pass, and the build output has separate chunks for panel pages. List the browser checks you didn't run: drawer on a phone, keyboard use of the sidebar, back button, refresh on a deep link.
+
+### P6: Vendor portal pages
+**Problem:** The vendor portal is one 926-line page. Adding an item is a modal (`productUploadModal.jsx`, 987 lines) that loses everything if it closes. The dashboard shows no plan name, status or expiry. Text is 11px and 12px on a phone, where most vendors will use it. The profile form has no field errors.
+**Fix:** Build these pages on `PanelLayout` and the `P1` parts, then delete `vendorDashboard.jsx`, `subscriptionManager.jsx` and `productUploadModal.jsx`. Every page takes the store from the session provider.
+1. **Dashboard (`/vendor`)**, modelled on `frontend/src/pages/VendorDashboard.jsx`: a banner when the plan has ended, when 30 days or fewer are left, or when the store is in a removal hold, each with one action; counts of active and inactive items; a `UsageBar` for items against the plan limit; the plan name and end date; the storefront link with copy and QR buttons, reusing `StoreQrModal`; quick links. For a new store, show a getting-started checklist worked out from the data, with no new database field: complete the store profile, add the first item, share the store link.
+2. **Items (`/vendor/items`)**, modelled on `frontend/src/components/ListingManager.jsx`: search, a list that reads well on a phone, the photo with the `M8` fallback, price, a status badge, edit, and an active or inactive switch that asks for confirmation in a `Modal` before deactivating. An item hidden by the admin shows "Hidden by BharatShopy" and the reason, and its switch is disabled. Show the server's message when reactivating fails at the quota. No permanent delete.
+3. **Add and edit item (`/vendor/items/new`, `/vendor/items/:productId`)**: a full page of numbered `FormSection`s, modelled on `frontend/src/pages/AddProduct.jsx`. Move the existing form logic out of the modal without changing behaviour: entity-specific fields, compression, direct Cloudinary upload with progress, `imageAssets`, the plan's photo limit, and the touch-friendly Remove and Cover buttons from `H2`. Keep `client/tests/productUpload.test.js` passing. Before any upload starts, block the save with a clear notice when the plan has ended or the quota is full. Show field errors beside the fields and scroll to the first one. After a save, go to the items list with a lasting notice.
+4. **Store profile (`/vendor/store`)**: the current profile form in `FormSection`s with `Field` errors from the `M1` validation messages, the read-only store address, and the entity type picker as real radio inputs.
+5. **Plan and usage (`/vendor/plan`)**, modelled on `frontend/src/pages/SubscriptionManager.jsx`: the current plan with its status and end date, usage, plan cards as radio inputs, the request form with the note, and the history of requests. Keep the wording honest about manual payment: the team contacts the vendor, then activates the plan. None of the words `E1` bans.
+6. Follow every item in "Lessons from NBP's own browser test". Use `formatDisplayDate` for every date and toasts plus a lasting `Notice` for results.
+7. Update `client/tests/accessibility.test.js` to assert the same things against the new files. Don't weaken it.
+**Verify:** Client tests, lint and build pass. Search finds no `/api/admin/` call in vendor files, no `window.prompt`, `window.confirm` or `alert(`, and no remaining import of the three deleted files. `signMediaUpload` currently has no plan or quota check of its own: report under "New problems found" whether a refused save can still leave photos in Cloudinary. List the phone, keyboard and real-upload checks you didn't run.
+
+### P7: Admin panel pages
+**Problem:** The admin panel is one dark page with three tabs. Rejecting an application uses `window.prompt` (`AdminDashboard.jsx:93`) and ending a plan uses `window.confirm` (`:198`). Renew, remind and discontinue need a typed store ID. There's no vendor list, no way to remove a vendor or cancel a removal from the screen although the routes exist, no resend-email button although `E1` built the routes, and after a renewal nothing on the page changes.
+**Fix:** Build these pages on `PanelLayout` and the `P1` parts, then delete `AdminDashboard.jsx`.
+1. **Dashboard (`/admin`)**, modelled on `frontend/src/pages/AdminDashboard.jsx`: a notice when applications or plan requests are waiting, stat cards from `/api/admin/overview`, and link panels with counts.
+2. **Applications (`/admin/applications`)**, modelled on `frontend/src/pages/UserApproval.jsx`: status tabs with waiting first, search, a card per application with every submitted detail and copy buttons for email and phone, approve, and reject in a `Modal` that requires the reason. When the server returns an email warning, show it with a resend button that calls the existing route.
+3. **Vendor directory (`/admin/vendors`)**, modelled on `frontend/src/pages/UserManagement.jsx`: status tabs with totals (all, active, ending soon, ended, no plan, removal hold), search, and a table that drops columns on small screens. A row opens a detail `Modal` with the store link, contact details and these actions: set or renew plan (plan cards as radio inputs and a duration from 1 to 366 days, showing the resulting end date, which extends from the current expiry as `H6` decided), end plan now with confirmation, send renewal reminder, resend the last plan email, remove vendor (show the removal-impact counts and require confirmation that names the 7-day hold), and cancel removal during the hold. After every action, reload the row from the server. Never patch it locally.
+4. **Plan requests (`/admin/plan-requests`)**, modelled on `frontend/src/pages/AdminPaymentRequests.jsx`: status tabs with totals, search, activate with the duration and resulting end date, and decline with a reason.
+5. **Listings (`/admin/listings`)**: search, a store filter, a visible or hidden filter, hide with a required reason in a `Modal`, and restore. Show the item name and store name on every row.
+6. **Audit log (`/admin/audit-log`)**, modelled on `frontend/src/pages/AdminAuditLogs.jsx`: paging, filters, a readable label and colour per action, and a detail `Modal` that lists the details as labelled rows, never raw JSON.
+7. **Header and sidebar:** a notification bell modelled on `frontend/src/components/NotificationBell.jsx`, and count badges for applications and plan requests that refresh on every page change.
+8. Show 409 responses from the server as plain messages: already decided, store pending removal, changed by someone else.
+9. Follow every item in "Lessons from NBP's own browser test".
+**Verify:** Client tests, lint and build pass. Search finds no `window.prompt`, `window.confirm` or `alert(` in `client/src`, no remaining import of `AdminDashboard.jsx`, and no admin page in the tenant route table. List the browser checks you didn't run, including each dialog with the keyboard.
+
+### P8: Plans in the database and the plan editor
+**Problem:** `getSubscriptionPlans` reads plans from a `subscription_plans` collection when it exists (`subscriptionController.js:42`), but requests, approval and renewal all read the fixed in-memory list (`:176`, `:333`, `:522`). The two can disagree, and changing a price or limit needs a code change and a deploy. `AdminDashboard.jsx:630-632` repeats plan names and prices by hand.
+**Fix:**
+1. Add `server/src/services/planService.js` as the only place plans are read. It reads the `subscription_plans` collection and falls back to the defaults in `subscriptionPlans.js` when the collection is empty or the database is unavailable. Replace every use of `inMemoryPlans` and `defaultPlans` in controllers with it.
+2. Add `GET /api/admin/plans` and `PUT /api/admin/plans/:planId`, behind `requireAdmin`. Editable fields: name, both prices, item limit, photos per item, the extra feature lines, popular flag, active flag and sort order. Validate types and ranges, and compute the discount on the server. A plan that any store uses can be switched off for new requests but not deleted. No route creates or deletes plans in this task.
+3. Generate the item and photo lines of the feature list from the numbers. The admin edits only the extra lines. Reject an extra line that contains a claim `M6` removed, using the same word list as `server/tests/planClaims.test.js`.
+4. A plan edit doesn't change any store. A store gets the new limits at its next activation or renewal, which already copies them.
+5. Add a documented script that copies the defaults into the collection once. It must refuse to run when `NODE_ENV=production` without an explicit flag, and must not overwrite existing plans.
+6. Add the `/admin/plans` page, modelled on `frontend/src/pages/AdminPlanSettings.jsx`, without its platform settings sections. Use the plan list from the API in the set-plan dialogs from `P7`.
+7. Log edits with `logAdminAction`.
+**Verify:** Tests cover: every controller reading plans through the service; an edited limit applying to a new activation and not to a current subscriber; the generated lines matching the numbers; a banned claim returning 400; bad prices and limits returning 400; a switched-off plan refused for a new request but still shown as the current plan of a store that has it; both routes returning 401 without a cookie and rejecting a vendor cookie. Don't run the script against a remote database.
+
+### P9: Sign-in and application pages on the shared layout
+**Problem:** `VendorLogin.jsx`, `AdminLogin.jsx` and `VendorApply.jsx` each have their own layout and styles, different from the panels they lead to.
+**Fix:** Rebuild the three pages on `AuthLayout`, `Field`, `Notice` and the button classes, modelled on `frontend/src/pages/UserLogin.jsx` and `AdminLogin.jsx` for layout only. Keep every request, step and message as it is: the email code steps, the password then code steps for the admin, the same response for known and unknown emails, and the link to `/vendor/apply` on the marketplace host. Lay out the application form as numbered `FormSection`s. A signed-in vendor or admin who opens a sign-in page goes straight to their panel.
+**Verify:** Client tests, lint and build pass. The auth behaviour tests on the server pass unchanged. List the browser checks you didn't run.
 
 ### R4: Final review fixes
 **Problem:** The review of the remaining Batch 3 and 4 tasks found the defects below.
