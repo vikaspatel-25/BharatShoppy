@@ -1,0 +1,165 @@
+/*
+ * BharatShopy panel design system: used by the admin panel, the vendor portal and
+ * the sign-in pages. Imported from App.css after Tailwind.
+ *
+ * Brand colour is orange. Links and focus rings use the blue "ocean" scale.
+ * Neutrals use Tailwind's warm `stone` scale. No base-layer rules live here, so the
+ * public marketplace pages keep their own look.
+ */
+
+@theme {
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #fdba74;
+  --color-brand-400: #fb923c;
+  --color-brand-500: #f97316;
+  --color-brand-600: #ea580c;
+  --color-brand-700: #c2410c;
+  --color-brand-800: #9a3412;
+  --color-brand-900: #7c2d12;
+  --color-brand-950: #431407;
+
+  --color-ocean-50: #eff7ff;
+  --color-ocean-100: #dbedfe;
+  --color-ocean-200: #bfe0fe;
+  --color-ocean-300: #93cdfd;
+  --color-ocean-400: #5fb0f9;
+  --color-ocean-500: #2f8be6;
+  --color-ocean-600: #0b6fc4;
+  --color-ocean-700: #0158a0;
+  --color-ocean-800: #064b85;
+  --color-ocean-900: #0b3f6e;
+  --color-ocean-950: #082849;
+
+  --radius-card: 1rem;
+  --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 1px 3px rgb(28 25 23 / 0.06);
+  --shadow-raised: 0 4px 6px -1px rgb(28 25 23 / 0.06), 0 12px 24px -6px rgb(28 25 23 / 0.1);
+}
+
+@layer components {
+  /* Root of every panel and sign-in page: sets text colour and focus rings for its subtree only */
+  .panel-root {
+    @apply bg-stone-50 text-stone-700 antialiased;
+  }
+  .panel-root :is(h1, h2, h3, h4) {
+    @apply tracking-tight text-stone-900;
+  }
+  .panel-root :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ocean-600;
+  }
+
+  /* Layout */
+  .page-container {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+  .card {
+    @apply rounded-(--radius-card) border border-stone-200 bg-white shadow-(--shadow-card);
+  }
+  .card-body {
+    @apply p-5 sm:p-6;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold
+      transition-colors duration-150 select-none
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+  .btn-lg {
+    @apply px-6 py-3 text-base;
+  }
+  .btn-primary {
+    @apply bg-brand-700 text-white hover:bg-brand-800 disabled:hover:bg-brand-700;
+  }
+  .btn-secondary {
+    @apply border border-stone-300 bg-white text-stone-800 hover:border-stone-400 hover:bg-stone-50;
+  }
+  .btn-ghost {
+    @apply text-stone-600 hover:bg-stone-100 hover:text-stone-900;
+  }
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700;
+  }
+  .link {
+    @apply font-semibold text-ocean-700 underline-offset-2 hover:underline;
+  }
+
+  /* Forms */
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-stone-800;
+  }
+  .field-hint {
+    @apply mt-1.5 text-xs text-stone-500;
+  }
+  .field-error {
+    @apply mt-1.5 text-xs font-medium text-red-600;
+  }
+  .input {
+    @apply block w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900
+      shadow-xs transition placeholder:text-stone-400
+      focus:border-ocean-600 focus:ring-3 focus:ring-ocean-600/15 focus:outline-none
+      disabled:bg-stone-100 disabled:text-stone-500;
+  }
+  .input-invalid {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500/15;
+  }
+  .checkbox {
+    @apply mt-0.5 size-4 shrink-0 cursor-pointer rounded border-stone-300 accent-brand-700;
+  }
+
+  /* Badges and notices */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap;
+  }
+  .badge-success {
+    @apply bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200 ring-inset;
+  }
+  .badge-brand {
+    @apply bg-brand-50 text-brand-800 ring-1 ring-brand-200 ring-inset;
+  }
+  .badge-ocean {
+    @apply bg-ocean-50 text-ocean-800 ring-1 ring-ocean-200 ring-inset;
+  }
+  .badge-neutral {
+    @apply bg-stone-100 text-stone-700 ring-1 ring-stone-200 ring-inset;
+  }
+  .badge-warn {
+    @apply bg-amber-50 text-amber-800 ring-1 ring-amber-200 ring-inset;
+  }
+  .badge-danger {
+    @apply bg-red-50 text-red-700 ring-1 ring-red-200 ring-inset;
+  }
+  .notice {
+    @apply flex items-start gap-3 rounded-lg border p-3.5 text-sm;
+  }
+  .notice-info {
+    @apply border-ocean-200 bg-ocean-50 text-ocean-900;
+  }
+  .notice-success {
+    @apply border-emerald-200 bg-emerald-50 text-emerald-900;
+  }
+  .notice-warn {
+    @apply border-amber-200 bg-amber-50 text-amber-900;
+  }
+  .notice-error {
+    @apply border-red-200 bg-red-50 text-red-800;
+  }
+}
+
+@keyframes panel-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility animate-panel-in {
+  animation: panel-fade-in 180ms ease-out both;
+}
