@@ -10,7 +10,9 @@
  *    preventing public ordering while preserving 100% of the underlying product data in DB.
  */
 
-export function isStoreSubscriptionActive(store) {
+import { isSubscriptionCurrent } from "./subscriptionStatus.js";
+
+export function isStoreSubscriptionActive(store, now = new Date()) {
   if (!store || store.isActive === false) {
     return false;
   }
@@ -20,22 +22,8 @@ export function isStoreSubscriptionActive(store) {
     return true;
   }
 
-  const { status, expiresAt } = store.subscription;
-
-  // Active or trial statuses are eligible
-  if (status !== "active" && status !== "trial") {
-    return false;
-  }
-
-  // If expiration date is specified, verify it hasn't lapsed
-  if (expiresAt) {
-    const expiryDate = new Date(expiresAt);
-    if (expiryDate <= new Date()) {
-      return false;
-    }
-  }
-
-  return true;
+  // Active or trial, and not past its end date: the same rule every panel uses
+  return isSubscriptionCurrent(store.subscription, now);
 }
 
 /**

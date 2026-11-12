@@ -24,6 +24,12 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
     { method: "POST", path: "/admin/store/store_0103/renew", role: "admin" },
     { method: "POST", path: "/admin/store/store_0103/discontinue", role: "admin" },
 
+    // Admin panel data (P2)
+    { method: "GET", path: "/admin/auth/me", role: "admin" },
+    { method: "GET", path: "/admin/overview", role: "admin" },
+    { method: "GET", path: "/admin/vendors", role: "admin" },
+    { method: "GET", path: "/admin/vendors/vendor_1/removal-impact", role: "admin" },
+
     // Vendor store routes
     { method: "GET", path: "/vendor/store/store_0103/subscription", role: "vendor", storeId: "store_0103" },
     { method: "POST", path: "/vendor/store/store_0103/subscription-request", role: "vendor", storeId: "store_0103" },

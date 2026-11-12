@@ -3,6 +3,8 @@ import { defaultPlans, calculateDiscount } from "../data/mockData/subscriptionPl
 import { resolveStoreByIdentifier } from "../middleware/authMiddleware.js";
 import { findVendorByStoreId } from "./vendorAuthController.js";
 import { getInMemoryStoreForRemoval } from "./adminVendorRemovalController.js";
+import { getSubscriptionState } from "../services/subscriptionStatus.js";
+import { findPlan } from "../services/planService.js";
 import {
   sendSubscriptionActivationEmail,
   sendSubscriptionDiscontinuationEmail,
@@ -80,31 +82,12 @@ export async function getStoreSubscriptionInfo(req, res) {
       return res.status(404).json({ message: "Store not found" });
     }
 
-    // Default subscription values if store record was created before subscription schema
-    const subscription = store.subscription || {
-      plan: "yearly_standard",
-      status: "active",
-      startDate: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 365 * 86400000).toISOString(),
-    };
-
-    const limits = store.limits || {
-      productMonthlyLimit: 50,
-      maxImagesPerProduct: 8,
-    };
-
-    const expiresAtDate = subscription.expiresAt ? new Date(subscription.expiresAt) : null;
-    const now = new Date();
-    const isExpired = expiresAtDate ? expiresAtDate <= now : false;
-
-    // Days remaining calculation
-    let daysRemaining = 0;
-    if (expiresAtDate && !isExpired) {
-      daysRemaining = Math.max(0, Math.ceil((expiresAtDate - now) / (1000 * 60 * 60 * 24)));
-    }
-
-    // Effective live status
-    const effectiveStatus = isExpired ? "expired" : subscription.status || "active";
+    // Report only what is on record. A store with no subscription record gets no invented plan or dates.
+    const subscription = store.subscription || {};
+    const state = getSubscriptionState(store);
+    const daysRemaining = state.remainingDays;
+    const effectiveStatus =
+      state.computedStatus === "active" ? subscription.status || "active" : state.computedStatus;
 
     // Count active products only
     const productsCollection = mongoose.connection?.db?.collection("products");
@@ -128,22 +111,29 @@ export async function getStoreSubscriptionInfo(req, res) {
       storeRequests = inMemoryRequests.filter((r) => r.storeId === store._id);
     }
 
-    // Match plan metadata
-    const activePlan =
-      inMemoryPlans.find((p) => p.planId === subscription.plan) || defaultPlans[1];
+    // Match plan metadata. An unknown plan ID is reported as-is, never as another plan.
+    const activePlan = subscription.plan ? await findPlan(subscription.plan) : null;
+    const limits = store.limits || {};
+    const productLimit = Number(limits.productMonthlyLimit ?? activePlan?.productMonthlyLimit ?? 0) || 0;
+    const imageLimit = Number(limits.maxImagesPerProduct ?? activePlan?.maxImagesPerProduct ?? 0) || 0;
 
     return res.json({
       subscription: {
         ...subscription,
+        plan: subscription.plan || null,
         effectiveStatus,
+        computedStatus: state.computedStatus,
         daysRemaining,
+        remainingDays: daysRemaining,
+        isExpiringSoon: state.isExpiringSoon,
         planDetails: activePlan,
+        planName: activePlan?.name || null,
       },
       limits: {
-        productMonthlyLimit: limits.productMonthlyLimit || activePlan.productMonthlyLimit,
-        maxImagesPerProduct: limits.maxImagesPerProduct || activePlan.maxImagesPerProduct,
+        productMonthlyLimit: productLimit,
+        maxImagesPerProduct: imageLimit,
         currentProductCount: totalProducts,
-        isUploadQuotaReached: totalProducts >= (limits.productMonthlyLimit || activePlan.productMonthlyLimit),
+        isUploadQuotaReached: totalProducts >= productLimit,
       },
       recentRequests: storeRequests.slice(0, 5),
     });
@@ -265,10 +255,43 @@ export async function getAdminPaymentRequests(req, res) {
         : [...inMemoryRequests];
     }
 
+    // Vendor emails for the stores in this list, and totals per status for the tabs
+    const storeIds = [...new Set(requests.map((r) => r.storeId).filter(Boolean))];
+    const emailByStore = new Map();
+    const vendorsCollection = mongoose.connection?.db?.collection("vendors");
+    if (vendorsCollection && storeIds.length > 0) {
+      const vendors = await vendorsCollection
+        .find({ storeId: { $in: storeIds } }, { projection: { email: 1, storeId: 1 } })
+        .toArray();
+      for (const v of vendors) emailByStore.set(String(v.storeId), v.email);
+    } else {
+      for (const id of storeIds) {
+        const v = await findVendorByStoreId(id);
+        if (v?.email) emailByStore.set(String(id), v.email);
+      }
+    }
+
+    const counts = { pending: 0, approved: 0, rejected: 0, total: 0 };
+    if (requestsCollection) {
+      const [pending, approved, rejected] = await Promise.all(
+        ["pending", "approved", "rejected"].map((s) => requestsCollection.countDocuments({ status: s }))
+      );
+      Object.assign(counts, { pending, approved, rejected, total: pending + approved + rejected });
+    } else {
+      for (const r of inMemoryRequests) {
+        if (counts[r.status] !== undefined) counts[r.status] += 1;
+        counts.total += 1;
+      }
+    }
+
     const formattedRequests = requests.map((r) => ({
       requestId: r._id,
       storeId: r.storeId,
       storeName: r.storeName,
+      vendorEmail: emailByStore.get(String(r.storeId)) || null,
+      rejectionReason: r.status === "rejected" ? r.adminNotes || "" : "",
+      durationDays: r.durationDays ?? null,
+      activatedExpiresAt: r.activatedExpiresAt || null,
       planId: r.selectedPlan,
       planName: r.planName,
       amount: r.discountedPrice,
@@ -279,7 +302,7 @@ export async function getAdminPaymentRequests(req, res) {
       adminNotes: r.adminNotes,
     }));
 
-    return res.json({ requests: formattedRequests });
+    return res.json({ requests: formattedRequests, counts });
   } catch (error) {
     console.error("getAdminPaymentRequests error:", error);
     return res.status(500).json({ message: "Failed to fetch requests." });

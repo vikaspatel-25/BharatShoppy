@@ -55,6 +55,13 @@ import {
 } from "../controllers/adminVendorRemovalController.js";
 
 import {
+  getAdminMe,
+  listVendorDirectory,
+  getVendorRemovalImpact,
+  getAdminOverview,
+} from "../controllers/adminPanelController.js";
+
+import {
   requireAdmin,
   requireVendor,
   requireStoreOwner,
@@ -89,6 +96,12 @@ router.post("/vendor/apply", submitApplication);
 router.post("/admin/auth/login", adminLogin);
 router.post("/admin/auth/verify", adminVerify);
 router.post("/admin/auth/logout", adminLogout);
+router.get("/admin/auth/me", requireAdmin, getAdminMe);
+
+// Admin panel data: dashboard totals, vendor directory, removal impact
+router.get("/admin/overview", requireAdmin, getAdminOverview);
+router.get("/admin/vendors", requireAdmin, listVendorDirectory);
+router.get("/admin/vendors/:vendorId/removal-impact", requireAdmin, getVendorRemovalImpact);
 
 // Admin Subscription Control & Verification Desk
 router.get("/admin/subscription-requests", requireAdmin, getAdminPaymentRequests);
