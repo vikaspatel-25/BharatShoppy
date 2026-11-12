@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { isStoreSubscriptionActive } from "../services/catalogVisibility.js";
+import { isStoreSubscriptionActive, isProductPubliclyVisible, PUBLIC_PRODUCT_FILTER } from "../services/catalogVisibility.js";
 import mockStores from "../data/mockData/stores.js";
 import mockProducts from "../data/mockData/products.js";
 
@@ -89,7 +89,7 @@ async function getStorePage(req, res) {
       if (productsCollection) {
         const productQuery = {
           storeId: store._id,
-          isActive: { $ne: false },
+          ...PUBLIC_PRODUCT_FILTER,
         };
         if (typeof productsCollection.countDocuments === "function") {
           total = await productsCollection.countDocuments(productQuery);
@@ -101,14 +101,14 @@ async function getStorePage(req, res) {
         } else {
           const allProds = await productsCollection.find(productQuery).toArray();
           const filtered = allProds.filter(
-            (product) => product.storeId === store._id && product.isActive !== false
+            (product) => product.storeId === store._id && isProductPubliclyVisible(product)
           );
           total = filtered.length;
           paginatedProducts = filtered.slice(startingIndex, startingIndex + limit);
         }
       } else {
         const storeProducts = mockProducts.filter(
-          (product) => product.storeId === store._id && product.isActive !== false
+          (product) => product.storeId === store._id && isProductPubliclyVisible(product)
         );
         total = storeProducts.length;
         paginatedProducts = storeProducts.slice(startingIndex, startingIndex + limit);

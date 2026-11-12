@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { filterActiveStores, filterProductsByActiveStores, isStoreSubscriptionActive } from "../services/catalogVisibility.js";
+import { filterActiveStores, filterProductsByActiveStores, isStoreSubscriptionActive, PUBLIC_PRODUCT_FILTER } from "../services/catalogVisibility.js";
 import mockProducts from "../data/mockData/products.js";
 import mockStores from "../data/mockData/stores.js";
 
@@ -83,7 +83,7 @@ async function globalSearch(req, res) {
       if (activeStoreIds.length > 0) {
         const productQuery = {
           storeId: { $in: activeStoreIds },
-          isActive: { $ne: false },
+          ...PUBLIC_PRODUCT_FILTER,
           $or: [
             { productName: searchRegex },
             { shortDescription: searchRegex },

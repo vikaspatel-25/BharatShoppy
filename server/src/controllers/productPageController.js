@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { isStoreSubscriptionActive } from "../services/catalogVisibility.js";
+import { isStoreSubscriptionActive, isProductPubliclyVisible, PUBLIC_PRODUCT_FILTER } from "../services/catalogVisibility.js";
 import mockProducts from "../data/mockData/products.js";
 import mockStores from "../data/mockData/stores.js";
 
@@ -22,11 +22,11 @@ async function getProductPage(req, res) {
       if (typeof products.findOne === "function") {
         product = await products.findOne({
           _id: productId,
-          isActive: { $ne: false },
+          ...PUBLIC_PRODUCT_FILTER,
         });
       } else {
         const all = await products.find({}).toArray();
-        product = all.find((p) => p._id === productId && p.isActive !== false) || null;
+        product = all.find((p) => p._id === productId && isProductPubliclyVisible(p)) || null;
       }
 
       if (!product) {
@@ -44,7 +44,7 @@ async function getProductPage(req, res) {
       }
     } else {
       product = mockProducts.find(
-        (p) => p._id === productId && p.isActive !== false
+        (p) => p._id === productId && isProductPubliclyVisible(p)
       );
       if (!product) {
         return res.status(404).json({ message: "Product not found" });
@@ -54,7 +54,8 @@ async function getProductPage(req, res) {
       );
     }
 
-    if (!store || !isStoreSubscriptionActive(store)) {
+    // A filter-unaware collection can still hand back a hidden item, so check the rule once more
+    if (!isProductPubliclyVisible(product) || !store || !isStoreSubscriptionActive(store)) {
       return res.status(404).json({ message: "Product not found" });
     }
 

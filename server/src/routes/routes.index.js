@@ -65,6 +65,7 @@ import {
   getNotifications,
   markNotificationRead,
 } from "../controllers/adminActivityController.js";
+import { listListings, hideListing, restoreListing } from "../controllers/adminListingController.js";
 
 import {
   requireAdmin,
@@ -112,6 +113,11 @@ router.get("/admin/vendors/:vendorId/removal-impact", requireAdmin, getVendorRem
 router.get("/admin/audit-log", requireAdmin, getAuditLog);
 router.get("/admin/notifications", requireAdmin, getNotifications);
 router.post("/admin/notifications/mark-read", requireAdmin, markNotificationRead);
+
+// Admin listing moderation: hide with a reason, restore
+router.get("/admin/listings", requireAdmin, listListings);
+router.post("/admin/listings/:productId/hide", requireAdmin, hideListing);
+router.post("/admin/listings/:productId/restore", requireAdmin, restoreListing);
 
 // Admin Subscription Control & Verification Desk
 router.get("/admin/subscription-requests", requireAdmin, getAdminPaymentRequests);

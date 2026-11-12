@@ -12,6 +12,20 @@
 
 import { isSubscriptionCurrent } from "./subscriptionStatus.js";
 
+/**
+ * The one rule for whether an item itself may be shown to the public:
+ * the vendor hasn't deactivated it, and an admin hasn't hidden it.
+ * PUBLIC_PRODUCT_FILTER is the same rule as a MongoDB filter.
+ */
+export const PUBLIC_PRODUCT_FILTER = Object.freeze({
+  isActive: { $ne: false },
+  "moderation.status": { $ne: "hidden" },
+});
+
+export function isProductPubliclyVisible(product) {
+  return Boolean(product) && product.isActive !== false && product.moderation?.status !== "hidden";
+}
+
 export function isStoreSubscriptionActive(store, now = new Date()) {
   if (!store || store.isActive === false) {
     return false;
@@ -42,7 +56,7 @@ export function getActiveStoreIds(stores = []) {
 export function filterProductsByActiveStores(products = [], stores = []) {
   const activeIds = new Set(getActiveStoreIds(stores));
   return products.filter(
-    (product) => activeIds.has(product.storeId) && product.isActive !== false
+    (product) => activeIds.has(product.storeId) && isProductPubliclyVisible(product)
   );
 }
 

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { isStoreSubscriptionActive } from "../services/catalogVisibility.js";
+import { isStoreSubscriptionActive, isProductPubliclyVisible, PUBLIC_PRODUCT_FILTER } from "../services/catalogVisibility.js";
 import mockStores from "../data/mockData/stores.js";
 import mockProducts from "../data/mockData/products.js";
 
@@ -74,7 +74,7 @@ async function searchStoreProducts(req, res) {
 
       const productQuery = {
         storeId: targetStoreId,
-        isActive: { $ne: false },
+        ...PUBLIC_PRODUCT_FILTER,
         $or: [
           { productName: searchRegex },
           { shortDescription: searchRegex },
@@ -106,7 +106,7 @@ async function searchStoreProducts(req, res) {
 
     // In-memory fallback
     const filteredProducts = mockProducts.filter((product) => {
-      if (product.storeId !== targetStoreId || product.isActive === false) {
+      if (product.storeId !== targetStoreId || !isProductPubliclyVisible(product)) {
         return false;
       }
 

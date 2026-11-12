@@ -400,3 +400,57 @@ export async function sendRenewalReminderEmail(to, { storeName, planName, daysRe
 
   return await sendEmail({ to, subject, text, html });
 }
+
+/**
+ * Tells a vendor that an admin has hidden one of their listings, and why.
+ */
+export async function sendListingHiddenEmail(to, { storeName, productName, reason }) {
+  const safeStoreName = escapeHtml(storeName);
+  const safeProduct = escapeHtml(productName);
+  const safeReason = escapeHtml(reason);
+
+  const subject = `A listing in "${storeName}" has been hidden`;
+  const text = `The BharatShopy team has hidden "${productName}" in your store "${storeName}". It no longer appears on BharatShopy or on your store page.\n\nReason: ${reason}\n\nYou can see it in your vendor portal under Items. Reply to this email if you have questions or have fixed the problem.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #0f172a;">A listing has been hidden</h2>
+      <p style="color: #475569;">The BharatShopy team has hidden <strong>${safeProduct}</strong> in your store <strong>${safeStoreName}</strong>. It no longer appears on BharatShopy or on your store page.</p>
+      <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <p style="color: #92400e; margin: 0;"><strong>Reason:</strong></p>
+        <p style="color: #92400e; margin: 4px 0 0 0;">${safeReason}</p>
+      </div>
+      <p style="color: #475569;">You can see it in your vendor portal under Items. Reply to this email if you have questions or have fixed the problem.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Listing hidden email sent to ${to} for item: ${productName}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}
+
+/**
+ * Tells a vendor that a hidden listing is visible again.
+ */
+export async function sendListingRestoredEmail(to, { storeName, productName }) {
+  const safeStoreName = escapeHtml(storeName);
+  const safeProduct = escapeHtml(productName);
+
+  const subject = `A listing in "${storeName}" is visible again`;
+  const text = `The BharatShopy team has made "${productName}" in your store "${storeName}" visible again.`;
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #0f172a;">Your listing is visible again</h2>
+      <p style="color: #475569;">The BharatShopy team has made <strong>${safeProduct}</strong> in your store <strong>${safeStoreName}</strong> visible again.</p>
+    </div>
+  `;
+
+  if (!getTransporter() && process.env.NODE_ENV !== "production") {
+    console.log(`[DEV EMAIL] Listing restored email sent to ${to} for item: ${productName}`);
+    return { success: true, simulated: true };
+  }
+
+  return await sendEmail({ to, subject, text, html });
+}

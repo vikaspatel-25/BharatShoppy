@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { filterProductsByActiveStores, isStoreSubscriptionActive } from "../services/catalogVisibility.js";
+import { filterProductsByActiveStores, isStoreSubscriptionActive, PUBLIC_PRODUCT_FILTER } from "../services/catalogVisibility.js";
 import mockProducts from "../data/mockData/products.js";
 import mockStores from "../data/mockData/stores.js";
 
@@ -67,7 +67,7 @@ async function getProducts(req, res) {
 
       const productQuery = {
         storeId: { $in: validStoreIds },
-        isActive: { $ne: false },
+        ...PUBLIC_PRODUCT_FILTER,
       };
 
       if (category) {
