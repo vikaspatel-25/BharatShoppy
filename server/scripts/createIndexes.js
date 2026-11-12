@@ -15,6 +15,8 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
  * - vendor_applications (partial unique: one pending application per email)
  * - auth_limits.expireAt (TTL index for automatic cleanup)
  * - products.storeId (catalog index)
+ * - admin_audit_log.createdAt, and action plus createdAt (audit log paging and filters)
+ * - admin_notifications.createdAt, and read (notification bell)
  */
 export async function createIndexes() {
   const uri = process.env.MONGO_URI;
@@ -59,6 +61,18 @@ export async function createIndexes() {
     const products = db.collection("products");
     await products.createIndex({ storeId: 1 });
     console.log(" - Created index on products.storeId");
+
+    console.log("Creating indexes on 'admin_audit_log' collection...");
+    const auditLog = db.collection("admin_audit_log");
+    await auditLog.createIndex({ createdAt: -1 }, { name: "audit_created_at" });
+    await auditLog.createIndex({ action: 1, createdAt: -1 }, { name: "audit_action_created_at" });
+    console.log(" - Created indexes on admin_audit_log.createdAt and action");
+
+    console.log("Creating indexes on 'admin_notifications' collection...");
+    const notifications = db.collection("admin_notifications");
+    await notifications.createIndex({ createdAt: -1 }, { name: "notifications_created_at" });
+    await notifications.createIndex({ read: 1 }, { name: "notifications_read" });
+    console.log(" - Created indexes on admin_notifications.createdAt and read");
 
     console.log("\nAll database indexes created successfully.");
   } catch (err) {

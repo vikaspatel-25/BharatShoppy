@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { createAdminNotification } from "../services/notificationService.js";
 import { checkProductUploadQuota } from "../services/quotaService.js";
 import {
   validateProductMedia,
@@ -165,6 +166,17 @@ export async function updateVendorProfile(req, res) {
     );
 
     const updated = await storesCollection.findOne({ _id: store._id });
+
+    if (updateFields.storeName && updateFields.storeName !== store.storeName) {
+      await createAdminNotification({
+        type: "store_renamed",
+        title: "Store renamed",
+        message: `"${store.storeName || store._id}" is now "${updateFields.storeName}".`,
+        link: "/admin/vendors",
+        metadata: { storeId: store._id, previousName: store.storeName || "", newName: updateFields.storeName },
+      });
+    }
+
     return res.json({
       message: "Vendor profile updated successfully",
       store: updated,

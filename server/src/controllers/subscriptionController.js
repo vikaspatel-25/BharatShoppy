@@ -5,6 +5,8 @@ import { findVendorByStoreId } from "./vendorAuthController.js";
 import { getInMemoryStoreForRemoval } from "./adminVendorRemovalController.js";
 import { getSubscriptionState } from "../services/subscriptionStatus.js";
 import { findPlan } from "../services/planService.js";
+import { logAdminAction } from "../services/auditLogService.js";
+import { createAdminNotification } from "../services/notificationService.js";
 import {
   sendSubscriptionActivationEmail,
   sendSubscriptionDiscontinuationEmail,
@@ -226,6 +228,14 @@ export async function submitSubscriptionRequest(req, res) {
         }
       );
     }
+
+    await createAdminNotification({
+      type: "plan_request",
+      title: "New plan request",
+      message: `${store.storeName || "A store"} asked for ${selectedPlan.name}.`,
+      link: "/admin/plan-requests",
+      metadata: { storeId: store._id, requestId: newRequest._id, planId: selectedPlan.planId },
+    });
 
     return res.status(201).json({
       message: "Subscription activation request submitted successfully. Awaiting admin approval.",
@@ -473,6 +483,15 @@ export async function verifyPaymentRequest(req, res) {
         }
       }
 
+      await logAdminAction({
+        req,
+        action: "plan_request.approve",
+        targetType: "store",
+        targetId: request.storeId,
+        targetName: store?.storeName || request.storeName,
+        details: { requestId: request._id, planId: selectedPlan.planId, planName: selectedPlan.name, durationDays: days, expiresAt, emailFailed: Boolean(emailWarning) },
+      });
+
       return res.json({
         success: true,
         message: emailWarning
@@ -513,6 +532,15 @@ export async function verifyPaymentRequest(req, res) {
       }
 
       Object.assign(request, updateData);
+
+      await logAdminAction({
+        req,
+        action: "plan_request.reject",
+        targetType: "store",
+        targetId: request.storeId,
+        targetName: request.storeName,
+        details: { requestId: request._id, planId: request.selectedPlan, reason: updateData.adminNotes },
+      });
 
       return res.json({
         message: "Subscription request rejected.",
@@ -684,6 +712,15 @@ export async function adminDirectRenew(req, res) {
       }
     }
 
+    await logAdminAction({
+      req,
+      action: "store.renew",
+      targetType: "store",
+      targetId: store._id,
+      targetName: store.storeName,
+      details: { planId: selectedPlan.planId, planName: selectedPlan.name, durationDays: days, expiresAt, emailFailed: Boolean(emailWarning) },
+    });
+
     return res.json({
       success: true,
       message: emailWarning
@@ -748,6 +785,15 @@ export async function adminDirectDiscontinue(req, res) {
       }
     }
 
+    await logAdminAction({
+      req,
+      action: "store.discontinue",
+      targetType: "store",
+      targetId: store._id,
+      targetName: store.storeName,
+      details: { endedAt: now.toISOString(), emailFailed: Boolean(emailWarning) },
+    });
+
     return res.json({
       success: true,
       message: "Subscription discontinued. Products are now shielded from public discovery.",
@@ -790,6 +836,15 @@ export async function sendAdminRenewalReminder(req, res) {
       planName: subscription.plan || "Standard Plan",
       daysRemaining,
       expiresAt,
+    });
+
+    await logAdminAction({
+      req,
+      action: "store.renewal_reminder",
+      targetType: "store",
+      targetId: store._id,
+      targetName: store.storeName,
+      details: { daysRemaining, expiresAt },
     });
 
     return res.json({

@@ -12,6 +12,8 @@ import {
   sendVendorRejectionEmail,
 } from "../services/emailService.js";
 import { findVendorByEmail, updateVendor, setInMemoryVendor } from "./vendorAuthController.js";
+import { logAdminAction } from "../services/auditLogService.js";
+import { createAdminNotification } from "../services/notificationService.js";
 
 // In-memory fallbacks for unit testing without MongoDB
 let inMemoryApplications = new Map();
@@ -473,6 +475,14 @@ export async function submitApplication(req, res) {
       emailWarning = "Application submitted, but confirmation email could not be delivered.";
     }
 
+    await createAdminNotification({
+      type: "new_application",
+      title: "New vendor application",
+      message: `${storeName.trim()} (${applicationDoc.address?.city || "no city given"}) applied to join.`,
+      link: "/admin/applications",
+      metadata: { applicationId },
+    });
+
     return res.status(201).json({
       success: true,
       message: emailWarning
@@ -666,6 +676,15 @@ export async function approveApplication(req, res) {
         "Application was approved and store created, but the approval email failed to deliver. You can resend it.";
     }
 
+    await logAdminAction({
+      req,
+      action: "application.approve",
+      targetType: "application",
+      targetId: id,
+      targetName: app.storeName,
+      details: { email: app.email, storeId, slug: app.slug, planId: "starter_free", emailFailed: Boolean(emailWarning) },
+    });
+
     return res.status(200).json({
       success: true,
       message: emailWarning
@@ -770,6 +789,15 @@ export async function rejectApplication(req, res) {
       emailWarning =
         "Application was rejected, but the notification email failed to deliver. You can resend it.";
     }
+
+    await logAdminAction({
+      req,
+      action: "application.reject",
+      targetType: "application",
+      targetId: id,
+      targetName: app.storeName,
+      details: { email: app.email, reason, emailFailed: Boolean(emailWarning) },
+    });
 
     return res.status(200).json({
       success: true,

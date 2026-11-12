@@ -60,6 +60,11 @@ import {
   getVendorRemovalImpact,
   getAdminOverview,
 } from "../controllers/adminPanelController.js";
+import {
+  getAuditLog,
+  getNotifications,
+  markNotificationRead,
+} from "../controllers/adminActivityController.js";
 
 import {
   requireAdmin,
@@ -102,6 +107,11 @@ router.get("/admin/auth/me", requireAdmin, getAdminMe);
 router.get("/admin/overview", requireAdmin, getAdminOverview);
 router.get("/admin/vendors", requireAdmin, listVendorDirectory);
 router.get("/admin/vendors/:vendorId/removal-impact", requireAdmin, getVendorRemovalImpact);
+
+// Admin audit log and notifications
+router.get("/admin/audit-log", requireAdmin, getAuditLog);
+router.get("/admin/notifications", requireAdmin, getNotifications);
+router.post("/admin/notifications/mark-read", requireAdmin, markNotificationRead);
 
 // Admin Subscription Control & Verification Desk
 router.get("/admin/subscription-requests", requireAdmin, getAdminPaymentRequests);

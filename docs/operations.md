@@ -37,3 +37,9 @@ The vendor removal protocol enforces a mandatory 7-day hold window before perman
 - **Required Secret:** The owner must generate a high-entropy secret string and configure `CRON_SECRET` in the Vercel Project Environment Variables before deployment.
 - **Fail-Safe Execution:** If media deletion from Cloudinary fails or returns no result, the vendor and store records are preserved in the database to be safely retried during the subsequent cron execution.
 
+## Admin audit log and notifications
+
+- **`admin_audit_log`:** one entry per admin action that changes data: approving or rejecting an application or a plan request, renewing or ending a plan, sending a renewal reminder, removing a vendor or cancelling a removal, and hiding or restoring a listing. Each entry holds the admin's email, the action, the target, a short details object and the client IP. Codes, tokens, passwords, secrets and hashes are never stored. The admin panel shows it on the audit log page.
+- **`admin_notifications`:** the admin panel's notification bell. A notification is created when a vendor applies, requests a plan, or renames a store.
+- **Indexes:** `npm --prefix server run create-indexes` creates `createdAt` and `action` indexes on the audit log, and `createdAt` and `read` indexes on notifications, along with the existing ones. Run it once against each database after deploying this change. Nothing deletes old entries yet, so both collections grow over time.
+

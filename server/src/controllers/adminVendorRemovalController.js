@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { deleteStoreMediaFolder } from "../services/cloudinaryService.js";
 import { findVendorByEmail, updateVendor, getInMemoryVendors } from "./vendorAuthController.js";
 import mockStores from "../data/mockData/stores.js";
+import { logAdminAction } from "../services/auditLogService.js";
 
 // In-memory fallback stores for testing when MongoDB is not connected
 let inMemoryStoresForRemoval = new Map();
@@ -173,6 +174,15 @@ export async function removeVendor(req, res) {
       }
     }
 
+    await logAdminAction({
+      req,
+      action: "vendor.remove",
+      targetType: "vendor",
+      targetId: vendor._id,
+      targetName: vendor.email,
+      details: { storeId, deleteAfter },
+    });
+
     return res.status(200).json({
       message: "Vendor marked for removal with 7-day hold. Listings have been hidden immediately.",
       vendorId: vendor._id,
@@ -279,6 +289,15 @@ export async function cancelVendorRemoval(req, res) {
         }
       }
     }
+
+    await logAdminAction({
+      req,
+      action: "vendor.cancel_removal",
+      targetType: "vendor",
+      targetId: vendor._id,
+      targetName: vendor.email,
+      details: { storeId, restoredStatus },
+    });
 
     return res.status(200).json({
       message: "Vendor removal cancelled. Store and listings restored successfully.",
