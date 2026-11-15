@@ -15,8 +15,6 @@ const VendorLogin = lazy(() => import("../pages/VendorLogin.jsx"));
 const VendorApply = lazy(() => import("../pages/VendorApply.jsx"));
 const AdminLogin = lazy(() => import("../pages/AdminLogin.jsx"));
 
-// Old single-page admin panel, kept at /admin until P7 replaces it
-const LegacyAdminDashboard = lazy(() => import("../pages/AdminDashboard.jsx"));
 
 const VendorHome = lazy(() => import("../pages/vendor/VendorHome.jsx"));
 const VendorItems = lazy(() => import("../pages/vendor/VendorItems.jsx"));
@@ -24,6 +22,7 @@ const VendorItemEditor = lazy(() => import("../pages/vendor/VendorItemEditor.jsx
 const VendorStore = lazy(() => import("../pages/vendor/VendorStore.jsx"));
 const VendorPlan = lazy(() => import("../pages/vendor/VendorPlan.jsx"));
 
+const AdminHome = lazy(() => import("../pages/admin/AdminHome.jsx"));
 const AdminApplications = lazy(() => import("../pages/admin/AdminApplications.jsx"));
 const AdminVendors = lazy(() => import("../pages/admin/AdminVendors.jsx"));
 const AdminPlanRequests = lazy(() => import("../pages/admin/AdminPlanRequests.jsx"));
@@ -98,8 +97,8 @@ function AppRoutes() {
           <Route path="/vendor/apply" element={<VendorApply />} />
 
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<LegacyAdminDashboard />} />
           <Route element={<AdminArea />}>
+            <Route path="/admin" element={<AdminHome />} />
             <Route path="/admin/applications" element={<AdminApplications />} />
             <Route path="/admin/vendors" element={<AdminVendors />} />
             <Route path="/admin/plan-requests" element={<AdminPlanRequests />} />
