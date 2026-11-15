@@ -5,9 +5,9 @@ Current phase: PANELS
 ## Project summary
 A local marketplace where shopkeepers, farmers and service providers list items. Customers browse and send enquiries over WhatsApp. Each store can also have its own subdomain storefront.
 
-- `client/`: React 19, Vite, Tailwind. Deployed on Vercel.
-- `server/`: Express 5, MongoDB through the native collections on `mongoose.connection.db`. Deployed on Vercel as `bharat-shoppy-server.vercel.app`.
-- `client/vercel.json` rewrites `/api/*` to the server, so the browser sees the API as same-origin.
+- `client/`: React 19, Vite, Tailwind.
+- `server/`: Express 5, MongoDB through the native collections on `mongoose.connection.db`.
+- Both deploy as one Vercel project, `bharatshopy`, built from the repo root (`D1`, 2026-11-15). The root `vercel.json` serves `client/dist` and sends `/api/*` to `api/index.js`, which exports the Express app. See "Deployment" in `docs/operations.md`.
 - CI: `.github/workflows/ci.yml`.
 - Reference project for the panel rebuild: `C:\Users\VikasPatel\Desktop\myProjects\NBP_digitalCatalogue` (NetZeroMart), read-only. See "Panel rebuild".
 
@@ -110,7 +110,8 @@ Set by Claude on 2026-11-12 as defaults so work can start. The owner can change 
 ## Open questions for the owner
 - `Q2`: The owner must create a Gmail app password and set `GMAIL_USER`, `GMAIL_APP_PASSWORD` and `ADMIN_EMAIL`. Real login in production needs them.
 - `Q4`: The owner must create a Cloudinary account and set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET`. Real uploads in production need them.
-- `Q5`: The owner must set `CRON_SECRET` in Vercel for the server project. Permanent deletion of removed vendors after the 7-day hold needs it.
+- `Q9`: The owner must set `MONGO_URI` on the `bharatshopy` Vercel project (production and preview). Until then every `/api` route returns 500 in production.
+- `Q5`: Done on 2026-11-15: `CRON_SECRET` is set on the `bharatshopy` project. It was originally needed for the server project. Permanent deletion of removed vendors after the 7-day hold needs it.
 - `Q6`: Panel colours. The default is BharatShopy orange with a light theme for both panels. Say so if you want NetZeroMart's green and blue, or another palette.
 - `Q7`: NBP lets a vendor request deletion of their own account. It isn't built here, because vendor removal was decided as an admin action. Say so if vendors should be able to request it.
 - `Q8`: NBP saves every buyer inquiry and shows an inbox in both panels. Here enquiries go straight to WhatsApp and nothing is saved, so there's no inbox. Building one means saving customer details, which needs your decision and the legal pages (`M7`).
@@ -129,6 +130,7 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 | P7 | P1 | Admin panel pages | P5, P3, P4 | IN REVIEW | Batch 9 |
 | P9 | P3 | Sign-in and application pages on the shared layout | P5 | IN REVIEW | Batch 9 |
 | P8 | P2 | Plans in the database and the plan editor | P7 | IN REVIEW | Batch 10 |
+| D1 | P1 | Deploy client and server as one Vercel project | none | IN REVIEW | Owner-authorised, Claude implemented. Needs `MONGO_URI` on `bharatshopy` |
 | T0 | P0 | Commit uncommitted work as a baseline | none | DONE | Batch 1 |
 | C3 | P0 | Guard seeding and auto-seeding | T0 | DONE | Batch 1 |
 | A1 | P0 | Admin authentication | T0 | DONE | Reviewed |
