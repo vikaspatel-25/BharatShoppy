@@ -32,7 +32,7 @@
 The vendor removal protocol enforces a mandatory 7-day hold window before permanently deleting a vendor profile, store details, listings, and Cloudinary media assets.
 
 - **Endpoint:** `/api/cron/cleanup-removed-vendors`
-- **Schedule:** Daily at midnight UTC (`0 0 * * *`), configured in `server/vercel.json`.
+- **Schedule:** Daily at midnight UTC (`0 0 * * *`), configured in the root `vercel.json`.
 - **Authentication:** Vercel Cron automatically passes `Authorization: Bearer <CRON_SECRET>` upon invocation.
 - **Required Secret:** The owner must generate a high-entropy secret string and configure `CRON_SECRET` in the Vercel Project Environment Variables before deployment.
 - **Fail-Safe Execution:** If media deletion from Cloudinary fails or returns no result, the vendor and store records are preserved in the database to be safely retried during the subsequent cron execution.
@@ -53,3 +53,13 @@ Plans live in the `subscription_plans` collection and are edited on the admin pa
 - A plan can be switched off for new requests. It still shows as the current plan of stores that have it. Plans can't be created or deleted from the panel.
 - The item and photo lines on plan cards are generated from the numbers. Extra lines are checked against the same banned words as the plan claims test (`server/src/data/planClaims.js`).
 
+
+## Deployment (one Vercel project)
+
+The client and the API deploy together as one Vercel project, `bharatshopy`, built from the repository root. It serves `www.bharatshopy.com`, `bharatshopy.com` and `*.bharatshopy.com`.
+
+- **Root `vercel.json`:** installs `server/` and `client/`, builds the client into `client/dist` (served from Vercel's CDN), sends `/api/*` to the Express function in `api/index.js`, sends every other path to `index.html`, and holds the cron.
+- **`api/index.js`:** exports `server/src/index.js`. The API routes themselves live in `server/src` as before.
+- **Environment variables:** all server variables (`MONGO_URI`, `AUTH_SECRET`, `CRON_SECRET`, `CLIENT_URL`, and the Gmail and Cloudinary ones once they exist) are set on this one project. The client needs none.
+- **Local development is unchanged:** `cd server && npm run dev` and `cd client && npm run dev`, with Vite proxying `/api` to port 7002.
+- Until 2026-11-15 the API was a separate project, `bharat-shoppy-server`, which the client reached through a rewrite. That project was deleted after the move.

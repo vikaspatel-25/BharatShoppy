@@ -1,0 +1,10 @@
+{
+  "name": "bharatshopy",
+  "private": true,
+  "type": "module",
+  "description": "Deployment wrapper: one Vercel project serves the client build and the API. The code lives in client/ and server/.",
+  "scripts": {
+    "install:all": "npm ci --prefix server && npm install --force --prefix client",
+    "build": "npm run build --prefix client"
+  }
+}

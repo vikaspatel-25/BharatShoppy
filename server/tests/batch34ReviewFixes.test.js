@@ -346,9 +346,18 @@ describe("Batch 3 & 4 Review Fixes Unit Tests (R3)", () => {
     });
   });
 
-  describe("Item 5: server/vercel.json Cron Configuration", () => {
+  // The client and API deploy as one Vercel project, so the cron lives in the root vercel.json.
+  describe("Item 5: root vercel.json Cron Configuration", () => {
+    it("sends /api/* to the Express function and every other path to the client", () => {
+      const parsed = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../vercel.json"), "utf8"));
+      assert.deepStrictEqual(parsed.rewrites[0], { source: "/api/(.*)", destination: "/api" });
+      assert.deepStrictEqual(parsed.rewrites.at(-1), { source: "/(.*)", destination: "/index.html" });
+      assert.strictEqual(parsed.outputDirectory, "client/dist");
+      assert.ok(fs.existsSync(path.resolve(__dirname, "../../api/index.js")), "api/index.js must exist");
+    });
+
     it("is valid JSON and configures the cleanup-removed-vendors daily cron", () => {
-      const vercelJsonPath = path.resolve(__dirname, "../vercel.json");
+      const vercelJsonPath = path.resolve(__dirname, "../../vercel.json");
       const raw = fs.readFileSync(vercelJsonPath, "utf8");
       const parsed = JSON.parse(raw);
 
