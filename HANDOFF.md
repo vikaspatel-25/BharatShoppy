@@ -23,6 +23,14 @@ Phase `PANELS`. Read "Panel rebuild" in `CLAUDE.md` first, then the task prompts
 
 ## Entries
 
+### 2026-11-15 P7 (Claude as implementer, for review)
+- Commit: `e1b7d1a` on `fix/P7-admin-panel`, after `3a42917` (protocol records). Starts from `fix/P6-vendor-portal`. Not merged, pushed or deployed. Nobody has reviewed it.
+- Changed: `/admin`, `/admin/applications`, `/admin/vendors`, `/admin/plan-requests`, `/admin/listings` and `/admin/audit-log` built on the panel shell; `AdminDashboard.jsx` deleted. New `lib/adminFormat.js` (end-date maths, 409 wording, audit labels), `lib/adminApi.js` (one request helper that always returns string messages), `components/admin/adminParts.jsx` (email warning with resend, copy button, plan choice, pager, two-line names). The bell and the sidebar badges from `P5` refresh on every page change. `/admin/plans` is still a placeholder for `P8`.
+- Verified: server tests 305/305; client tests 95/95, including new tests for durations, end dates, 409 wording, audit labels, application search, no browser dialogs in `client/src`, no import of `AdminDashboard.jsx`, and no admin page on tenant hosts; lint 0 errors (warnings only, the same set-state-in-effect pattern as existing pages); build passes with a chunk per admin page.
+- Decisions, for review: reject and decline reasons need at least 5 characters on the client, although the server accepts any non-empty reason for applications and an empty one for plan requests. Applications and plan requests are loaded in full and filtered in the browser, because those routes have no search or paging. The activate dialog finds the store's current end date through a directory search on the store name; if it isn't found, the end date is shown from today. The listings store filter shows at most 100 stores, the directory route's cap. Stores without a vendor record (demo data) can't be removed from the dialog.
+- New problems found: none on the server. The renewal routes take `adminNotes` but the directory dialog's note isn't shown anywhere afterwards except the audit log, if the server records it.
+- Not verified: nothing was opened in a browser. Not checked: each dialog with the keyboard (focus on open, Tab trapping, Escape, focus return), the table on a phone, real email resend, real MongoDB, Vercel and CI.
+
 ### 2026-11-15 P1 to P6 (Claude as implementer, for review)
 - Commits, one branch each, chained in order: `38927b4` P1 (`fix/P1-panel-design-system`), `12616f2` P2 (`fix/P2-panel-data-apis`), `c3eff2e` P3 (`fix/P3-audit-log-notifications`), `c5eb5d3` P4 (`fix/P4-listing-moderation`), `361d02e` P5 (`fix/P5-panel-shell`), `f9ae11c` P6 (`fix/P6-vendor-portal`). Nothing merged into `fixes/base`, nothing pushed or deployed.
 - Nobody has reviewed these. Status stays `IN REVIEW` until the owner or another reviewer checks them.

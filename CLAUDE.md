@@ -126,7 +126,7 @@ Statuses: `TODO`, `IN PROGRESS`, `IN REVIEW`, `CHANGES REQUESTED`, `DONE`, `BLOC
 | P4 | P1 | Listing moderation: hide and restore | P3 | IN REVIEW | Batch 8 |
 | P5 | P1 | Panel shell, routes and session guards | P1, P2 | IN REVIEW | Batch 9 |
 | P6 | P1 | Vendor portal pages | P5, P4 | IN REVIEW | Batch 9 |
-| P7 | P1 | Admin panel pages | P5, P3, P4 | TODO | Batch 9 |
+| P7 | P1 | Admin panel pages | P5, P3, P4 | IN REVIEW | Batch 9 |
 | P9 | P3 | Sign-in and application pages on the shared layout | P5 | TODO | Batch 9 |
 | P8 | P2 | Plans in the database and the plan editor | P7 | TODO | Batch 10 |
 | T0 | P0 | Commit uncommitted work as a baseline | none | DONE | Batch 1 |
