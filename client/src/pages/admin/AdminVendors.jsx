@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { BellRing, CalendarPlus, CheckCircle2, ExternalLink, Loader2, Mail, Power, ShieldAlert, Trash2, Undo2, Users } from "lucide-react";
-import { DetailList, EmptyState, Field, FilterTabs, LoadingState, Modal, Notice, PageHeader, SearchInput, StatusBadge, inputClass } from "@/components/panel/ui";
+import { DetailList, EmptyState, FilterTabs, LoadingState, Modal, Notice, PageHeader, SearchInput, StatusBadge } from "@/components/panel/ui";
 import { ClampedName, CopyButton, EmailWarning, Pager, PlanChoice } from "@/components/admin/adminParts";
 import { useToast } from "@/context/ToastContext";
 import { adminRequest, loadPlans } from "@/lib/adminApi";
@@ -184,7 +184,6 @@ function VendorDialog({ row, onClose, onDone }) {
   const [plans, setPlans] = useState([]);
   const [planId, setPlanId] = useState(row.planId || "");
   const [days, setDays] = useState("365");
-  const [note, setNote] = useState("");
   const [impact, setImpact] = useState(null);
   const [understood, setUnderstood] = useState(false);
   const storeUrl = getTenantStoreUrl({ subdomain: row.subdomain, slug: row.slug, _id: row.storeId });
@@ -235,9 +234,6 @@ function VendorDialog({ row, onClose, onDone }) {
     content = (
       <div className="space-y-5">
         <PlanChoice idPrefix="dir" plans={plans} planId={planId} onPlan={setPlanId} days={days} onDays={setDays} currentExpiresAt={row.computedStatus === "active" ? row.expiresAt : null} />
-        <Field id="dir-note" label="Note for the record" optional hint="For example, how the vendor paid.">
-          <input id="dir-note" type="text" maxLength={300} value={note} onChange={(e) => setNote(e.target.value)} className={inputClass(false)} />
-        </Field>
       </div>
     );
     footer = (
@@ -248,7 +244,7 @@ function VendorDialog({ row, onClose, onDone }) {
         confirmIcon={CalendarPlus}
         disabled={!chosen || !isValidDuration(days)}
         onConfirm={() =>
-          run(`/api/admin/store/${sid}/renew`, { planId, durationDays: Number(days), adminNotes: note.trim() }, `${name} is on ${chosen?.name} for ${days} more days.`)
+          run(`/api/admin/store/${sid}/renew`, { planId, durationDays: Number(days) }, `${name} is on ${chosen?.name} for ${days} more days.`)
         }
       />
     );
