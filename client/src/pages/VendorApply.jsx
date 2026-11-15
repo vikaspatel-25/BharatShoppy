@@ -1,7 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Store, Mail, CheckCircle2, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
-import { apiFetch } from "../lib/apiClient.js";
+import { CheckCircle2, Loader2, Mail, Send } from "lucide-react";
+import { AuthLayout, Field, FormSection, Notice, inputClass } from "@/components/panel/ui";
+import { apiFetch } from "@/lib/apiClient";
+import { ENTITY_TYPES } from "@/lib/entityTypes";
+import { toMessage } from "@/lib/formatDate";
+import { scrollToTop } from "@/lib/scrollPanel";
+
+const toSlug = (value) =>
+  String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 export default function VendorApply() {
   const [formData, setFormData] = useState({
@@ -17,45 +28,39 @@ export default function VendorApply() {
     city: "",
     state: "",
   });
-
   const [code, setCode] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [codeLoading, setCodeLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [warning, setWarning] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => {
       const updated = { ...prev, [name]: value };
-      // Auto-suggest slug & subdomain when storeName changes if not explicitly typed
+      // Suggest the slug and subdomain from the store name until the applicant edits them
       if (name === "storeName") {
-        const generatedSlug = value
-          .toLowerCase()
-          .trim()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-|-$/g, "");
-        if (!prev.slug || prev.slug === prev.storeName?.toLowerCase().replace(/[^a-z0-9]+/g, "-")) {
-          updated.slug = generatedSlug;
-        }
-        if (!prev.subdomain || prev.subdomain === prev.storeName?.toLowerCase().replace(/[^a-z0-9]+/g, "-")) {
-          updated.subdomain = generatedSlug;
-        }
+        const before = toSlug(prev.storeName);
+        if (!prev.slug || prev.slug === before) updated.slug = toSlug(value);
+        if (!prev.subdomain || prev.subdomain === before) updated.subdomain = toSlug(value);
       }
       return updated;
     });
   };
 
-  const handleRequestCode = async (e) => {
-    e.preventDefault();
-    setError(null);
+  const fail = (msg) => {
+    setError(toMessage(msg));
+    scrollToTop();
+  };
 
+  const handleRequestCode = async () => {
+    setError("");
     if (!formData.email.trim() || !formData.email.includes("@")) {
-      setError("Please provide a valid email address.");
+      fail("Please provide a valid email address.");
       return;
     }
-
     try {
       setCodeLoading(true);
       const res = await apiFetch("/api/vendor/apply/request-code", {
@@ -63,15 +68,11 @@ export default function VendorApply() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email.trim() }),
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to send verification code.");
-      }
-
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(toMessage(data, "Failed to send verification code."));
       setCodeSent(true);
     } catch (err) {
-      setError(err.message);
+      fail(err);
     } finally {
       setCodeLoading(false);
     }
@@ -79,18 +80,15 @@ export default function VendorApply() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-
+    setError("");
     if (!codeSent) {
-      setError("Please request a verification code first.");
+      fail("Please request a verification code first.");
       return;
     }
-
     if (!code.trim() || code.trim().length !== 6) {
-      setError("Please enter the 6-digit verification code sent to your email.");
+      fail("Please enter the 6-digit verification code sent to your email.");
       return;
     }
-
     try {
       setLoading(true);
       const res = await apiFetch("/api/vendor/apply", {
@@ -99,21 +97,16 @@ export default function VendorApply() {
         body: JSON.stringify({
           ...formData,
           code: code.trim(),
-          address: {
-            city: formData.city,
-            state: formData.state,
-          },
+          address: { city: formData.city, state: formData.state },
         }),
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to submit application.");
-      }
-
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(toMessage(data, "Failed to submit application."));
+      setWarning(typeof data.warning === "string" ? data.warning : "");
       setSuccess(true);
+      scrollToTop();
     } catch (err) {
-      setError(err.message);
+      fail(err);
     } finally {
       setLoading(false);
     }
@@ -121,283 +114,167 @@ export default function VendorApply() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full mx-auto bg-white p-8 border border-slate-200 rounded-2xl shadow-sm text-center">
-          <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="w-8 h-8" />
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Application Submitted!</h2>
-          <p className="text-slate-600 text-sm mb-6">
-            Thank you for applying to sell on BharatShopy. Our moderation team will review your
-            store application for <strong>{formData.storeName}</strong>. You will receive an email update
-            at <strong>{formData.email}</strong> once approved.
+      <AuthLayout title="Application submitted">
+        <div className="text-center">
+          <span className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+            <CheckCircle2 size={28} aria-hidden="true" />
+          </span>
+          <p className="text-sm text-stone-600">
+            Thank you for applying to sell on BharatShopy. Our moderation team will review your store application for{" "}
+            <strong className="break-words text-stone-900">{formData.storeName}</strong>. You will receive an email update at{" "}
+            <strong className="break-all text-stone-900">{formData.email}</strong> once approved.
           </p>
-          <div className="space-y-3">
-            <Link
-              to="/vendor/login"
-              className="w-full inline-flex justify-center items-center py-2.5 px-4 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-sm"
-            >
-              Go to Vendor Login
+          {warning && (
+            <Notice tone="warn" className="mt-4 text-left">
+              Your application is saved, but the confirmation email couldn't be sent. You don't need to apply again.
+            </Notice>
+          )}
+          <div className="mt-6 grid gap-2">
+            <Link to="/vendor/login" className="btn btn-primary">
+              Go to vendor sign in
             </Link>
-            <Link
-              to="/"
-              className="w-full inline-flex justify-center items-center py-2.5 px-4 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition"
-            >
-              Back to Marketplace
+            <Link to="/" className="btn btn-ghost">
+              Back to the marketplace
             </Link>
           </div>
         </div>
-      </div>
+      </AuthLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-emerald-600/10 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
-            <Store className="w-6 h-6" />
-          </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            Apply to Sell on BharatShopy
-          </h1>
-          <p className="text-sm text-slate-600 mt-2">
-            Join local shopkeepers, artisans, and farmers reaching customers across India.
-          </p>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
-          {error && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Applicant Full Name *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Ramesh Patel"
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Business / Store Name *
-                </label>
-                <input
-                  type="text"
-                  name="storeName"
-                  required
-                  value={formData.storeName}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Patel Organics"
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                Applicant Email Address *
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="vendor@example.com"
-                  className="flex-1 px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                <button
-                  type="button"
-                  onClick={handleRequestCode}
-                  disabled={codeLoading || !formData.email}
-                  className="px-4 py-2.5 text-xs font-semibold rounded-xl bg-slate-800 hover:bg-slate-900 text-white disabled:opacity-50 transition flex items-center gap-1.5 whitespace-nowrap"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>{codeSent ? "Resend Code" : "Send Code"}</span>
-                </button>
-              </div>
-              {codeSent && (
-                <p className="text-xs text-emerald-600 mt-1 font-medium">
-                  Verification code sent to {formData.email}. Please check your inbox.
-                </p>
-              )}
-            </div>
-
-            {codeSent && (
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  6-Digit Verification Code *
-                </label>
-                <input
-                  type="text"
-                  maxLength={6}
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                  placeholder="123456"
-                  className="w-full tracking-widest text-center font-mono font-bold text-lg px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Store Slug *
-                </label>
-                <input
-                  type="text"
-                  name="slug"
-                  required
-                  value={formData.slug}
-                  onChange={handleInputChange}
-                  placeholder="patel-organics"
-                  className="w-full px-3.5 py-2.5 text-sm font-mono bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                <p className="text-xs text-slate-500 mt-1">
-                  Storefront URL: /store/{formData.slug || "your-slug"}
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Subdomain *
-                </label>
-                <input
-                  type="text"
-                  name="subdomain"
-                  required
-                  value={formData.subdomain}
-                  onChange={handleInputChange}
-                  placeholder="patel-organics"
-                  className="w-full px-3.5 py-2.5 text-sm font-mono bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                <p className="text-xs text-slate-500 mt-1">
-                  Subdomain: {formData.subdomain || "your-store"}.bharatshopy.com
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Phone / WhatsApp Number
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="+91 9876543210"
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Business Entity Type
-                </label>
-                <select
-                  name="entityType"
-                  value={formData.entityType}
-                  onChange={handleInputChange}
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                >
-                  <option value="shopkeeper">Shopkeeper / Retailer</option>
-                  <option value="farmer">Farmer / Agro Producer</option>
-                  <option value="artisan">Artisan / Handcrafter</option>
-                  <option value="service">Service Provider</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  City
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Pune"
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  State
-                </label>
-                <input
-                  type="text"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Maharashtra"
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                Store Description
-              </label>
-              <textarea
-                name="description"
-                rows={3}
-                value={formData.description}
+    <AuthLayout
+      wide
+      title="Apply to sell on BharatShopy"
+      subtitle="Join local shopkeepers, artisans and farmers reaching customers across India. The BharatShopy team reviews every application."
+      footer={
+        <>
+          Already an approved vendor?{" "}
+          <Link to="/vendor/login" className="link font-semibold">
+            Sign in here
+          </Link>
+        </>
+      }
+    >
+      {error && (
+        <Notice tone="error" className="mb-6">
+          {error}
+        </Notice>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <FormSection id="verify" step={1} title="Your email" description="We'll send a code to check it's yours. Your store sign-in uses this email.">
+          <Field id="email" label="Email address">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="vendor@example.com"
+                value={formData.email}
                 onChange={handleInputChange}
-                placeholder="Tell customers about the products or produce you sell..."
-                className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className={inputClass(false, "flex-1")}
               />
-            </div>
-
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={loading || !codeSent}
-                className="w-full py-3 px-4 rounded-xl text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-50 transition shadow-sm flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <span>Submitting Application...</span>
-                ) : (
-                  <>
-                    <ShieldCheck className="w-5 h-5" />
-                    <span>Submit Vendor Application</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
+              <button type="button" onClick={handleRequestCode} disabled={codeLoading || !formData.email} className="btn btn-secondary">
+                {codeLoading ? <Loader2 size={16} className="animate-spin" aria-hidden="true" /> : <Mail size={16} aria-hidden="true" />}
+                {codeSent ? "Resend code" : "Send code"}
               </button>
             </div>
-          </form>
+          </Field>
+          {codeSent && (
+            <>
+              <Notice tone="success" icon={CheckCircle2}>
+                Verification code sent to <span className="break-all">{formData.email}</span>. Please check your inbox.
+              </Notice>
+              <Field id="code" label="6-digit verification code">
+                <input
+                  id="code"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={6}
+                  placeholder="123456"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  className={inputClass(false, "text-center text-xl font-bold tracking-widest sm:max-w-48")}
+                />
+              </Field>
+            </>
+          )}
+        </FormSection>
 
-          <div className="mt-6 pt-6 border-t border-slate-100 text-center">
-            <p className="text-xs text-slate-500">
-              Already registered as an approved vendor?{" "}
-              <Link to="/vendor/login" className="font-semibold text-emerald-600 hover:text-emerald-700">
-                Sign in here
-              </Link>
-            </p>
+        <FormSection id="about" step={2} title="You and your store">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field id="name" label="Your full name">
+              <input id="name" name="name" type="text" autoComplete="name" required placeholder="For example, Ramesh Patel" value={formData.name} onChange={handleInputChange} className={inputClass(false)} />
+            </Field>
+            <Field id="storeName" label="Store or business name">
+              <input id="storeName" name="storeName" type="text" required placeholder="For example, Patel Organics" value={formData.storeName} onChange={handleInputChange} className={inputClass(false)} />
+            </Field>
           </div>
+          <fieldset>
+            <legend className="field-label">What you sell</legend>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {Object.values(ENTITY_TYPES).map((entity) => (
+                <label
+                  key={entity.id}
+                  className="flex cursor-pointer items-start gap-3 rounded-lg border-2 border-stone-200 p-3 hover:border-stone-300 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50/50 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ocean-500"
+                >
+                  <input type="radio" name="entityType" value={entity.id} checked={formData.entityType === entity.id} onChange={handleInputChange} className="mt-1 accent-brand-700" />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold text-stone-900">{entity.label}</span>
+                    <span className="block text-sm text-stone-500">{entity.description}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <Field id="description" label="Store description" optional>
+            <textarea
+              id="description"
+              name="description"
+              rows={3}
+              placeholder="Tell customers about the products or produce you sell"
+              value={formData.description}
+              onChange={handleInputChange}
+              className={inputClass(false)}
+            />
+          </Field>
+        </FormSection>
+
+        <FormSection id="address" step={3} title="Store web address" description="Lowercase letters, numbers and hyphens. Suggested from your store name.">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field id="slug" label="Store link name" hint={`Marketplace link: /shop/${formData.slug || "your-slug"}`}>
+              <input id="slug" name="slug" type="text" required placeholder="patel-organics" value={formData.slug} onChange={handleInputChange} className={inputClass(false, "font-mono")} />
+            </Field>
+            <Field id="subdomain" label="Subdomain" hint={`Your own site: ${formData.subdomain || "your-store"}.bharatshopy.com`}>
+              <input id="subdomain" name="subdomain" type="text" required placeholder="patel-organics" value={formData.subdomain} onChange={handleInputChange} className={inputClass(false, "font-mono")} />
+            </Field>
+          </div>
+        </FormSection>
+
+        <FormSection id="contact" step={4} title="Contact and location">
+          <div className="grid gap-5 sm:grid-cols-3">
+            <Field id="phone" label="Phone or WhatsApp" optional>
+              <input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+91 9876543210" value={formData.phone} onChange={handleInputChange} className={inputClass(false)} />
+            </Field>
+            <Field id="city" label="City" optional>
+              <input id="city" name="city" type="text" autoComplete="address-level2" placeholder="For example, Pune" value={formData.city} onChange={handleInputChange} className={inputClass(false)} />
+            </Field>
+            <Field id="state" label="State" optional>
+              <input id="state" name="state" type="text" autoComplete="address-level1" placeholder="For example, Maharashtra" value={formData.state} onChange={handleInputChange} className={inputClass(false)} />
+            </Field>
+          </div>
+        </FormSection>
+
+        <div className="flex justify-end">
+          <button type="submit" disabled={loading || !codeSent} className="btn btn-primary btn-lg w-full sm:w-auto">
+            {loading ? <Loader2 size={16} className="animate-spin" aria-hidden="true" /> : <Send size={16} aria-hidden="true" />}
+            {loading ? "Submitting application…" : "Submit application"}
+          </button>
         </div>
-      </div>
-    </div>
+      </form>
+    </AuthLayout>
   );
 }

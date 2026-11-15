@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiFetch } from "../lib/apiClient.js";
-import { getMarketplaceUrl } from "../lib/domainUtils.js";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { AuthLayout, Field, LoadingState, Notice, inputClass } from "@/components/panel/ui";
+import { apiFetch } from "@/lib/apiClient";
+import { getMarketplaceUrl } from "@/lib/domainUtils";
+import { toMessage } from "@/lib/formatDate";
 
 export default function VendorLogin() {
   const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
   const [step, setStep] = useState("email"); // 'email' | 'code'
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -12,28 +16,39 @@ export default function VendorLogin() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  // A vendor who is already signed in goes straight to the portal
+  useEffect(() => {
+    let cancelled = false;
+    apiFetch("/api/vendor/auth/me")
+      .then((res) => {
+        if (cancelled) return;
+        if (res.ok) navigate("/vendor", { replace: true });
+        else setChecking(false);
+      })
+      .catch(() => !cancelled && setChecking(false));
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
+
   const handleRequestCode = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
     setLoading(true);
-
     try {
       const res = await apiFetch("/api/vendor/auth/request-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to request verification code");
-      }
-
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(toMessage(data, "Failed to request verification code"));
+      // The same response for known and unknown emails, so this page can't reveal who has an account
       setMessage(data.message || "If registered, a verification code was sent to your email.");
       setStep("code");
     } catch (err) {
-      setError(err.message);
+      setError(toMessage(err));
     } finally {
       setLoading(false);
     }
@@ -44,152 +59,111 @@ export default function VendorLogin() {
     setError("");
     setMessage("");
     setLoading(true);
-
     try {
       const res = await apiFetch("/api/vendor/auth/verify-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code }),
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Verification failed");
-      }
-
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(toMessage(data, "Verification failed"));
       setMessage("Authentication successful! Redirecting to dashboard...");
-      setTimeout(() => {
-        navigate("/vendor");
-      }, 800);
+      setTimeout(() => navigate("/vendor"), 800);
     } catch (err) {
-      setError(err.message);
+      setError(toMessage(err));
     } finally {
       setLoading(false);
     }
   };
 
+  if (checking) {
+    return (
+      <div className="panel-root min-h-screen">
+        <LoadingState label="Checking your session…" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-extrabold text-slate-900 tracking-tight">
-          BharatShopy
-        </h2>
-        <p className="mt-2 text-center text-sm text-slate-600 font-medium">
-          Vendor & Store Owner Sign In
-        </p>
-      </div>
+    <AuthLayout
+      title="Sign in to your store"
+      subtitle={step === "email" ? "We'll email you a 6-digit code. No password needed." : `Enter the code we sent to ${email}.`}
+      footer={
+        <>
+          New to BharatShopy?{" "}
+          <a href={getMarketplaceUrl("/vendor/apply")} className="link font-semibold">
+            Apply for a vendor account
+          </a>
+        </>
+      }
+    >
+      {error && (
+        <Notice tone="error" className="mb-5">
+          {error}
+        </Notice>
+      )}
+      {message && (
+        <Notice tone="success" icon={CheckCircle2} className="mb-5">
+          {message}
+        </Notice>
+      )}
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-sm rounded-xl border border-slate-200 sm:px-10">
-          {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-
-          {message && (
-            <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg text-sm">
-              {message}
-            </div>
-          )}
-
-          {step === "email" ? (
-            <form onSubmit={handleRequestCode} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-slate-700"
-                >
-                  Vendor Email Address
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="vendor@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
-                  />
-                </div>
-                <p className="mt-1 text-xs text-slate-500">
-                  We'll send a 6-digit one-time code to verify your store ownership.
-                </p>
-              </div>
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50"
-                >
-                  {loading ? "Sending Code..." : "Send Verification Code"}
-                </button>
-              </div>
-            </form>
-          ) : (
-            <form onSubmit={handleVerifyCode} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="code"
-                  className="block text-sm font-medium text-slate-700"
-                >
-                  Enter 6-Digit Verification Code
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="code"
-                    name="code"
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]{6}"
-                    maxLength={6}
-                    required
-                    placeholder="123456"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    className="appearance-none tracking-widest text-center text-xl font-bold block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm placeholder-slate-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
-                  />
-                </div>
-                <p className="mt-1 text-xs text-slate-500">
-                  Sent to {email}. Code expires in 5 minutes.
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => setStep("email")}
-                  className="text-xs font-medium text-emerald-600 hover:text-emerald-500"
-                >
-                  Change email address
-                </button>
-              </div>
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50"
-                >
-                  {loading ? "Verifying..." : "Verify & Sign In"}
-                </button>
-              </div>
-            </form>
-          )}
-
-          <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-            <p className="text-xs text-slate-500">
-              New to BharatShopy?{" "}
-              <a href={getMarketplaceUrl("/vendor/apply")} className="font-semibold text-emerald-600 hover:text-emerald-700">
-                Apply for a Vendor Account
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+      {step === "email" ? (
+        <form onSubmit={handleRequestCode} className="space-y-5">
+          <Field id="email" label="Email address">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              placeholder="vendor@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={inputClass(false)}
+            />
+          </Field>
+          <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full">
+            {loading && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
+            {loading ? "Sending code…" : "Email me a code"}
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={handleVerifyCode} className="space-y-5">
+          <Field id="code" label="6-digit code" hint={`Sent to ${email}. Code expires in 5 minutes.`}>
+            <input
+              id="code"
+              name="code"
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              pattern="[0-9]{6}"
+              maxLength={6}
+              required
+              placeholder="123456"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              className={inputClass(false, "text-center text-xl font-bold tracking-widest")}
+            />
+          </Field>
+          <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full">
+            {loading && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
+            {loading ? "Verifying…" : "Verify and sign in"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setStep("email");
+              setCode("");
+              setMessage("");
+              setError("");
+            }}
+            className="btn btn-ghost w-full"
+          >
+            Change email address
+          </button>
+        </form>
+      )}
+    </AuthLayout>
   );
 }
