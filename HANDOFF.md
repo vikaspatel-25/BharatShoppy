@@ -23,6 +23,12 @@ Phase `PANELS`. Read "Panel rebuild" in `CLAUDE.md` first, then the task prompts
 
 ## Entries
 
+### 2026-11-15 Live site setup and store subdomains (Claude, at the owner's request)
+- Pushed to `main` at the owner's request: P1 to P9 and their records. A temporary panel preview and a sample data tool were added and then removed (`76658b4`). No sample data was written to the live database.
+- Vercel server project, Production: added `AUTH_SECRET` (the server was crashing on startup without it; the health check now reports the database connected), `CRON_SECRET` and `CLIENT_URL=https://www.bharatshopy.com`, then redeployed. Still missing: `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `ADMIN_EMAIL` and the three Cloudinary settings. The owner is moving MongoDB and Cloudinary to a new account, so `MONGO_URI` on Vercel must be replaced too. No admin account exists yet; create it with `server/scripts/createAdmin.js` once `server/.env` is filled. A local `server/.env` exists with generated local secrets and blanks for the account values.
+- Store subdomains: added `*.bharatshopy.com` to the client project and the owner moved the nameservers to Vercel. Not working yet. See `Q9` in `CLAUDE.md` for the state and the checks.
+- The server project still has a misspelled `*.bharatshoppy.com` domain. It does nothing and can be removed.
+
 ### 2026-11-15 D1 One Vercel project (Claude as implementer, owner-authorised)
 - Commit: 174f18a (code) on `fix/D1-single-vercel-project`, merged into `main` by the owner's instruction ("full control" for this migration).
 - Changed: Root `vercel.json`, `package.json` and `api/index.js` so one project installs `server/` and `client/`, serves `client/dist` from the CDN and runs the existing Express app for `/api/*`. The cron moved to the root `vercel.json`. Deleted `client/vercel.json` (rewrite to the old server project) and `server/vercel.json`. `server/tests/batch34ReviewFixes.test.js` now reads the root `vercel.json` and also checks the API rewrite. `docs/operations.md` has a Deployment section. `.vercel/` added to `.gitignore`.
