@@ -19,42 +19,55 @@ describe("L1: Accessibility verification tests", () => {
     );
   });
 
-  it("vendorDashboard.jsx contains accessible entity radio buttons and labeled action buttons", () => {
-    const vendorDashboardPath = path.join(
-      clientRoot,
-      "src",
-      "pages",
-      "vendorDashboard.jsx"
-    );
-    const content = fs.readFileSync(vendorDashboardPath, "utf-8");
+  const read = (...parts) => fs.readFileSync(path.join(clientRoot, "src", ...parts), "utf-8");
 
-    // Radiogroup for entity type
-    assert.ok(
-      content.includes('role="radiogroup"'),
-      "Entity picker must have role='radiogroup'"
-    );
-    assert.ok(
-      content.includes('role="radio"'),
-      "Entity cards must have role='radio'"
-    );
-    assert.ok(
-      content.includes("aria-checked="),
-      "Entity radio cards must have aria-checked"
-    );
+  it("store profile uses real radio inputs for the entity type, inside a labelled group", () => {
+    const content = read("pages", "vendor", "VendorStore.jsx");
+    assert.ok(content.includes('type="radio"'), "Entity picker must use real radio inputs");
+    assert.ok(content.includes('name="entityType"'), "Entity radios must share one name");
+    assert.ok(content.includes("<fieldset") && content.includes("<legend"), "Entity radios must sit in a fieldset with a legend");
+    assert.ok(content.includes("aria-invalid="), "Fields with errors must set aria-invalid");
+  });
 
-    // Labeled buttons
-    assert.ok(
-      content.includes('aria-label="Back to Marketplace"'),
-      "Back to marketplace link must have aria-label"
-    );
-    assert.ok(
-      content.includes("aria-label={`Edit ${item.productName"),
-      "Edit product buttons must have aria-label"
-    );
-    assert.ok(
-      content.includes("aria-label={`Toggle status for ${item.productName"),
-      "Toggle status buttons must have aria-label"
-    );
+  it("items list labels its edit and switch buttons with the item name", () => {
+    const content = read("pages", "vendor", "VendorItems.jsx");
+    assert.ok(content.includes("aria-label={`Edit ${item.productName"), "Edit buttons must have aria-label");
+    assert.ok(content.includes("aria-label={`Switch off ${item.productName"), "Switch off buttons must have aria-label");
+    assert.ok(content.includes("aria-label={`Switch on ${item.productName"), "Switch on buttons must have aria-label");
+    assert.ok(content.includes("<Modal"), "Switching off must be confirmed in the shared dialog");
+  });
+
+  it("shared Modal has dialog role, aria-modal, a label and an Escape handler", () => {
+    const content = read("components", "panel", "ui.jsx");
+    assert.ok(content.includes('role="dialog"'), "Modal must have role='dialog'");
+    assert.ok(content.includes('aria-modal="true"'), "Modal must have aria-modal='true'");
+    assert.ok(content.includes("aria-label={title}"), "Modal must be labelled by its title");
+    assert.ok(content.includes('e.key === "Escape"'), "Modal must handle Escape key press");
+  });
+
+  it("item editor labels its photo buttons and uses real radio inputs for the unit", () => {
+    const content = read("pages", "vendor", "VendorItemEditor.jsx");
+    assert.ok(content.includes("aria-label={`Set image ${idx + 1} as cover photo`}"), "Set cover photo button must have aria-label");
+    assert.ok(content.includes("aria-label={`Remove image ${idx + 1}`}"), "Remove photo button must have aria-label");
+    assert.ok(content.includes('name="unit"') && content.includes('type="radio"'), "Unit picker must use real radio inputs");
+    assert.ok(content.includes("aria-invalid="), "Fields with errors must set aria-invalid");
+  });
+
+  it("plan page offers plans as real radio inputs inside a labelled group", () => {
+    const content = read("pages", "vendor", "VendorPlan.jsx");
+    assert.ok(content.includes('type="radio"') && content.includes('name="plan"'), "Plans must be real radio inputs");
+    assert.ok(content.includes("<fieldset") && content.includes("<legend"), "Plans must sit in a fieldset with a legend");
+  });
+
+  it("vendor portal files call no admin route and use no browser dialogs", () => {
+    const dirs = [path.join(clientRoot, "src", "pages", "vendor"), path.join(clientRoot, "src", "components", "vendor")];
+    for (const dir of dirs) {
+      for (const file of fs.readdirSync(dir)) {
+        const content = fs.readFileSync(path.join(dir, file), "utf-8");
+        assert.ok(!content.includes("/api/admin/"), `${file} must not call an admin route`);
+        assert.ok(!/window\.(prompt|confirm|alert)\s*\(|\balert\(/.test(content), `${file} must not use browser dialogs`);
+      }
+    }
   });
 
   it("storeQrModal.jsx contains dialog role, aria-modal, title link, and escape handler", () => {
@@ -83,82 +96,6 @@ describe("L1: Accessibility verification tests", () => {
     assert.ok(
       content.includes('e.key === "Escape"'),
       "QR modal must handle Escape key press"
-    );
-  });
-
-  it("productUploadModal.jsx contains dialog role, aria-modal, title link, escape handler, and labeled photo buttons", () => {
-    const uploadModalPath = path.join(
-      clientRoot,
-      "src",
-      "components",
-      "vendor",
-      "productUploadModal.jsx"
-    );
-    const content = fs.readFileSync(uploadModalPath, "utf-8");
-
-    assert.ok(
-      content.includes('role="dialog"'),
-      "Upload modal must have role='dialog'"
-    );
-    assert.ok(
-      content.includes('aria-modal="true"'),
-      "Upload modal must have aria-modal='true'"
-    );
-    assert.ok(
-      content.includes('aria-labelledby="product-upload-title"'),
-      "Upload modal must have aria-labelledby='product-upload-title'"
-    );
-    assert.ok(
-      content.includes('id="product-upload-title"'),
-      "Upload modal heading must have id='product-upload-title'"
-    );
-    assert.ok(
-      content.includes('e.key === "Escape"'),
-      "Upload modal must handle Escape key press"
-    );
-    assert.ok(
-      content.includes("aria-label={`Set image ${idx + 1} as cover photo`}"),
-      "Set cover photo button must have aria-label"
-    );
-    assert.ok(
-      content.includes("aria-label={`Remove image ${idx + 1}`}"),
-      "Remove photo button must have aria-label"
-    );
-  });
-
-  it("subscriptionManager.jsx contains dialog role, escape handler, and radiogroup attributes", () => {
-    const subManagerPath = path.join(
-      clientRoot,
-      "src",
-      "components",
-      "vendor",
-      "subscriptionManager.jsx"
-    );
-    const content = fs.readFileSync(subManagerPath, "utf-8");
-
-    assert.ok(
-      content.includes('role="radiogroup"'),
-      "Plans container must have role='radiogroup'"
-    );
-    assert.ok(
-      content.includes('role="radio"'),
-      "Plans must have role='radio'"
-    );
-    assert.ok(
-      content.includes('role="dialog"'),
-      "Request modal must have role='dialog'"
-    );
-    assert.ok(
-      content.includes('aria-modal="true"'),
-      "Request modal must have aria-modal='true'"
-    );
-    assert.ok(
-      content.includes('aria-labelledby="activation-modal-title"'),
-      "Request modal must have aria-labelledby"
-    );
-    assert.ok(
-      content.includes('e.key === "Escape"'),
-      "Request modal must handle Escape key press"
     );
   });
 });

@@ -15,6 +15,8 @@ import { getStoreSubscriptionInfo, getAdminPaymentRequests } from "../src/contro
 const DAY = 86400000;
 const NOW = new Date("2026-11-12T06:00:00.000Z");
 const iso = (ms) => new Date(NOW.getTime() + ms).toISOString();
+// The routes read the real clock, so their fixtures are dated from now, not from NOW.
+const live = (ms) => new Date(Date.now() + ms).toISOString();
 
 describe("P2: one plan-status rule", () => {
   it("active with more than 30 days left", () => {
@@ -83,11 +85,11 @@ describe("P2: admin panel data routes", () => {
 
   const seed = () => ({
     stores: [
-      { _id: "s_active", storeName: "Asha Tailors", slug: "asha", subdomain: "asha", city: "Pune", contact: { phone: "+919800000001" }, subscription: { plan: "yearly_standard", status: "active", expiresAt: iso(200 * DAY) }, limits: { productMonthlyLimit: 50 } },
-      { _id: "s_soon", storeName: "Bala Farms", slug: "bala", subdomain: "bala", subscription: { plan: "starter_free", status: "active", expiresAt: iso(10 * DAY) } },
-      { _id: "s_stale", storeName: "Chotu Repairs", slug: "chotu", subdomain: "chotu", subscription: { plan: "yearly_pro", status: "active", expiresAt: iso(-2 * DAY) } },
+      { _id: "s_active", storeName: "Asha Tailors", slug: "asha", subdomain: "asha", city: "Pune", contact: { phone: "+919800000001" }, subscription: { plan: "yearly_standard", status: "active", expiresAt: live(200 * DAY) }, limits: { productMonthlyLimit: 50 } },
+      { _id: "s_soon", storeName: "Bala Farms", slug: "bala", subdomain: "bala", subscription: { plan: "starter_free", status: "active", expiresAt: live(10 * DAY) } },
+      { _id: "s_stale", storeName: "Chotu Repairs", slug: "chotu", subdomain: "chotu", subscription: { plan: "yearly_pro", status: "active", expiresAt: live(-2 * DAY) } },
       { _id: "s_none", storeName: "Demo Legacy", slug: "legacy" },
-      { _id: "s_hold", storeName: "Dhaba Store", slug: "dhaba", isActive: false, removalStatus: "pending_deletion", deleteAfter: iso(5 * DAY), subscription: { plan: "mystery_plan", status: "active", expiresAt: iso(90 * DAY) } },
+      { _id: "s_hold", storeName: "Dhaba Store", slug: "dhaba", isActive: false, removalStatus: "pending_deletion", deleteAfter: live(5 * DAY), subscription: { plan: "mystery_plan", status: "active", expiresAt: live(90 * DAY) } },
     ],
     vendors: [
       { _id: "v_active", email: "asha@example.com", storeId: "s_active", status: "approved" },
@@ -107,9 +109,9 @@ describe("P2: admin panel data routes", () => {
       { _id: "a3", status: "rejected" },
     ],
     subscription_requests: [
-      { _id: "r1", storeId: "s_soon", storeName: "Bala Farms", selectedPlan: "yearly_standard", status: "pending", createdAt: iso(-DAY) },
-      { _id: "r2", storeId: "s_active", storeName: "Asha Tailors", selectedPlan: "yearly_standard", status: "approved", createdAt: iso(-5 * DAY) },
-      { _id: "r3", storeId: "s_stale", storeName: "Chotu Repairs", selectedPlan: "yearly_pro", status: "rejected", adminNotes: "Payment not received", createdAt: iso(-9 * DAY) },
+      { _id: "r1", storeId: "s_soon", storeName: "Bala Farms", selectedPlan: "yearly_standard", status: "pending", createdAt: live(-DAY) },
+      { _id: "r2", storeId: "s_active", storeName: "Asha Tailors", selectedPlan: "yearly_standard", status: "approved", createdAt: live(-5 * DAY) },
+      { _id: "r3", storeId: "s_stale", storeName: "Chotu Repairs", selectedPlan: "yearly_pro", status: "rejected", adminNotes: "Payment not received", createdAt: live(-9 * DAY) },
     ],
   });
 

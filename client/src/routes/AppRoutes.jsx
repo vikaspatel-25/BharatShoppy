@@ -15,10 +15,10 @@ const VendorLogin = lazy(() => import("../pages/VendorLogin.jsx"));
 const VendorApply = lazy(() => import("../pages/VendorApply.jsx"));
 const AdminLogin = lazy(() => import("../pages/AdminLogin.jsx"));
 
-// Old single-page panels, kept at /vendor and /admin until P6 and P7 replace them
-const LegacyVendorDashboard = lazy(() => import("../pages/vendorDashboard.jsx"));
+// Old single-page admin panel, kept at /admin until P7 replaces it
 const LegacyAdminDashboard = lazy(() => import("../pages/AdminDashboard.jsx"));
 
+const VendorHome = lazy(() => import("../pages/vendor/VendorHome.jsx"));
 const VendorItems = lazy(() => import("../pages/vendor/VendorItems.jsx"));
 const VendorItemEditor = lazy(() => import("../pages/vendor/VendorItemEditor.jsx"));
 const VendorStore = lazy(() => import("../pages/vendor/VendorStore.jsx"));
@@ -45,8 +45,8 @@ const pageFallback = <LoadingState />;
 function vendorRoutes() {
   return (
     <>
-      <Route path="/vendor" element={<LegacyVendorDashboard />} />
       <Route element={<VendorArea />}>
+        <Route path="/vendor" element={<VendorHome />} />
         <Route path="/vendor/items" element={<VendorItems />} />
         <Route path="/vendor/items/new" element={<VendorItemEditor />} />
         <Route path="/vendor/items/:productId" element={<VendorItemEditor />} />
