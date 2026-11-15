@@ -59,3 +59,48 @@ describe("sample data script", () => {
     assert.deepEqual(db.collection("admin_audit_log").docs.map((a) => a._id), ["a2"]);
   });
 });
+
+describe("locked sample data route", () => {
+  const SECRET = "x".repeat(40);
+  const call = async (headers, body, db) => {
+    const { runSampleData } = await import("../src/controllers/maintenanceController.js");
+    const mongoose = (await import("mongoose")).default;
+    const previous = mongoose.connection.db;
+    mongoose.connection.db = db;
+    const res = { statusCode: 200, body: null, status(c) { this.statusCode = c; return this; }, json(b) { this.body = b; return this; } };
+    try {
+      await runSampleData({ headers, body }, res);
+    } finally {
+      mongoose.connection.db = previous;
+    }
+    return res;
+  };
+
+  it("is invisible (404) unless SAMPLE_DATA_SECRET is set", async () => {
+    delete process.env.SAMPLE_DATA_SECRET;
+    const res = await call({ authorization: `Bearer ${SECRET}` }, { mode: "insert" }, createMemoryDb());
+    assert.equal(res.statusCode, 404);
+  });
+
+  it("rejects a missing or wrong secret and changes nothing", async () => {
+    process.env.SAMPLE_DATA_SECRET = SECRET;
+    const db = createMemoryDb();
+    assert.equal((await call({}, { mode: "insert" }, db)).statusCode, 401);
+    assert.equal((await call({ authorization: "Bearer wrong" }, { mode: "insert" }, db)).statusCode, 401);
+    assert.equal(db.collection("stores").docs.length, 0);
+    delete process.env.SAMPLE_DATA_SECRET;
+  });
+
+  it("previews, inserts and removes with the right secret", async () => {
+    process.env.SAMPLE_DATA_SECRET = SECRET;
+    const db = createMemoryDb();
+    const auth = { authorization: `Bearer ${SECRET}` };
+    const dry = await call(auth, { mode: "dry-run" }, db);
+    assert.equal(dry.body.preview.stores.sample, 10);
+    assert.equal(db.collection("stores").docs.length, 0, "dry run changes nothing");
+    assert.equal((await call(auth, { mode: "insert" }, db)).body.added.products, 10);
+    assert.equal((await call(auth, { mode: "remove" }, db)).body.removed.stores, 10);
+    assert.equal((await call(auth, { mode: "wipe" }, db)).statusCode, 400);
+    delete process.env.SAMPLE_DATA_SECRET;
+  });
+});
