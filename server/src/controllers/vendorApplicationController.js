@@ -13,6 +13,7 @@ import {
 } from "../services/emailService.js";
 import { findVendorByEmail, updateVendor, setInMemoryVendor } from "./vendorAuthController.js";
 import { logAdminAction } from "../services/auditLogService.js";
+import { findPlan } from "../services/planService.js";
 import { createAdminNotification } from "../services/notificationService.js";
 
 // In-memory fallbacks for unit testing without MongoDB
@@ -556,6 +557,7 @@ export async function approveApplication(req, res) {
     }
 
     const now = new Date();
+    const starterPlan = await findPlan("starter_free");
     // Generate a random unique store _id (never overwrite store_0103 or slug-named store)
     const storeId = "store_" + crypto.randomUUID().replace(/-/g, "").substring(0, 16);
 
@@ -584,9 +586,10 @@ export async function approveApplication(req, res) {
         startDate: now.toISOString(),
         expiresAt: new Date(now.getTime() + 30 * 86400000).toISOString(),
       },
+      // Limits come from the stored starter plan, so an edit applies to every new store
       limits: {
-        productMonthlyLimit: 15,
-        maxImagesPerProduct: 5,
+        productMonthlyLimit: Number(starterPlan?.productMonthlyLimit) || 15,
+        maxImagesPerProduct: Number(starterPlan?.maxImagesPerProduct) || 5,
       },
       isActive: true,
       createdAt: now.toISOString(),

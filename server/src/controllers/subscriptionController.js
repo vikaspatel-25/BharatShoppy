@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
-import { defaultPlans, calculateDiscount } from "../data/mockData/subscriptionPlans.js";
 import { resolveStoreByIdentifier } from "../middleware/authMiddleware.js";
 import { findVendorByStoreId } from "./vendorAuthController.js";
 import { getInMemoryStoreForRemoval } from "./adminVendorRemovalController.js";
 import { getSubscriptionState } from "../services/subscriptionStatus.js";
-import { findPlan } from "../services/planService.js";
+import { findPlan, findRequestablePlan, listPlans } from "../services/planService.js";
 import { logAdminAction } from "../services/auditLogService.js";
 import { createAdminNotification } from "../services/notificationService.js";
 import {
@@ -24,7 +23,6 @@ async function resolveVendorEmailForStore(store) {
 
 // In-memory fallback stores for subscription requests when DB collection is simulated
 let inMemoryRequests = [];
-let inMemoryPlans = [...defaultPlans];
 
 export function resetInMemorySubscriptionRequests() {
   inMemoryRequests = [];
@@ -43,24 +41,9 @@ export function getInMemorySubscriptionRequests() {
  */
 export async function getSubscriptionPlans(req, res) {
   try {
-    const plansCollection = mongoose.connection?.db?.collection("subscription_plans");
-    let plansData = [];
-
-    if (plansCollection) {
-      plansData = await plansCollection.find({ isActive: true }).toArray();
-    }
-
-    if (!plansData || plansData.length === 0) {
-      plansData = inMemoryPlans.filter((p) => p.isActive !== false);
-    }
-
-    // Ensure discount percentage is always up to date
-    const formattedPlans = plansData.map((plan) => ({
-      ...plan,
-      discountPercentage: calculateDiscount(plan.originalPrice, plan.discountedPrice),
-    }));
-
-    return res.json({ plans: formattedPlans });
+    // Only switched-on plans are offered; the service generates the item and photo lines
+    const plans = await listPlans();
+    return res.json({ plans });
   } catch (error) {
     console.error("getSubscriptionPlans error:", error);
     return res.status(500).json({ message: "Failed to load plans." });
@@ -164,10 +147,13 @@ export async function submitSubscriptionRequest(req, res) {
       return res.status(404).json({ message: "Store not found" });
     }
 
-    // 1. Unknown plan check (reject with 400 instead of falling back to defaultPlans[1])
-    const selectedPlan = inMemoryPlans.find((p) => p.planId === planId);
+    // 1. Unknown or switched-off plan: 400, never a fallback to another plan
+    const selectedPlan = await findRequestablePlan(planId);
     if (!selectedPlan) {
-      return res.status(400).json({ message: `Unknown subscription plan '${planId}'` });
+      const exists = await findPlan(planId);
+      return res.status(400).json({
+        message: exists ? `${exists.name} isn't available for new requests.` : `Unknown subscription plan '${planId}'`,
+      });
     }
 
     // 2. Prevent duplicate pending requests for a store
@@ -363,7 +349,7 @@ export async function verifyPaymentRequest(req, res) {
       }
 
       // 3. Return 400 for unknown plan
-      const selectedPlan = inMemoryPlans.find((p) => p.planId === request.selectedPlan);
+      const selectedPlan = await findPlan(request.selectedPlan);
       if (!selectedPlan) {
         return res.status(400).json({
           message: `Unknown plan '${request.selectedPlan}'`,
@@ -570,7 +556,7 @@ export async function adminDirectRenew(req, res) {
     }
 
     // 2. Validate plan: return 400 for unknown plan
-    const selectedPlan = inMemoryPlans.find((p) => p.planId === planId);
+    const selectedPlan = await findPlan(planId);
     if (!selectedPlan) {
       return res.status(400).json({
         message: `Unknown plan '${planId}'`,
@@ -874,8 +860,7 @@ export async function resendSubscriptionEmail(req, res) {
     }
 
     const subscription = store.subscription || {};
-    const selectedPlan =
-      inMemoryPlans.find((p) => p.planId === subscription.plan) || defaultPlans[1];
+    const selectedPlan = (await findPlan(subscription.plan)) || { name: "your current plan" };
 
     await sendSubscriptionActivationEmail(vendorEmail, {
       storeName: store.storeName,

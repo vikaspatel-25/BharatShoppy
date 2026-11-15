@@ -1,19 +1,17 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { defaultPlans } from "../src/data/mockData/subscriptionPlans.js";
+import { BANNED_PLAN_WORDS } from "../src/data/planClaims.js";
 import { dummyStores } from "../scripts/seedDummyProfiles.js";
 import stores from "../src/data/mockData/stores.js";
 
 describe("M6: Plan claims, badges, and dummy credentials verification", () => {
   it("ensures no subscription plan promises analytics, priority ranking, 24/7 support, or verified badges", () => {
-    const prohibitedKeywords = [
-      "analytics",
-      "priority",
-      "24/7",
-      "verified",
-      "ranking",
-      "placement",
-    ];
+    // The same list the plan editor uses to reject extra feature lines
+    const prohibitedKeywords = [...BANNED_PLAN_WORDS];
+    for (const word of ["analytics", "priority", "24/7", "verified", "ranking", "placement"]) {
+      assert.ok(prohibitedKeywords.includes(word), `banned list still contains "${word}"`);
+    }
 
     for (const plan of defaultPlans) {
       assert.ok(plan.features && plan.features.length > 0, `Plan ${plan.planId} has features`);

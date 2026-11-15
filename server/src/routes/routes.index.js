@@ -1,4 +1,5 @@
 import express from "express";
+import { listAdminPlans, updateAdminPlan } from "../controllers/adminPlanController.js";
 import { searchLocations } from "../controllers/locationController.js";
 import { getProducts } from "../controllers/productController.js";
 import { getProductPage } from "../controllers/productPageController.js";
@@ -118,6 +119,10 @@ router.post("/admin/notifications/mark-read", requireAdmin, markNotificationRead
 router.get("/admin/listings", requireAdmin, listListings);
 router.post("/admin/listings/:productId/hide", requireAdmin, hideListing);
 router.post("/admin/listings/:productId/restore", requireAdmin, restoreListing);
+
+// Admin plan editor: plans are edited and switched off, never created or deleted here
+router.get("/admin/plans", requireAdmin, listAdminPlans);
+router.put("/admin/plans/:planId", requireAdmin, updateAdminPlan);
 
 // Admin Subscription Control & Verification Desk
 router.get("/admin/subscription-requests", requireAdmin, getAdminPaymentRequests);

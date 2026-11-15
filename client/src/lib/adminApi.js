@@ -31,8 +31,8 @@ export async function adminRequest(url, { method = "GET", body } = {}) {
   }
 }
 
-/** Plans for the set-plan and activate dialogs. */
+/** Plans for the set-plan dialog: the stored plans that are switched on. */
 export async function loadPlans() {
-  const r = await adminRequest("/api/subscription/plans");
-  return r.ok && Array.isArray(r.data.plans) ? r.data.plans : [];
+  const r = await adminRequest("/api/admin/plans");
+  return r.ok && Array.isArray(r.data.plans) ? r.data.plans.filter((p) => p.isActive !== false) : [];
 }

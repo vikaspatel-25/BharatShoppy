@@ -37,6 +37,8 @@ describe("Protected Routes Table-Driven Access Control Tests (C1)", () => {
 
     // Admin listing moderation (P4)
     { method: "GET", path: "/admin/listings", role: "admin" },
+    { method: "GET", path: "/admin/plans", role: "admin" },
+    { method: "PUT", path: "/admin/plans/yearly_standard", role: "admin" },
     { method: "POST", path: "/admin/listings/prod_1/hide", role: "admin" },
     { method: "POST", path: "/admin/listings/prod_1/restore", role: "admin" },
 

@@ -43,3 +43,13 @@ The vendor removal protocol enforces a mandatory 7-day hold window before perman
 - **`admin_notifications`:** the admin panel's notification bell. A notification is created when a vendor applies, requests a plan, or renames a store.
 - **Indexes:** `npm --prefix server run create-indexes` creates `createdAt` and `action` indexes on the audit log, and `createdAt` and `read` indexes on notifications, along with the existing ones. Run it once against each database after deploying this change. Nothing deletes old entries yet, so both collections grow over time.
 
+## Plans and limits
+
+Plans live in the `subscription_plans` collection and are edited on the admin panel's "Plans and limits" page. When the collection is empty, or the database can't be reached, the built-in defaults in `server/src/data/mockData/subscriptionPlans.js` are used.
+
+- The first edit copies any missing default plans into the collection, so no plan disappears. To fill it before anyone edits, run `node scripts/seedPlans.js` from `server/` with `MONGO_URI` set. It only adds missing plan IDs and never overwrites a plan. It refuses to run when `NODE_ENV=production` unless `ALLOW_PLAN_SEED_IN_PRODUCTION=true` is set.
+- `node scripts/createIndexes.js` adds a unique index on `subscription_plans.planId`.
+- An edit changes no store. A store gets the plan's item and photo limits at its next activation or renewal. New stores get the starter plan's limits when their application is approved.
+- A plan can be switched off for new requests. It still shows as the current plan of stores that have it. Plans can't be created or deleted from the panel.
+- The item and photo lines on plan cards are generated from the numbers. Extra lines are checked against the same banned words as the plan claims test (`server/src/data/planClaims.js`).
+

@@ -3,7 +3,8 @@
  * Supports the filters and options the panel controllers use: equality on dotted paths,
  * $in, $nin, $ne, $exists, $gt, $gte, $lt, $lte, $regex, $or, $and; find with projection,
  * sort, skip and limit; countDocuments; findOne; insertOne; updateOne and updateMany with
- * $set, $unset and $inc; findOneAndUpdate; deleteOne; deleteMany; createIndex.
+ * $set, $unset and $inc (updateOne also takes { upsert } with $setOnInsert); findOneAndUpdate;
+ * deleteOne; deleteMany; createIndex; and aggregate with a single $group counting by one field.
  */
 
 function getPath(doc, path) {
@@ -176,9 +177,20 @@ export class MemoryCollection {
     this.docs.push(copy);
     return { acknowledged: true, insertedId: copy._id };
   }
-  async updateOne(filter, update) {
+  async updateOne(filter, update, options = {}) {
     this._maybeFail();
     const doc = this.docs.find((d) => matches(d, filter));
+    if (!doc && options.upsert) {
+      const created = {};
+      for (const [path, value] of Object.entries(filter)) {
+        if (value === null || typeof value !== "object") setPath(created, path, value);
+      }
+      for (const [path, value] of Object.entries(update.$setOnInsert || {})) setPath(created, path, structuredClone(value));
+      applyUpdate(created, update);
+      if (created._id === undefined) created._id = `mem_${Math.random().toString(36).slice(2, 12)}`;
+      this.docs.push(created);
+      return { matchedCount: 0, modifiedCount: 0, upsertedCount: 1, upsertedId: created._id };
+    }
     if (!doc) return { matchedCount: 0, modifiedCount: 0 };
     applyUpdate(doc, update);
     return { matchedCount: 1, modifiedCount: 1 };
@@ -212,6 +224,18 @@ export class MemoryCollection {
   }
   async createIndex() {
     return "ok";
+  }
+  /** Supports [{ $group: { _id: "$field", count: { $sum: 1 } } }] only. */
+  aggregate(pipeline = []) {
+    this._maybeFail();
+    const group = pipeline[0]?.$group;
+    const key = String(group?._id || "").replace(/^\$/, "");
+    const counts = new Map();
+    for (const d of this.docs) {
+      const k = getPath(d, key);
+      counts.set(k, (counts.get(k) || 0) + 1);
+    }
+    return new Cursor([...counts].map(([k, count]) => ({ _id: k ?? null, count })));
   }
 }
 
