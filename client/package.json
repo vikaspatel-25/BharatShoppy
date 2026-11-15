@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "oxlint",
     "test": "node --test tests/**/*.test.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:panels-api": "node scripts/panelPreviewApi.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
