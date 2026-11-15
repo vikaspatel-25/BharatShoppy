@@ -1,6 +1,5 @@
 import express from "express";
 import { listAdminPlans, updateAdminPlan } from "../controllers/adminPlanController.js";
-import { runSampleData } from "../controllers/maintenanceController.js";
 import { searchLocations } from "../controllers/locationController.js";
 import { getProducts } from "../controllers/productController.js";
 import { getProductPage } from "../controllers/productPageController.js";
@@ -142,9 +141,6 @@ router.post("/admin/vendor-applications/:id/resend-email", requireAdmin, resendA
 // Admin Vendor Removal & 7-Day Hold Control
 router.post("/admin/vendors/:vendorId/remove", requireAdmin, removeVendor);
 router.post("/admin/vendors/:vendorId/cancel-removal", requireAdmin, cancelVendorRemoval);
-
-// Sample data: switched off unless SAMPLE_DATA_SECRET is set (404 otherwise)
-router.post("/maintenance/sample-data", runSampleData);
 
 // Secured Cron: Cleanup removed vendors after 7-day hold
 router.get("/cron/cleanup-removed-vendors", cleanupRemovedVendors);
