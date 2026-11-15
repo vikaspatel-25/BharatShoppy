@@ -58,7 +58,7 @@ const applications = [
 const shop = (n, storeName, slug, entityType, city, planId, status, days, activeItems, extra = {}) => {
   const plan = plans.find((p) => p.planId === planId);
   return {
-    vendorId: extra.noVendor ? null : `v${n}`, storeId: n === 1 ? "store_demo" : `store_${slug}`, storeName, slug, subdomain: slug,
+    vendorId: extra.noVendor ? null : `v${n}`, storeId: n === 1 ? "store_demo" : extra.noVendor ? "store_legacy" : `store_${slug}`, storeName, slug, subdomain: slug,
     email: extra.noVendor ? null : `${slug}@example.com`, phone: "+9198765432" + String(n).padStart(2, "0"), whatsapp: "+9198765432" + String(n).padStart(2, "0"),
     entityType, city, planId, planName: plan ? plan.name : null, computedStatus: status,
     isExpiringSoon: status === "active" && days <= 30, remainingDays: status === "active" ? days : 0,
@@ -89,6 +89,51 @@ const notifications = [
   { _id: "n3", type: "store_renamed", title: "Store renamed", message: '"Sharma Electric" is now "Sharma Electricals".', link: "/admin/vendors", read: true, createdAt: iso(-8) },
 ];
 
+
+// Public store pages: the 10 sample shops, with the same visibility rules as the real server
+const DESCRIPTIONS = {
+  farmer: "Fresh produce picked to order and sold direct from the farm.",
+  service_provider: "Local service at your doorstep. Message us on WhatsApp to book.",
+  shopkeeper: "A neighbourhood shop with hand-picked stock. Ask us on WhatsApp.",
+};
+function publicStore(v) {
+  if (v.storeId === "store_demo") return { ...store, isActive: true };
+  const days = v.expiresAt ? Math.round((new Date(v.expiresAt) - Date.now()) / DAY) : null;
+  return {
+    _id: v.storeId, storeName: v.storeName, slug: v.slug, subdomain: v.subdomain, entityType: v.entityType,
+    description: DESCRIPTIONS[v.entityType], city: v.city, address: { area: "Main Market", city: v.city },
+    contact: { phone: v.phone, whatsapp: v.whatsapp }, isActive: v.computedStatus !== "removal_hold",
+    subscription: v.planId ? { plan: v.planId, status: v.computedStatus === "expired" ? "expired" : "active", expiresAt: v.expiresAt } : undefined,
+    limits: { productMonthlyLimit: v.itemLimit, maxImagesPerProduct: 8 }, _days: days,
+  };
+}
+function findPublicStore(id) {
+  const v = vendors.find((x) => [x.storeId, x.slug, x.subdomain].includes(id));
+  return v ? publicStore(v) : null;
+}
+function storeIsCurrent(st) {
+  if (st.isActive === false) return false;
+  if (!st.subscription) return true;
+  return ["active", "trial"].includes(st.subscription.status) && (!st.subscription.expiresAt || new Date(st.subscription.expiresAt) > new Date());
+}
+// A couple of items for each other shop, so their store pages aren't empty
+const other = (storeId, id, productName, category, min, unit) => ({ _id: id, storeId, productName, category, price: { min, max: min, unit }, images: [], isActive: true, inStock: true });
+const otherItems = [
+  other("store_green-valley", "g1", "Thompson seedless grapes", "Groceries & Organics", 90, "kg"),
+  other("store_green-valley", "g2", "Red onions, 5 kg bag", "Groceries & Organics", 160, "bag"),
+  other("store_sharma-electricals", "s1", "Inverter installation", "Services & Repairs", 799, "service"),
+  other("store_meenakshi-spices", "m1", "Guntur red chilli powder", "Groceries & Organics", 300, "kg"),
+  other("store_meenakshi-spices", "m2", "Erode turmeric powder", "Groceries & Organics", 240, "kg"),
+  other("store_kolkata-books", "k1", "Gitanjali, Bengali edition", "Books & Stationery", 250, "piece"),
+  other("store_kolkata-books", "k2", "Feluda Samagra, volume 1", "Books & Stationery", 450, "piece"),
+  other("store_ravi-tailors", "r1", "Blouse stitching with lining", "Services & Repairs", 550, "service"),
+  other("store_himalayan-apples", "h1", "Royal Delicious apples, 10 kg box", "Groceries & Organics", 1500, "box"),
+  other("store_coastal-cane", "c1", "Handwoven cane armchair", "Furniture & Home Decor", 6900, "piece"),
+  other("store_coastal-cane", "c2", "Cane hanging swing", "Furniture & Home Decor", 11500, "piece"),
+  other("store_legacy", "d1", "Steel water bottle, 1 litre", "Home & Garden", 349, "piece"),
+];
+const publicItems = (st) => (storeIsCurrent(st) ? [...products, ...otherItems].filter((x) => x.storeId === st._id && x.isActive !== false && x.moderation?.status !== "hidden") : []);
+
 const ok = { success: true, message: "Done (preview only, nothing was saved)." };
 const subInfo = () => ({
   subscription: { ...store.subscription, computedStatus: "active", remainingDays: 20, isExpiringSoon: true, planName: "Boutique & Farm Standard" },
@@ -108,6 +153,20 @@ function route(method, url, body) {
   const q = u.searchParams;
   if (p === "/api/__preview/signout") { signedOut = true; return [200, { signedOut }]; }
   if (p === "/api/__preview/signin") { signedOut = false; return [200, { signedOut }]; }
+  const sp = p.match(/^\/api\/store\/([^/]+)$/);
+  if (sp) {
+    const st = findPublicStore(decodeURIComponent(sp[1]));
+    if (!st) return [404, { message: "Store not found" }];
+    const items = publicItems(st);
+    return [200, { store: { ...st, isSubscriptionActive: storeIsCurrent(st) }, products: items, pagination: { page: 1, limit: 10, total: items.length, hasMore: false } }];
+  }
+  const ss = p.match(/^\/api\/stores\/([^/]+)\/products\/search$/);
+  if (ss) {
+    const st = findPublicStore(decodeURIComponent(ss[1]));
+    const term = (q.get("q") || q.get("query") || "").toLowerCase();
+    const items = st ? publicItems(st).filter((x) => !term || x.productName.toLowerCase().includes(term)) : [];
+    return [200, { products: items, pagination: { page: 1, limit: 10, total: items.length, hasMore: false } }];
+  }
   if (p === "/api/subscription/plans") return [200, { plans }];
   if (p === "/api/vendor/auth/me") return signedOut ? [401, { message: "Not signed in" }] : [200, { vendor: { _id: "v1", email: "vastra@example.com", storeId: "store_demo", status: "approved" } }];
   if (p === "/api/admin/auth/me") return signedOut ? [401, { message: "Not signed in" }] : [200, { admin: { email: "admin@example.com" } }];
